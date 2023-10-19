@@ -8,7 +8,7 @@ const router = useRouter();
 
 <template>
 
-<nav class=" w-full h-16 bg-orange-500 dark:bg-gray-900 fixed z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
+<nav class=" w-full h-16 bg-amber-300 dark:bg-gray-900 fixed z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
   <router-link :to="{ name: 'home' }">
     <a class="flex items-center">
