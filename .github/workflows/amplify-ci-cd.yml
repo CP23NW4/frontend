@@ -25,9 +25,13 @@ jobs:
       run: npm run build
 
     - name: Deploy to AWS Amplify
-      uses: aws-amplify/github-action@v3
-      with:
-        amplifyAppId: ${{ secrets.AMPLIFY_APP_ID }} # Replace with your Amplify App ID
-        amplifyBranch: master # Adjust to your main branch
-        awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      # uses: aws-amplify/github-action@v3
+      # with:
+      #   amplifyAppId: ${{ secrets.AMPLIFY_APP_ID }} # Replace with your Amplify App ID
+      #   amplifyBranch: master # Adjust to your main branch
+      #   awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #   awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+        npm install -g @aws-amplify/cli
+        amplify configure
+        amplify publish --appId ${{ secrets.AMPLIFY_APP_ID }}
