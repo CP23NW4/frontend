@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
+    - name: Checkout repository
       uses: actions/checkout@v2
 
     - name: Set up Node.js
@@ -27,7 +27,7 @@ jobs:
     - name: Deploy to AWS Amplify
       uses: aws-amplify/github-action@v3
       with:
-        amplifyAppId: ${{ secrets.AMPLIFY_APP_NAME }} # Replace with your Amplify App ID
+        amplifyAppId: ${{ secrets.AMPLIFY_APP_ID }} # Replace with your Amplify App ID
         amplifyBranch: master # Adjust to your main branch
         awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
         awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
