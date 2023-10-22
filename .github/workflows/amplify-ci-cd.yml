@@ -33,7 +33,8 @@ jobs:
       #   awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
         npm install -g @aws-amplify/cli
+        amplify upgrade
         amplify init
         amplify pull --appId d2q9os5qhazynr --envName staging
-        amplify configure
-        amplify publish --appId ${{ secrets.AMPLIFY_APP_ID }}
+        amplify configure set
+        amplify publish --appId d2q9os5qhazynr
