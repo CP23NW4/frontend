@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "flowbite": "^1.8.1",
+    "tesseract.js": "^5.0.2",
     "vue": "^3.3.4",
+    "vue-pdf": "^4.3.0",
     "vue-router": "^4.0.13"
   },
   "devDependencies": {

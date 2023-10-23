@@ -8,7 +8,7 @@ const router = useRouter();
 
 <template>
 
-<nav class=" w-full h-16 bg-amber-300 dark:bg-gray-900 fixed z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
+<nav class=" w-full h-16 bg-white dark:bg-gray-900 fixed z-20 top-0 left-0 dark:border-gray-600">
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
   <router-link :to="{ name: 'home' }">
     <a class="flex items-center">
@@ -55,13 +55,13 @@ const router = useRouter();
   </div>
   <div class="justify-start items-start gap-4 flex">
     <router-link :to="{ name: 'home' }">
-        <div class="px-7 py-2 bg-amber-300 rounded-3xl justify-start items-center flex hover:bg-amber-400 hover:text-white">
-            <a class="text-black text-sm font-medium">Home</a>
+        <div class="px-7 py-2 bg-indigo-950 rounded-3xl justify-start items-center flex hover:bg-zinc-800 hover:text-white">
+            <a class="text-white text-sm font-medium">Home</a>
         </div>
     </router-link>
     <router-link :to="{ name: 'health' }">
-        <div class="px-7 py-2 bg-amber-300 rounded-3xl justify-start items-center flex hover:bg-amber-400 hover:text-white">
-            <a class="text-black text-sm font-medium">Health</a>
+        <div class="px-7 py-2 bg-indigo-950 rounded-3xl justify-start items-center flex hover:bg-zinc-800 hover:text-white">
+            <a class="text-white text-sm font-medium">Health</a>
         </div>
     </router-link>
    </div>
