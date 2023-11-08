@@ -22,7 +22,7 @@ const router = useRouter();
 
 
   <div class="flex items-center md:order-2">
-    <img class="w-5 mr-4" src="/noti3.png">
+    <!-- <img class="w-5 mr-4" src="/noti3.png"> -->
     <router-link :to="{ name: 'login' }">
         <div class="mr-4 px-7 py-2 bg-orange-600 rounded-3xl justify-start items-center flex hover:bg-amber-400 hover:text-white">
             <a class="text-white text-sm font-medium">Sign in</a>
@@ -30,7 +30,7 @@ const router = useRouter();
     </router-link>
       <button type="button" class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
         <span class="sr-only">Open user menu</span>
-        <img class="w-8 h-8 rounded-full" src="/pf.png" alt="user photo">  
+        <img class="w-8 h-8 rounded-full object-cover" src="/cat.jpg" alt="user photo">  
 <!-- use profile img path from users data {{ users.img }} -->
 <!-- add default image when image==null use defaul image -->
       </button>
