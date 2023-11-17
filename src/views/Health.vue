@@ -8,7 +8,6 @@ import Button from '../components/Button.vue';
 <template>
 <Banner />
 <br>
-<h1 class="font-bold text-left m-8">Finding Home</h1>
 
       <CreateEditPost />
       <Button label="Cancel" color="amber-500" />
