@@ -28,15 +28,15 @@ onMounted(() => {
 });
 
 </script>
-
 <template>
   <div>
     <Banner />
-    <a>{{ strayAnimals }} </a>
     <br>
+    <a>{{ strayAnimals }}</a>
     <h1 class="font-bold text-left m-8">Finding Home</h1>
     <div class="grid grid-cols-3 gap-4">
-      <DetailCard v-for="animal in strayAnimals" :key="animal.id" :animal="animal" />
+      <!-- <DetailCard v-for="animal in strayAnimals" :key="animal.id" :animal="animal" /> -->
+      <DetailCard />
     </div>
   </div>
 </template>
