@@ -1,25 +1,42 @@
 <script setup>
-// import SearchFilter from '../components/SearchFilter.vue'
-// import Sf from '../components/sf.vue'
-  import ScanIdCard from '../components/ScanIdCard.vue';
-  import AutoFillForm from '../components/AutoFillForm.vue';
-  import Banner from '../components/Banner.vue';
-  import DetailCard from '../components/DetailCard.vue'
+import { ref, onMounted } from 'vue'
+import Banner from '../components/Banner.vue';
+import DetailCard from '../components/DetailCard.vue'
+
+const strayAnimals = ref([])
+
+const getPost = async () => {
+  try {
+    const res = await fetch(`http://localhost:8090/api/strayAnimals`, {
+      method: 'GET',
+    });
+
+    if (res.status === 200) {
+      const data = await res.json();
+      console.log('Data from API:', data);
+      strayAnimals.value = data;
+    } else {
+      console.error('Error:', res.status, res.statusText);
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+onMounted(() => {
+  getPost();
+});
 
 </script>
 
 <template>
-    <!-- <SearchFilter /> <br> -->
-    <!-- <Sf /> -->
-    <!-- v-if data===0 -->
-    <!-- <Banner /> -->
+  <div>
     <Banner />
-<br>
+    <a>{{ strayAnimals }} </a>
+    <br>
     <h1 class="font-bold text-left m-8">Finding Home</h1>
     <div class="grid grid-cols-3 gap-4">
-      <DetailCard v-for="index in 12" :key="index" />
+      <DetailCard v-for="animal in strayAnimals" :key="animal.id" :animal="animal" />
     </div>
-    <!-- <v-else></v-else> -->
-
+  </div>
 </template>
-
