@@ -1,11 +1,16 @@
 <script setup>
-import HealthCard from '../components/HealthCard.vue'
+import CreateEditPost from '../components/CreateEditPost.vue'
+import Banner from '../components/Banner.vue';
+import Button from '../components/Button.vue';
 
 </script>
 
-<template><br>
-    <h1 class="font-bold text-left m-8">Health Topics</h1>
-    <div class="grid grid-cols-3 gap-4">
-      <HealthCard v-for="index in 12" :key="index" />
-    </div>
+<template>
+<Banner />
+<br>
+
+      <CreateEditPost />
+      <Button label="Cancel" color="amber-500" />
+      <Button label="Confirm" />
+
 </template>
