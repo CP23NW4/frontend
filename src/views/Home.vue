@@ -1,9 +1,9 @@
 <script setup>
-import { ref, onMounted } from 'vue'
 import Banner from '../components/Banner.vue';
-import DetailCard from '../components/DetailCard.vue'
+import DetailCard from '../components/DetailCard.vue';
+import { ref, onMounted } from 'vue';
 
-const strayAnimals = ref([])
+const strayAnimals = ref([]);
 
 const getPost = async () => {
   try {
@@ -28,15 +28,16 @@ onMounted(() => {
 });
 
 </script>
+
 <template>
   <div>
     <Banner />
-    <br>
-    <a>{{ strayAnimals }}</a>
+    <br />
     <h1 class="font-bold text-left m-8">Finding Home</h1>
     <div class="grid grid-cols-3 gap-4">
-      <!-- <DetailCard v-for="animal in strayAnimals" :key="animal.id" :animal="animal" /> -->
-      <DetailCard />
+      <div v-for="strayAnimal in strayAnimals" :key="strayAnimal._id">
+        <DetailCard :strayAnimal="strayAnimal" />
+      </div>
     </div>
   </div>
 </template>
