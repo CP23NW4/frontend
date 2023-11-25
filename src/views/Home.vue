@@ -1,15 +1,15 @@
 <script setup>
-import Banner from '../components/Banner.vue';
-import DetailCard from '../components/DetailCard.vue';
-import { ref, onMounted } from 'vue';
+import Banner from '../components/Banner.vue'
+import DetailCard from '../components/DetailCard.vue'
+import { ref, onMounted } from 'vue'
 
-const strayAnimals = ref([]);
+const strayAnimals = ref([])
 
 const getPost = async () => {
   try {
     // const res = await fetch(`http://localhost:8090/api/strayAnimals`, {
-    const res = await fetch(`http://54.179.85.138/api/strayAnimals`, {
-      // const res = await fetch(`http://172.17.0.2:8090/api/strayAnimals`, {
+    // const res = await fetch(`http://54.179.85.138/api/strayAnimals`, {
+    const res = await fetch(`${process.env.VUE_APP_API_URL}/strayAnimals`, {
       method: 'GET',
     })
 
@@ -32,7 +32,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <Banner/>
+    <Banner />
     <br />
     <h1 class="font-bold text-left m-8">Finding Home</h1>
     <div class="grid grid-cols-3 gap-4">
