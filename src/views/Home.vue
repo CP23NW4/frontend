@@ -5,14 +5,12 @@ import { ref, onMounted } from 'vue'
 
 const strayAnimals = ref([])
 
-const API_URL = 'http://54.179.85.138/api';
-
 const getPost = async () => {
   try {
     // const res = await fetch(`http://localhost:8090/api/strayAnimals`, {
     // const res = await fetch(`http://54.179.85.138/api/strayAnimals`, {
-      console.log('API URL:', API_URL);
-      const res = await fetch(`${API_URL}/strayAnimals`, {
+      console.log('API URL:', process.env.VUE_APP_API_URL);
+      const res = await fetch(`${process.env.VUE_APP_API_URL}/strayAnimals`, {
       method: 'GET',
     })
 
