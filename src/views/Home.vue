@@ -8,7 +8,7 @@ const strayAnimals = ref([]);
 const getPost = async () => {
   try {
     // const res = await fetch(`http://localhost:8090/api/strayAnimals`, {
-    const res = await fetch(`http://54.179.85.138:8090/api/strayAnimals`, {
+    const res = await fetch(`http://54.179.85.138/api/strayAnimals`, {
       // const res = await fetch(`http://172.17.0.2:8090/api/strayAnimals`, {
       method: 'GET',
     })
