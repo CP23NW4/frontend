@@ -32,7 +32,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <Banner />
+    <Banner/>
     <br />
     <h1 class="font-bold text-left m-8">Finding Home</h1>
     <div class="grid grid-cols-3 gap-4">
