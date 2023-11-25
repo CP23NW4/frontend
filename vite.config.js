@@ -8,6 +8,6 @@ export default defineConfig({
     port: 2304, 
     
   },
-  // base: process.env.NODE_ENV === 'production' ? '/frontend/' : '/',
-  base: '/',
+  publicPath: process.env.NODE_ENV === 'production' ? '/frontend/' : '/',
+  // base: '/',
 })
