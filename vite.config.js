@@ -10,7 +10,7 @@ export default defineConfig({
         target: 'http://54.179.85.138', // http to VM's IP
         rewrite: path => path.replace(/^\/api/, ''),
       changeOrigin: true,
-      secure: false, // Set this flag to false to allow HTTP requests
+      secure: false, // This line allows usage of self-signed SSL certificates
       }
     },
     port: 2304, 
