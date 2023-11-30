@@ -7,7 +7,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-    //     target: 'http://54.179.85.138/api'
+        target: 'http://54.179.85.138', // http to VM's IP
+        rewrite: path => path.replace(/^\/api/, ''),
+      changeOrigin: true,
       }
     },
     port: 2304, 
