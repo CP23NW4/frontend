@@ -9,9 +9,10 @@ const getPost = async () => {
   try {
     // const res = await fetch(`http://localhost:8090/api/strayAnimals`, {
     // const res = await fetch(`http://54.179.85.138/api/strayAnimals`, {
-      console.log('API URL:', process.env.VUE_APP_API_URL);
-      console.log('Constructed URL:', `${process.env.VUE_APP_API_URL}/strayAnimals`);
-      const res = await fetch(`${process.env.VUE_APP_API_URL}/strayAnimals`, {
+    console.log('API URL:', process.env.VUE_APP_API_URL) // Ensure this prints the correct value
+    const constructedURL = `${process.env.VUE_APP_API_URL}/strayAnimals`
+    console.log('Constructed URL:', constructedURL) // Check if this logs the expected complete URL
+    const res = await fetch(constructedURL, {
       method: 'GET',
     })
 
