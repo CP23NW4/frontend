@@ -10,6 +10,7 @@ const getPost = async () => {
     // const res = await fetch(`http://localhost:8090/api/strayAnimals`, {
     // const res = await fetch(`http://54.179.85.138/api/strayAnimals`, {
       console.log('API URL:', process.env.VUE_APP_API_URL);
+      console.log('Constructed URL:', `${process.env.VUE_APP_API_URL}/strayAnimals`);
       const res = await fetch(`${process.env.VUE_APP_API_URL}/strayAnimals`, {
       method: 'GET',
     })
