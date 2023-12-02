@@ -10,24 +10,23 @@ const getPost = async () => {
   try {
     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/strayAnimals`, {
       method: 'GET',
-    });
+    })
 
     if (res.status === 200) {
       const data = await res.json();
       console.log('success');
       strayAnimals.value = data;
     } else {
-      console.error('Error:', res.status, res.statusText);
+      console.error('Error:', res.status, res.statusText)
     }
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error('Error fetching data:', error)
   }
-};
+}
 
 onMounted(() => {
-  getPost();
-});
-
+  getPost()
+})
 </script>
 
 <template>
