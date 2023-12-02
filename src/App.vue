@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar.vue";
   <router-view class="min-h-screen" />
   </div>
 
+
 </template>
 
 
