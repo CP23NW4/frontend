@@ -13,6 +13,7 @@ export default defineConfig({
       //secure: false, // This line allows usage of self-signed SSL certificates
       //}
     //},
+    //host: '54.179.85.138',
     host: '0.0.0.0',
     port: 2304, 
   },
