@@ -9,6 +9,7 @@ const strayAnimals = ref([])
 
 const getPost = async () => {
   try {
+    console.log('API URL:', '${import.meta.env.VITE_APP_TITLE}/api/strayAnimals')
     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/strayAnimals`, {
     // const res = await fetch(`http://localhost:8090/api/strayAnimals`, {
     // const res = await fetch(import.meta.env.VITE_APP_TITLE, {
@@ -21,6 +22,7 @@ const getPost = async () => {
       const data = await res.json();
       console.log('success');
       strayAnimals.value = data;
+      console.log(data)
     } else {
       console.error('Error:', res.status, res.statusText)
     }
