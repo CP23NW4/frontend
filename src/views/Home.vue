@@ -9,10 +9,14 @@ const getPost = async () => {
   try {
     // const res = await fetch(`http://localhost:8090/api/strayAnimals`, {
     // const res = await fetch(`http://172.17.0.2:8090/api/strayAnimals`, {
-      // const res = await fetch(`http://172.17.0.2:8090/api/strayAnimals`, {
-       const res = await fetch(import.meta.env.VITE_APP_TITLE, {
+    // const res = await fetch(`http://172.17.0.2:8090/api/strayAnimals`, {
+    //  const res = await fetch(import.meta.env.VITE_APP_TITLE, {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/api/strayAnimals`,
+      {
         method: 'GET',
-    })
+      }
+    )
 
     if (res.status === 200) {
       const data = await res.json()
