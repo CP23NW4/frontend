@@ -8,12 +8,10 @@ const strayAnimals = ref([])
 const getPost = async () => {
   try {
     // const res = await fetch(`http://localhost:8090/api/strayAnimals`, {
-    // const res = await fetch(`http://54.179.85.138/api/strayAnimals`, {
-    // console.log('API URL:', meta.env.VUE_APP_API_URL) // Ensure this prints the correct value
-    const constructedURL = `${import.meta.env.VITE_APP_TITLE.replace(/^https/, 'http')}/api/strayAnimals`
-    console.log('Constructed URL:', constructedURL) // Check if this logs the expected complete URL
-    const res = await fetch(constructedURL, {
-      method: 'GET',
+    // const res = await fetch(`http://172.17.0.2:8090/api/strayAnimals`, {
+      // const res = await fetch(`http://172.17.0.2:8090/api/strayAnimals`, {
+       const res = await fetch(import.meta.env.VITE_APP_TITLE, {
+        method: 'GET',
     })
 
     if (res.status === 200) {
