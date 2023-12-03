@@ -1,5 +1,5 @@
 # Use a Node.js base image
-FROM node:latest
+FROM node:14
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -20,4 +20,5 @@ RUN npm run build
 EXPOSE 2304
 
 # Command to start the application
-CMD ["npm", "run", "build"]
+CMD ["npm", "run", "serve"]
+
