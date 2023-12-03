@@ -4,14 +4,19 @@ import Card from '../components/Card.vue';
 
 import { ref, onMounted } from 'vue';
 
-const strayAnimals = ref([]);
+
+const strayAnimals = ref([])
 
 const getPost = async () => {
   try {
-    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/strayAnimals`, {
-      method: 'GET',
-    })
-
+    // const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/strayAnimals`, {
+    // const res = await fetch(`http://localhost:8090/api/strayAnimals`, {
+    // const res = await fetch(import.meta.env.VITE_APP_TITLE, {
+       const res = await fetch(`http://54.179.85.138/api/strayAnimals`, {
+    // const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/strayAnimals`, {
+        method: 'GET',
+      }
+    )
     if (res.status === 200) {
       const data = await res.json();
       console.log('success');
