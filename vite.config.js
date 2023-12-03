@@ -6,7 +6,6 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     port: 2304, 
-    
   },
   // base: process.env.NODE_ENV === 'production' ? '/frontend/' : '/',
   base: '/',
