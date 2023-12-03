@@ -1,9 +1,9 @@
 <script setup>
-import Banner from '../components/Banner.vue';
-import DetailCard from '../components/DetailCard.vue';
-import { ref, onMounted } from 'vue';
+import Banner from '../components/Banner.vue'
+import DetailCard from '../components/DetailCard.vue'
+import { ref, onMounted } from 'vue'
 
-const strayAnimals = ref([]);
+const strayAnimals = ref([])
 
 const getPost = async () => {
   try {
