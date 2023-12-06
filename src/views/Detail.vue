@@ -5,8 +5,8 @@ import Banner from '../components/Banner.vue'
 </script>
 
 <template>
-<Banner />
-  <div>
+<!-- <Banner /> -->
+  <div class="m-10">
         <Detail />
   </div>
 
