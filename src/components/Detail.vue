@@ -9,6 +9,21 @@ const getDet = ref({});
 // const getUser = ref({});
 
 
+const formatDate = (timestamp) => {
+  const date = new Date(timestamp);
+  return date.toLocaleString("en-US", {
+    timeZone: "Asia/Bangkok",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  });
+};
+
+
+
+
 const getPostById = async () => {
   try {
     const res = await fetch(
@@ -72,7 +87,7 @@ const removePost = async (id) => {
         method: "DELETE",
       }
     );
-    console.log(res.json());
+    // console.log(res.json());
     router.push({
       name: "home",
     });
@@ -94,7 +109,7 @@ const removePost = async (id) => {
           <div class="font-medium dark:text-white">
             <div>Millieme</div>
             <div class="text-sm text-gray-500 dark:text-gray-400">
-              20 Aug 2022 22:22
+              {{ formatDate(getDet.createdOn) }}
             </div>
           </div>
         </div>
