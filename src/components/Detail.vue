@@ -80,7 +80,7 @@ onMounted(() => {
 
 
 const removePost = async (id) => {
-  if (confirm("Would you like to cancel your post?") == true) {
+  if (confirm("Would you like to delete your post?") == true) {
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/api/strayAnimals/${route.query.id}`,
       {
