@@ -6,6 +6,7 @@ import { useRoute, useRouter } from "vue-router";
 const router = useRouter();
 const route = useRoute();
 
+
 const minCount = 0; // ตัวแปรเพื่อบอกจำนวนตัวอักษรของ name, notes
 const maxCountNotes = 500; // ตัวแปรเพื่อบอกว่า notes ใส่ได้สูงสุด 500 ตัว
 const formPost = ref({
@@ -57,6 +58,7 @@ const handleSubmit = async () => {
 </script>
 
 <template>
+{{ formPost }}
   <div class="flex items-center justify-center">
     <form @submit.prevent="handleSubmit" action="#" method="POST">
       <div class="flex items-center justify-center w-full mb-4">

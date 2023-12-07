@@ -1,13 +1,14 @@
 <script setup>
-import Detail from '../components/Detail.vue'
-import Banner from '../components/Banner.vue'
+import Detail from "../components/Detail.vue";
+import Banner from "../components/Banner.vue";
+import ConfirmCard from "../components/ConfirmCard.vue";
 
 </script>
 
 <template>
-<!-- <Banner /> -->
+  <!-- <Banner /> -->
   <div class="m-10">
-        <Detail />
-  </div>
+    <Detail />
 
+  </div>
 </template>

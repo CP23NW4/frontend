@@ -6,6 +6,5 @@ import Banner from '../components/Banner.vue';
 <template>
 <Banner />
 <br>
-
       <CreateEditPost />
 </template>

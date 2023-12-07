@@ -1,4 +1,6 @@
 <script setup>
+import ConfirmCard from './ConfirmCard.vue';
+
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from 'vue-router'
 
@@ -6,7 +8,7 @@ const router = useRouter()
 const route = useRoute()
 const goBack = () => router.go(-1);
 const getDet = ref({});
-// const getUser = ref({});
+
 
 
 const formatDate = (timestamp) => {
@@ -21,9 +23,6 @@ const formatDate = (timestamp) => {
   });
 };
 
-
-
-
 const getPostById = async () => {
   try {
     const res = await fetch(
@@ -37,45 +36,46 @@ const getPostById = async () => {
       const data = await res.json();
       console.log("success");
       getDet.value = data;
-      // console.log(data);
     } else {
       console.error("Error:", res.status, res.statusText);
     }
   } catch (error) {
     console.error(error);
     console.log("saId:", getDet.id);
-
-    // console.log(getDet.id);
   }
 };
 
-// const getUserById = async () => {
-//   try {
-//     const res = await fetch(
-//       `${import.meta.env.VITE_APP_TITLE}/api/users/${route.query.id}`,
-//       {
-//         method: "GET",
-//       }
-//     );
+const getUser = ref({});
+const getUsers = async () => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/api/users`,
+      {
+        method: "GET",
+      }
+    );
 
-//     if (res.status === 200) {
-//       const data = await res.json();
-//       console.log("success");
-//       getUser.value = data;
-//     } else {
-//       console.error("Error:", res.status, res.statusText);
-//     }
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
-// onMounted(() => {
-//   getUserById();
-// });
+    if (res.status === 200) {
+      const data = await res.json();
+      console.log("success");
+      getUser.value = data;
+    } else {
+      console.error("Error:", res.status, res.statusText);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+onMounted(() => {
+  getUsers();
+});
 
 onMounted(() => {
   getPostById();
 });
+
+
 
 
 
@@ -94,10 +94,19 @@ const removePost = async (id) => {
   } else {
   }
 };
+
+const editPost = (id) => {
+  console.log(id)
+  router.push({
+    name: 'posts',
+    query: { id: id },
+  })
+}
+
 </script>
 <template>
-{{ getDet }}
-{{ getUser }}
+{{ getDet.ownerId }}
+<!-- {{ getUser }} -->
   <div class="flex items-center justify-center">
     <div class="items-center gap-4 mb-4 text-center max-w-lg">
       <div class="mb-4">
@@ -141,12 +150,21 @@ const removePost = async (id) => {
       </button>
 
       <button
+        class="px-4 py-2 bg-blue-500 text-white rounded-md"
+        @click="editPost(getDet.id)"
+      >
+        Edit
+      </button>
+
+      <button
         type="button"
         @click="removePost"
         class="bg-red-700 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
       >
-        Cancel
+        Delete
       </button>
+
+      
     </div>
   </div>
 </template>
