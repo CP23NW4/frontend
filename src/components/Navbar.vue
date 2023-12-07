@@ -63,12 +63,11 @@ const router = useRouter();
     </router-link>
     <router-link :to="{ name: 'health' }">
         <div class="px-7 py-2 bg-indigo-950 rounded-3xl justify-start items-center flex hover:bg-zinc-800 hover:text-white">
-            <a class="text-white text-sm font-medium">Health</a>
-        </div>
+            <a class="text-white text-sm font-medium">Test</a>
+        </div>    
     </router-link>
+
    </div>
  </div>
 </nav>
-
-
 </template>
