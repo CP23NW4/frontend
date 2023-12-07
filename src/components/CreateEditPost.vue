@@ -1,69 +1,66 @@
 <script setup>
-// import { ref, onMounted } from 'vue';
+import { ref } from "vue";
 
-// const strayAnimal = ref(null);
-// const formPost = ref({
-//   name: '',
-//   type: '',
-//   gender: '',
-//   color: '',
-//   notes: '',
-//   address: '',
-//   phone: '',
-//   image: null
-// });
+import { useRoute, useRouter } from "vue-router";
 
-// onMounted(() => {
-//   const strayAnimalId = 1; 
-//   if (strayAnimalId) {
-//     strayAnimal.value = {
-//       id: strayAnimalId,
-//       name: strayAnimal.name,
-//       type: strayAnimal.type,
-//       gender: strayAnimal.gender,
-//       color: strayAnimal.color,
-//       notes: strayAnimal.notes,
-//       address: strayAnimal.address,
-//       phone: strayAnimal.phone,
-//     };
-//     formPost.value = { ...strayAnimal.value };
-//   }
-// });
-// const handleSubmit = async () => {
-//   const formPost = new formPost();
+const router = useRouter();
+const route = useRoute();
 
-//   Object.entries(formPost.value).forEach(([key, value]) => {
-//     formData.append(key, value);
-//   });
 
-//   if (formPost.value.image) {
-//     formData.append('image', formPost.value.image);
-//   }
+const minCount = 0; // ตัวแปรเพื่อบอกจำนวนตัวอักษรของ name, notes
+const maxCountNotes = 500; // ตัวแปรเพื่อบอกว่า notes ใส่ได้สูงสุด 500 ตัว
+const formPost = ref({
+  name: "",
+  type: "",
+  gender: "",
+  color: "",
+  notes: "",
+  image: null,
+  createdOn: null,
+});
 
-//   try {
-//     const response = await fetch('/api/upload', {
-//       method: 'POST',
-//       body: formData,
-//     });
+const handleSubmit = async () => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/api/strayAnimals`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formPost.value),
+      }
+    );
 
-//     if (response.ok) {
-//       console.log('File uploaded successfully!');
-//     } else {
-//       console.error('File upload failed!');
-//     }
-//   } catch (error) {
-//     console.error('Error uploading file:', error);
-//   }
-// };
-
+    if (res.ok) {
+      const data = await res.json();
+      console.log("Post created successfully:", data);
+      formPost.value = {
+        name: "",
+        type: "",
+        gender: "",
+        color: "",
+        notes: "",
+        image: null,
+        createdOn: new Date().toISOString(),
+      };
+      alert("Post created successfully");
+      router.push({
+        name: "home",
+      });
+    } else {
+      console.error("Error creating post:", res.status, res.statusText);
+    }
+  } catch (error) {
+    console.error("Error creating post:", error);
+  }
+};
 </script>
+
 <template>
+{{ formPost }}
   <div class="flex items-center justify-center">
-    <form
-      @submit.prevent="handleSubmit"
-      action="#"
-      method="POST"
-    >
+    <form @submit.prevent="handleSubmit" action="#" method="POST">
       <div class="flex items-center justify-center w-full mb-4">
         <label
           for="dropzone-file"
@@ -101,7 +98,7 @@
         <input
           type="text"
           id="name"
-          v-model="name"
+          v-model="formPost.name"
           placeholder="Name of pets"
           required
           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
@@ -113,7 +110,7 @@
           <input
             type="text"
             id="type"
-            v-model="type"
+            v-model="formPost.type"
             placeholder="Type"
             required
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
@@ -124,32 +121,57 @@
           <input
             type="text"
             id="gender"
-            v-model="gender"
+            v-model="formPost.gender"
             placeholder="Gender"
             required
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
           />
         </div>
 
+        <!-- <div class="relative inline-block text-left">
+  <button id="genderDropdownButton" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+    Gender
+    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+    </svg>
+  </button>
+
+  <div id="genderDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="genderDropdownButton">
+      <li>
+        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Male</a>
+      </li>
+      <li>
+        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Female</a>
+      </li>
+    </ul>
+  </div>
+</div> -->
+
         <div>
           <input
             type="text"
             id="color"
-            v-model="color"
+            v-model="formPost.color"
             placeholder="Color"
             required
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
           />
         </div>
       </div>
-      <textarea
-        v-model="notes"
-        placeholder=" Write your description..."
-        cols="5"
-        rows="5"
-        class="bg-white border border-gray-300 text-black text-m focus:ring-0 w-[100%] rounded-lg"
-      ></textarea>
-      <div class="mb-4">
+      <div>
+        <textarea
+          v-model="formPost.notes"
+          placeholder=" Write your description..."
+          cols="5"
+          rows="5"
+          class="bg-white border border-gray-300 text-black text-m focus:ring-0 w-[100%] rounded-lg"
+        ></textarea>
+        <span class="text-xs ml-[95%] text-gray-400"
+          >{{ minCount + formPost.notes.length }}/{{ maxCountNotes }}</span
+        >
+      </div>
+      <!-- <div class="mb-4">
         <input
           type="text"
           id="address"
@@ -168,7 +190,7 @@
           required
           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
         />
-      </div>
+      </div> -->
       <div class="mb-4">
         <button
           type="submit"
