@@ -105,12 +105,15 @@ const editPost = (id) => {
 
 </script>
 <template>
-{{ getDet.ownerId }}
+<!-- {{ getDet.ownerId }} -->
 <!-- {{ getUser }} -->
   <div class="flex items-center justify-center">
     <div class="items-center gap-4 mb-4 text-center max-w-lg">
       <div class="mb-4">
-        <img src="/cat.jpg" class="w-512 h-300 object-cover rounded-md" />
+        <!-- <img src="{{ getDet.picture }}" class="w-512 h-300 object-cover rounded-md" /> -->
+        <img v-if="getDet.picture !== null" :src="getDet.picture" class="w-full h-full object-cover rounded-lg" alt="Animal Image">
+        <img v-else-if="getDet.picture === null" src="/nodata.png" class="w-full h-full object-cover rounded-lg" alt="Animal Image">
+
       </div>
       <div class="w-full bg-white shadow-lg p-8 my-10 rounded-md text-left">
         <div class="flex mb-4">
@@ -143,14 +146,14 @@ const editPost = (id) => {
           ขอรับเลี้ยง
         </button> -->
       <button
-        class="px-4 py-2 bg-blue-500 text-white rounded-md"
+        class="m-2 px-4 py-2 bg-blue-500 text-white rounded-md"
         @click="goBack"
       >
         Close
       </button>
 
       <button
-        class="px-4 py-2 bg-blue-500 text-white rounded-md"
+        class="m-2 bg-amber-400 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
         @click="editPost(getDet.id)"
       >
         Edit
@@ -159,7 +162,7 @@ const editPost = (id) => {
       <button
         type="button"
         @click="removePost"
-        class="bg-red-700 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
+        class="m-2 bg-red-700 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
       >
         Delete
       </button>

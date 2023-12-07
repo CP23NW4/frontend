@@ -1,32 +1,85 @@
 <script setup>
-import { ref } from "vue";
-
-import { useRoute, useRouter } from "vue-router";
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter();
 const route = useRoute();
+const minCount = 0;
+const maxCountDesc = 500;
 
-
-const minCount = 0; // ตัวแปรเพื่อบอกจำนวนตัวอักษรของ name, notes
-const maxCountNotes = 500; // ตัวแปรเพื่อบอกว่า notes ใส่ได้สูงสุด 500 ตัว
 const formPost = ref({
-  name: "",
-  type: "",
-  gender: "",
-  color: "",
-  notes: "",
+  name: '',
+  type: '',
+  gender: '',
+  color: '',
+  description: '',
   image: null,
   createdOn: null,
 });
 
-const handleSubmit = async () => {
+const getPostById = async () => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/api/strayAnimals/${route.query.id}`,
+      {
+        method: 'GET',
+      }
+    );
+
+    if (res.status === 200) {
+      const data = await res.json();
+      formPost.value = data;
+    } else {
+      console.error('Error:', res.status, res.statusText);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const updatePost = async () => {
+  const confirmed = window.confirm('Are you sure you want to update the post?');
+
+  if (confirmed) {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_APP_TITLE}/api/strayAnimals/${route.query.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formPost.value),
+        }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        console.log('Post updated successfully:', data);
+        router.push({
+          name: 'home',
+        });
+      } else {
+        console.error('Error updating post:', res.status, res.statusText);
+      }
+    } catch (error) {
+      console.error('Error updating post:', error);
+    }
+  } else {
+    // The user canceled the update
+    console.log('Update canceled by user');
+  }
+};
+
+
+const createPost = async () => {
   try {
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/api/strayAnimals`,
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(formPost.value),
       }
@@ -34,31 +87,38 @@ const handleSubmit = async () => {
 
     if (res.ok) {
       const data = await res.json();
-      console.log("Post created successfully:", data);
-      formPost.value = {
-        name: "",
-        type: "",
-        gender: "",
-        color: "",
-        notes: "",
-        image: null,
-        createdOn: new Date().toISOString(),
-      };
-      alert("Post created successfully");
+      console.log('Post created successfully:', data);
       router.push({
-        name: "home",
+        name: 'home',
       });
     } else {
-      console.error("Error creating post:", res.status, res.statusText);
+      console.error('Error creating post:', res.status, res.statusText);
     }
   } catch (error) {
-    console.error("Error creating post:", error);
+    console.error('Error creating post:', error);
   }
 };
+
+const handleSubmit = async () => {
+  if (route.query.id) {
+    // If ID update post
+    updatePost();
+  } else {
+    // else create new post
+    createPost();
+  }
+};
+
+onMounted(() => {
+  if (route.query.id) {
+    // Fetch data if ID is present
+    getPostById();
+  }
+});
 </script>
 
 <template>
-{{ formPost }}
+<!-- {{ formPost }} -->
   <div class="flex items-center justify-center">
     <form @submit.prevent="handleSubmit" action="#" method="POST">
       <div class="flex items-center justify-center w-full mb-4">
@@ -161,15 +221,14 @@ const handleSubmit = async () => {
       </div>
       <div>
         <textarea
-          v-model="formPost.notes"
+          v-model="formPost.description"
           placeholder=" Write your description..."
           cols="5"
           rows="5"
           class="bg-white border border-gray-300 text-black text-m focus:ring-0 w-[100%] rounded-lg"
         ></textarea>
-        <span class="text-xs ml-[95%] text-gray-400"
-          >{{ minCount + formPost.notes.length }}/{{ maxCountNotes }}</span
-        >
+        <span class="text-xs ml-[95%] text-gray-400">{{ minCount + (formPost.description ? formPost.description.length : 0) }}/{{ maxCountDesc }}</span>
+
       </div>
       <!-- <div class="mb-4">
         <input
@@ -192,11 +251,8 @@ const handleSubmit = async () => {
         />
       </div> -->
       <div class="mb-4">
-        <button
-          type="submit"
-          class="px-4 py-2 bg-blue-500 text-white rounded-md"
-        >
-          {{ strayAnimal ? "Update" : "Create" }}
+        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">
+          {{ route.query.id ? 'Update' : 'Create' }}
         </button>
       </div>
     </form>
