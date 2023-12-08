@@ -56,9 +56,9 @@ const getPostById = async () => {
 };
 
 const updatePost = async () => {
-  // const confirmed = window.confirm("Are you sure you want to update the post?");
+  const confirmed = window.confirm("Are you sure you want to update the post?");
 
-  // if (confirmed) {
+  if (confirmed) {
     try {
       const res = await fetch(
         `${import.meta.env.VITE_APP_TITLE}/api/strayAnimals/${route.query.id}`,
@@ -92,10 +92,10 @@ const updatePost = async () => {
     } catch (error) {
       console.error("Error updating post:", error);
     }
-  // } else {
-  //   // The user canceled the update
-  //   console.log("Update canceled by user");
-  // }
+  } else {
+    // The user canceled the update
+    console.log("Update canceled by user");
+  }
 };
 
 const createPost = async () => {
