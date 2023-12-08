@@ -61,11 +61,11 @@ const router = useRouter();
             <a class="text-white text-sm font-medium">Home</a>
         </div>
     </router-link>
-    <router-link :to="{ name: 'health' }">
+    <!-- <router-link :to="{ name: 'health' }">
         <div class="px-7 py-2 bg-indigo-950 rounded-3xl justify-start items-center flex hover:bg-zinc-800 hover:text-white">
             <a class="text-white text-sm font-medium">Test</a>
         </div>    
-    </router-link>
+    </router-link> -->
 
    </div>
  </div>
