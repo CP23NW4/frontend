@@ -1,18 +1,30 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 const router = useRouter();
 const route = useRoute();
 const minCount = 0;
 const maxCountDesc = 500;
+let nameError = '';
+
+
+const validateName = () => {
+  formPost.name = formPost.name.trim();
+
+  if (formPost.name.length > 20) {
+    nameError = 'Name must be 20 characters or less';
+  } else {
+    nameError = '';
+  }
+};
 
 const formPost = ref({
-  name: '',
-  type: '',
-  gender: '',
-  color: '',
-  description: '',
+  name: "",
+  type: "",
+  gender: "",
+  color: "",
+  description: "",
   image: null,
   createdOn: null,
 });
@@ -22,7 +34,7 @@ const getPostById = async () => {
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/api/strayAnimals/${route.query.id}`,
       {
-        method: 'GET',
+        method: "GET",
       }
     );
 
@@ -30,7 +42,13 @@ const getPostById = async () => {
       const data = await res.json();
       formPost.value = data;
     } else {
-      console.error('Error:', res.status, res.statusText);
+      if (res.status === 404) {
+        console.error("Error: Post not found");
+      } else if (res.status === 500) {
+        console.error("Error: Internal Server Error");
+      } else {
+        console.error("Error:", res.status, res.statusText);
+      }
     }
   } catch (error) {
     console.error(error);
@@ -38,64 +56,81 @@ const getPostById = async () => {
 };
 
 const updatePost = async () => {
-  const confirmed = window.confirm('Are you sure you want to update the post?');
+  // const confirmed = window.confirm("Are you sure you want to update the post?");
 
-  if (confirmed) {
+  // if (confirmed) {
     try {
       const res = await fetch(
         `${import.meta.env.VITE_APP_TITLE}/api/strayAnimals/${route.query.id}`,
         {
-          method: 'PUT',
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(formPost.value),
         }
       );
 
-      if (res.ok) {
+      if (res.status === 200) {
         const data = await res.json();
-        console.log('Post updated successfully:', data);
+        console.log("Post updated successfully:", data);
         router.push({
-          name: 'home',
+          name: "home",
         });
       } else {
-        console.error('Error updating post:', res.status, res.statusText);
+        if (res.status === 404) {
+          console.error("Error: Post not found");
+          router.push({
+            name: "notfound",
+          });
+        } else if (res.status === 500) {
+          console.error("Error: Internal Server Error");
+        } else {
+          console.error("Error:", res.status, res.statusText);
+        }
       }
     } catch (error) {
-      console.error('Error updating post:', error);
+      console.error("Error updating post:", error);
     }
-  } else {
-    // The user canceled the update
-    console.log('Update canceled by user');
-  }
+  // } else {
+  //   // The user canceled the update
+  //   console.log("Update canceled by user");
+  // }
 };
-
 
 const createPost = async () => {
   try {
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/api/strayAnimals`,
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formPost.value),
       }
     );
 
-    if (res.ok) {
+    if (res.status === 200 || res.status === 201) {
       const data = await res.json();
-      console.log('Post created successfully:', data);
+      console.log("Post created successfully:", data);
       router.push({
-        name: 'home',
+        name: "home",
       });
     } else {
-      console.error('Error creating post:', res.status, res.statusText);
+      if (res.status === 404) {
+        console.error("Error: Post not found");
+        router.push({
+          name: "notfound",
+        });
+      } else if (res.status === 500) {
+        console.error("Error: Internal Server Error");
+      } else {
+        console.error("Error:", res.status, res.statusText);
+      }
     }
   } catch (error) {
-    console.error('Error creating post:', error);
+    console.error("Error creating post:", error);
   }
 };
 
@@ -115,10 +150,14 @@ onMounted(() => {
     getPostById();
   }
 });
+
+const selectGender = (selectedGender) => {
+  formPost.gender = selectedGender;
+};
 </script>
 
 <template>
-<!-- {{ formPost }} -->
+  <!-- {{ formPost }} -->
   <div class="flex items-center justify-center">
     <form @submit.prevent="handleSubmit" action="#" method="POST">
       <div class="flex items-center justify-center w-full mb-4">
@@ -158,15 +197,18 @@ onMounted(() => {
         <input
           type="text"
           id="name"
+          maxlength="20" 
           v-model="formPost.name"
           placeholder="Name of pets"
+          @input="validateName"
           required
           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
         />
+         <p v-if="nameError" class="text-red-500 text-sm">{{ nameError }}</p>
       </div>
 
       <div class="grid gap-3 mb-4 md:grid-cols-3">
-        <div>
+        <!-- <div>
           <input
             type="text"
             id="type"
@@ -175,9 +217,9 @@ onMounted(() => {
             required
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
           />
-        </div>
+        </div> -->
 
-        <div>
+        <!-- <div>
           <input
             type="text"
             id="gender"
@@ -186,7 +228,30 @@ onMounted(() => {
             required
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
           />
-        </div>
+        </div> -->
+<label class="form-control w-full max-w-xs">
+  <select class="select select-bordered" required v-model="formPost.type">
+    <option value="" disabled selected>Type</option>
+    <option value="Cat">Cat</option>
+    <option value="Dog">Dog</option>
+  </select>
+</label>
+
+<label class="form-control w-full max-w-xs">
+  <select class="select select-bordered" required v-model="formPost.gender">
+    <option value="" disabled selected>Gender</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+  </select>
+</label>
+
+        <!-- <details class="dropdown">
+  <summary class="m-1 btn">Gender</summary>
+  <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+    <li><a @click="selectGender('Male')">Male</a></li>
+    <li><a @click="selectGender('Female')">Female</a></li>
+  </ul>
+</details> -->
 
         <!-- <div class="relative inline-block text-left">
   <button id="genderDropdownButton" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -214,6 +279,7 @@ onMounted(() => {
             id="color"
             v-model="formPost.color"
             placeholder="Color"
+            maxlength="10"
             required
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
           />
@@ -225,10 +291,14 @@ onMounted(() => {
           placeholder=" Write your description..."
           cols="5"
           rows="5"
+          maxlength="500"
           class="bg-white border border-gray-300 text-black text-m focus:ring-0 w-[100%] rounded-lg"
         ></textarea>
-        <span class="text-xs ml-[95%] text-gray-400">{{ minCount + (formPost.description ? formPost.description.length : 0) }}/{{ maxCountDesc }}</span>
-
+        <span class="text-xs ml-[95%] text-gray-400"
+          >{{
+            minCount + (formPost.description ? formPost.description.length : 0)
+          }}/{{ maxCountDesc }}</span
+        >
       </div>
       <!-- <div class="mb-4">
         <input
@@ -251,9 +321,13 @@ onMounted(() => {
         />
       </div> -->
       <div class="mb-4">
-        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">
-          {{ route.query.id ? 'Update' : 'Create' }}
+        <button
+          type="submit"
+          class="px-4 py-2 bg-blue-500 text-white rounded-md"
+        >
+          {{ route.query.id ? "Update" : "Create" }}
         </button>
+
       </div>
     </form>
   </div>
