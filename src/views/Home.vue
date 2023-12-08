@@ -26,7 +26,9 @@ const getPost = async () => {
     if (res.status === 200) {
       const data = await res.json();
       console.log('success', data);
-      strayAnimals.value = data;
+      strayAnimals.value = data._embedded.strayAnimals;
+      // strayAnimals.value = data;
+      console.log('ddd',strayAnimals.value)
       console.log(data)
     } else {
       if (res.status === 404) {

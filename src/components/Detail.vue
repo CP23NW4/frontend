@@ -32,7 +32,7 @@ const getPostById = async () => {
 
     if (res.status === 200) {
       const data = await res.json();
-      console.log("success");
+      console.log("success", data);
       getDet.value = data;
     } else {
       if (res.status === 404) {
@@ -202,7 +202,7 @@ const editPost = (id) => {
         class="m-2 bg-red-700 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
         onclick="my_modal_1.showModal()"
       >
-        Deletel
+        Delete
       </button>
       <dialog id="my_modal_1" class="modal">
   <div class="modal-box flex flex-col items-center justify-center">

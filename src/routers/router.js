@@ -28,6 +28,7 @@ const routes = [
     component: Posts,
   },
   {
+    path: '/detail/:id',
     path: '/detail',
     name: 'detail',
     component: Detail,
