@@ -22,8 +22,8 @@ console.log(id)
     <div class="relative w-full h-52">
         <img v-if="strayAnimal.picture !== null" :src="strayAnimal.picture" class="w-full h-full object-cover rounded-lg" alt="Animal Image">
         <img v-else-if="strayAnimal.picture === null" src="/nodata.png" class="w-full h-full object-cover rounded-lg" alt="Animal Image">
-
-    </div>
+    </div> -->
+    
     <div class="flex items-center p-5">
       <img v-if="strayAnimal.gender === 'Female'" src="/female.svg" class="h-5 mr-4" alt="Female Icon">
       <img v-if="strayAnimal.gender === 'Male'" src="/male.svg" class="h-5 mr-4" alt="Male Icon">
