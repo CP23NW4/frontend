@@ -4,6 +4,7 @@ import Health from '../views/Health.vue';
 import Login from '../views/Login.vue';
 import Posts from '../views/Posts.vue';
 import Detail from '../views/Detail.vue';
+import NotFound from '../views/NotFound.vue';
 
 const routes = [
   {
@@ -27,9 +28,15 @@ const routes = [
     component: Posts,
   },
   {
+    path: '/detail/:id',
     path: '/detail',
     name: 'detail',
     component: Detail,
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'notfound',
+    component: NotFound,
   },
 ];
 
