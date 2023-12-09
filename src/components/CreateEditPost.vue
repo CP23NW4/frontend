@@ -10,14 +10,23 @@ let nameError = '';
 
 
 const validateName = () => {
-  formPost.name = formPost.name.trim();
+  const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>]/;
 
-  if (formPost.name.length > 20) {
-    nameError = 'Name must be 20 characters or less';
+  const trimmedName = formPost.name?.trim();
+
+  // if (!trimmedName) {
+  //   nameError = "Name is required.";
+  // } else 
+  if (trimmedName?.length > 20) {
+    nameError = "Name cannot exceed 20 characters.";
+  } else if (specialCharacterRegex.trimmedName) {
+    nameError = "Special characters are not allowed.";
+    console.log(specialCharacterRegex)
   } else {
-    nameError = '';
+    nameError = "";
   }
 };
+
 
 const formPost = ref({
   name: "",
@@ -26,7 +35,7 @@ const formPost = ref({
   color: "",
   description: "",
   image: null,
-  createdOn: null,
+  createdOn: new Date().toISOString(),
 });
 
 const getPostById = async () => {
@@ -154,6 +163,9 @@ onMounted(() => {
 const selectGender = (selectedGender) => {
   formPost.gender = selectedGender;
 };
+
+
+
 </script>
 
 <template>

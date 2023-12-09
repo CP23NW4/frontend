@@ -28,7 +28,7 @@ const getPost = async () => {
       console.log('success', data);
       strayAnimals.value = data._embedded.strayAnimals;
       // strayAnimals.value = data;
-      console.log('ddd',strayAnimals.value)
+      console.log('test',strayAnimals.value)
       console.log(data)
     } else {
       if (res.status === 404) {

@@ -111,13 +111,16 @@ const removePost = async () => {
   }
 };
 
-
 const editPost = (id) => {
   console.log(id);
   router.push({
     name: "posts",
     query: { id: id },
   });
+};
+const capitalizeFirstLetter = (str) => {
+  if (!str) return "";
+  return str.charAt(0).toUpperCase() + str.slice(1);
 };
 </script>
 <template>
@@ -155,8 +158,15 @@ const editPost = (id) => {
         <div class="mt-4">
           <ul>
             <li><a class="font-bold m-2">ชื่อ :</a> {{ getDet.name }}</li>
-            <li><a class="font-bold m-2">เพศ :</a> {{ getDet.gender }}</li>
-            <li><a class="font-bold m-2">ประเภท :</a> {{ getDet.type }}</li>
+            <li>
+              <a class="font-bold m-2">เพศ :</a>
+              {{ capitalizeFirstLetter(getDet.gender) }}
+            </li>
+
+            <li>
+              <a class="font-bold m-2">ประเภท :</a>
+              {{ capitalizeFirstLetter(getDet.type) }}
+            </li>
             <li><a class="font-bold m-2">สี :</a> {{ getDet.color }}</li>
             <li>
               <a class="font-bold m-2">คำอธิบาย :</a> {{ getDet.description }}
@@ -205,27 +215,28 @@ const editPost = (id) => {
         Delete
       </button>
       <dialog id="my_modal_1" class="modal">
-  <div class="modal-box flex flex-col items-center justify-center">
-    <img src="/modal.svg"/>
-    <h1 class="font-bold text-2xl text-amber-500 mt-2">Delete Post?</h1>
-    <p class="py-2">Would you like to delete your post?</p>
-    <div class="modal-action flex">
-      <form method="dialog">
-        <button 
-          class="m-2 bg-slate-400 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
-        >Cancel</button>
-        <button
-          type="button"
-          @click="removePost"
-          class="m-2 bg-orange-600 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
-        >
-          Confirm
-        </button>
-      </form>
-    </div>
-  </div>
-</dialog>
-
+        <div class="modal-box flex flex-col items-center justify-center">
+          <img src="/modal.svg" />
+          <h1 class="font-bold text-2xl text-amber-500 mt-2">Delete Post?</h1>
+          <p class="py-2">Would you like to delete your post?</p>
+          <div class="modal-action flex">
+            <form method="dialog">
+              <button
+                class="m-2 bg-slate-400 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                @click="removePost"
+                class="m-2 bg-orange-600 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
+              >
+                Confirm
+              </button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </div>
   </div>
 </template>
