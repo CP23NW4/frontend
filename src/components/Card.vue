@@ -25,8 +25,8 @@ console.log(id)
     </div> 
     
     <div class="flex items-center p-5">
-      <img v-if="strayAnimal.gender.toUpperCase() === 'FEMALE'" src="/female.svg" class="h-5 mr-4" alt="Female Icon">
-      <img v-if="strayAnimal.gender.toUpperCase() === 'MALE'" src="/male.svg" class="h-5 mr-4" alt="Male Icon">
+<img v-if="strayAnimal && strayAnimal.gender && strayAnimal.gender.toUpperCase() === 'FEMALE'" src="/female.svg" class="h-5 mr-4" alt="Female Icon">
+<img v-if="strayAnimal && strayAnimal.gender && strayAnimal.gender.toUpperCase() === 'MALE'" src="/male.svg" class="h-5 mr-4" alt="Male Icon">
       <div v-if="strayAnimal.gender === null" class="mr-4"> ไม่ระบุเพศ </div>
       
       <div class="text-[16px] font-bold leading-none tracking-tight" v-if="strayAnimal.name !== null">
