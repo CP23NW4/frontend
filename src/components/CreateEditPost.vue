@@ -150,7 +150,7 @@ const handleFileUpload = async (event) => {
 
   if (file) {
     const formData = new FormData();
-    formData.append('picture', file); // Use 'picture' as the form field name
+    formData.append('picture', file);
 
     try {
       const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals/upload`, {
@@ -161,7 +161,6 @@ const handleFileUpload = async (event) => {
       if (res.status === 200) {
         const data = await res.json();
         console.log('Image uploaded successfully', data);
-        // Update formPost.picture with the uploaded image path
         formPost.picture = data.filePath;
       } else {
         console.error('Error uploading image:', res.status, res.statusText);
