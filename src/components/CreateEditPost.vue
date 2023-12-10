@@ -112,7 +112,7 @@ const updatePost = async () => {
 const createPost = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/api/strayAnimals`,
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals`,
       {
         method: "POST",
         headers: {
@@ -168,8 +168,6 @@ const handleFileUpload = async (event) => {
         }
     }
 };
-
-
 
 
 
@@ -384,7 +382,7 @@ const selectGender = (selectedGender) => {
           type="submit"
           class="px-4 py-2 bg-blue-500 text-white rounded-md"
         >
-          {{ route.query.id ? "Update" : "Create" }}
+          {{ route.params.id ? "Update" : "Create" }}
         </button>
       </div>
     </form>

@@ -196,7 +196,7 @@ const capitalizeFirstLetter = (str) => {
 
       <button
         class="m-2 bg-amber-400 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
-        @click="editPost(getDet.id)"
+        @click="editPost(getDet._id)"
       >
         Edit
       </button>
