@@ -146,28 +146,32 @@ const createPost = async () => {
 };
 
 const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
+  const file = event.target.files[0];
 
-    if (file) {
-        const formData = new FormData();
-        formData.append('imageData', file);
+  if (file) {
+    const formData = new FormData();
+    formData.append('picture', file); // Use 'picture' as the form field name
 
-        try {
-            const res = await fetch('http://localhost:8090/api/strayAnimals/upload', {
-                method: 'POST',
-                body: formData,
-            });
+    try {
+      const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals/upload`, {
+        method: 'POST',
+        body: formData,
+      });
 
-            if (res.status === 200) {
-                console.log('Image uploaded successfully', file);
-            } else {
-                console.error('Error uploading image:', res.status, res.statusText);
-            }
-        } catch (error) {
-            console.error('Error uploading image:', error);
-        }
+      if (res.status === 200) {
+        const data = await res.json();
+        console.log('Image uploaded successfully', data);
+        // Update formPost.picture with the uploaded image path
+        formPost.picture = data.filePath;
+      } else {
+        console.error('Error uploading image:', res.status, res.statusText);
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
     }
+  }
 };
+
 
 
 
@@ -231,7 +235,7 @@ const selectGender = (selectedGender) => {
           <input
             id="dropzone-file"
             type="file"
-            accept="/images/*"
+            accept="images/*"
             @change="handleFileUpload"
             class="hidden"
           />
