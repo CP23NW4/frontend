@@ -23,13 +23,17 @@ const routes = [
     component: Login,
   },
   {
+    path: '/posts/:id',
+    name: 'posts',
+    component: Posts,
+  },
+  {
     path: '/posts',
     name: 'posts',
     component: Posts,
   },
   {
     path: '/detail/:id',
-    path: '/detail',
     name: 'detail',
     component: Detail,
   },

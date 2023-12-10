@@ -24,9 +24,10 @@ const formatDate = (timestamp) => {
 const getPostById = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/api/strayAnimals/${route.query.id}`,
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`,
       {
         method: "GET",
+        headers: {'Content-Type':'application/json'}
       }
     );
 
@@ -91,7 +92,7 @@ onMounted(() => {
 const removePost = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/api/strayAnimals/${route.query.id}`,
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`,
       {
         method: "DELETE",
       }
@@ -115,7 +116,7 @@ const editPost = (id) => {
   console.log(id);
   router.push({
     name: "posts",
-    query: { id: id },
+    params: { id: id },
   });
 };
 const capitalizeFirstLetter = (str) => {

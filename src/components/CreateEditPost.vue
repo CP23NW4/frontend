@@ -6,8 +6,7 @@ const router = useRouter();
 const route = useRoute();
 const minCount = 0;
 const maxCountDesc = 500;
-let nameError = '';
-
+let nameError = "";
 
 const validateName = () => {
   const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>]/;
@@ -16,17 +15,16 @@ const validateName = () => {
 
   // if (!trimmedName) {
   //   nameError = "Name is required.";
-  // } else 
+  // } else
   if (trimmedName?.length > 20) {
     nameError = "Name cannot exceed 20 characters.";
   } else if (specialCharacterRegex.trimmedName) {
     nameError = "Special characters are not allowed.";
-    console.log(specialCharacterRegex)
+    console.log(specialCharacterRegex);
   } else {
     nameError = "";
   }
 };
-
 
 const formPost = ref({
   name: "",
@@ -34,14 +32,14 @@ const formPost = ref({
   gender: "",
   color: "",
   description: "",
-  image: null,
+  picture: "",
   createdOn: new Date().toISOString(),
 });
 
 const getPostById = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/api/strayAnimals/${route.query.id}`,
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`,
       {
         method: "GET",
       }
@@ -55,6 +53,8 @@ const getPostById = async () => {
         console.error("Error: Post not found");
       } else if (res.status === 500) {
         console.error("Error: Internal Server Error");
+      } else if (res.status === 400) {
+        console.error("Not validate");
       } else {
         console.error("Error:", res.status, res.statusText);
       }
@@ -70,7 +70,7 @@ const updatePost = async () => {
   if (confirmed) {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_APP_TITLE}/api/strayAnimals/${route.query.id}`,
+        `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`,
         {
           method: "PUT",
           headers: {
@@ -94,6 +94,8 @@ const updatePost = async () => {
           });
         } else if (res.status === 500) {
           console.error("Error: Internal Server Error");
+        } else if (res.status === 400) {
+        console.error("Not validate");
         } else {
           console.error("Error:", res.status, res.statusText);
         }
@@ -143,8 +145,37 @@ const createPost = async () => {
   }
 };
 
+const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+
+    if (file) {
+        const formData = new FormData();
+        formData.append('imageData', file);
+
+        try {
+            const res = await fetch('http://localhost:8090/api/strayAnimals/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (res.status === 200) {
+                console.log('Image uploaded successfully', file);
+            } else {
+                console.error('Error uploading image:', res.status, res.statusText);
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+        }
+    }
+};
+
+
+
+
+
+
 const handleSubmit = async () => {
-  if (route.query.id) {
+  if (route.params.id) {
     // If ID update post
     updatePost();
   } else {
@@ -154,7 +185,7 @@ const handleSubmit = async () => {
 };
 
 onMounted(() => {
-  if (route.query.id) {
+  if (route.params.id) {
     // Fetch data if ID is present
     getPostById();
   }
@@ -163,15 +194,13 @@ onMounted(() => {
 const selectGender = (selectedGender) => {
   formPost.gender = selectedGender;
 };
-
-
-
 </script>
 
 <template>
   <!-- {{ formPost }} -->
   <div class="flex items-center justify-center">
     <form @submit.prevent="handleSubmit" action="#" method="POST">
+      <!-- images -->
       <div class="flex items-center justify-center w-full mb-4">
         <label
           for="dropzone-file"
@@ -201,22 +230,32 @@ const selectGender = (selectedGender) => {
               SVG, PNG or JPG up tp 10MB
             </p>
           </div>
-          <input id="dropzone-file" type="file" class="hidden" />
+          <input
+            id="dropzone-file"
+            type="file"
+            accept="/images/*"
+            @change="handleFileUpload"
+            class="hidden"
+          />
         </label>
       </div>
+      <div v-if="formPost.picture">
+  <img :src="formPost.picture" alt="Uploaded Image" class="max-w-full mb-4" />
+</div>
+
 
       <div class="mb-4">
         <input
           type="text"
           id="name"
-          maxlength="20" 
+          maxlength="20"
           v-model="formPost.name"
           placeholder="Name of pets"
           @input="validateName"
           required
           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
         />
-         <p v-if="nameError" class="text-red-500 text-sm">{{ nameError }}</p>
+        <p v-if="nameError" class="text-red-500 text-sm">{{ nameError }}</p>
       </div>
 
       <div class="grid gap-3 mb-4 md:grid-cols-3">
@@ -241,21 +280,29 @@ const selectGender = (selectedGender) => {
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
           />
         </div> -->
-<label class="form-control w-full max-w-xs">
-  <select class="select select-bordered" required v-model="formPost.type">
-    <option value="" disabled selected>Type</option>
-    <option value="Cat">Cat</option>
-    <option value="Dog">Dog</option>
-  </select>
-</label>
+        <label class="form-control w-full max-w-xs">
+          <select
+            class="select select-bordered"
+            required
+            v-model="formPost.type"
+          >
+            <option value="" disabled selected>Type</option>
+            <option value="Cat">Cat</option>
+            <option value="Dog">Dog</option>
+          </select>
+        </label>
 
-<label class="form-control w-full max-w-xs">
-  <select class="select select-bordered" required v-model="formPost.gender">
-    <option value="" disabled selected>Gender</option>
-    <option value="Male">Male</option>
-    <option value="Female">Female</option>
-  </select>
-</label>
+        <label class="form-control w-full max-w-xs">
+          <select
+            class="select select-bordered"
+            required
+            v-model="formPost.gender"
+          >
+            <option value="" disabled selected>Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </label>
 
         <!-- <details class="dropdown">
   <summary class="m-1 btn">Gender</summary>
@@ -339,7 +386,6 @@ const selectGender = (selectedGender) => {
         >
           {{ route.query.id ? "Update" : "Create" }}
         </button>
-
       </div>
     </form>
   </div>
