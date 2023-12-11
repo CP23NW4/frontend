@@ -116,7 +116,7 @@ const removePost = async () => {
 const editPost = (id) => {
   console.log(id);
   router.push({
-    name: "posts",
+    name: "posts-detail",
     params: { id: id },
   });
 };

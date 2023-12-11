@@ -33,7 +33,7 @@ const formPost = ref({
   gender: "",
   color: "",
   description: "",
-  picture: "",
+  picture: "/noimg.png",
   createdOn: new Date().toISOString(),
 });
 
@@ -92,9 +92,7 @@ const updatePost = async () => {
       if (res.status === 200) {
         const data = await res.json();
         console.log("Post updated successfully:", data);
-        router.push({
-          name: "home",
-        });
+        router.go(-1);
       } else {
         if (res.status === 404) {
           console.error("Error: Post not found");
@@ -105,6 +103,7 @@ const updatePost = async () => {
           console.error("Error: Internal Server Error");
         } else if (res.status === 400) {
         console.error("Not validate");
+        const confirmed = window.confirm("Not validate");
         } else {
           console.error("Error:", res.status, res.statusText);
         }
@@ -262,9 +261,9 @@ watch(formPost, (newValue, oldValue) => {
           />
         </label>
       </div>
-      <div v-if="formPost.picture">
+      <!-- <div v-if="formPost.picture">
   <img :src="formPost.picture" alt="Uploaded Image" class="w-full h-full object-cover rounded-lg mb-4" />
-</div>
+</div> -->
 
 
       <div class="mb-4">
