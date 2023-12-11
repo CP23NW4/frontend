@@ -10,6 +10,7 @@ const route = useRoute();
 const router = useRouter();
 
 
+
 const strayAnimals = ref([])
 
 
@@ -26,7 +27,6 @@ const getPost = async () => {
       // strayAnimals.value = data._embedded.strayAnimals;
       strayAnimals.value = data;
       console.log('test',strayAnimals.value)
-      console.log(data)
     } else {
       if (res.status === 404) {
         console.error('Error: Post not found');
