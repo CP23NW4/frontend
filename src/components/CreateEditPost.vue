@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const router = useRouter();
@@ -7,6 +7,7 @@ const route = useRoute();
 const minCount = 0;
 const maxCountDesc = 500;
 let nameError = "";
+
 
 const validateName = () => {
   const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>]/;
@@ -35,6 +36,14 @@ const formPost = ref({
   picture: "",
   createdOn: new Date().toISOString(),
 });
+
+const touchedInputs = ref({
+  name: false,
+  type: false,
+  gender: false,
+  color: false,
+});
+
 
 const getPostById = async () => {
   try {
@@ -173,7 +182,12 @@ const handleFileUpload = async (event) => {
 
 
 
-
+const handleInputBlur = (inputName) => {
+  touchedInputs.value[inputName] = true;
+  if (formPost[inputName]?.trim() === "") {
+    formPost[inputName] = ""; // Set to empty string to trigger class change
+  }
+};
 
 const handleSubmit = async () => {
   if (route.params.id) {
@@ -195,12 +209,20 @@ onMounted(() => {
 const selectGender = (selectedGender) => {
   formPost.gender = selectedGender;
 };
+
+watch(formPost, (newValue, oldValue) => {
+  for (const inputName in touchedInputs.value) {
+    if (newValue[inputName] !== oldValue[inputName] && touchedInputs.value[inputName]) {
+      validateName(); // You can add similar validation for other inputs
+    }
+  }
+}, { deep: true });
 </script>
 
 <template>
   <!-- {{ formPost }} -->
   <div class="flex items-center justify-center">
-    <form @submit.prevent="handleSubmit" action="#" method="POST">
+    <form @submit.prevent="handleSubmit" action="#" method="POST" class="max-w-lg mx-auto text-center">
       <!-- images -->
       <div class="flex items-center justify-center w-full mb-4">
         <label
@@ -241,7 +263,7 @@ const selectGender = (selectedGender) => {
         </label>
       </div>
       <div v-if="formPost.picture">
-  <img :src="formPost.picture" alt="Uploaded Image" class="max-w-full mb-4" />
+  <img :src="formPost.picture" alt="Uploaded Image" class="w-full h-full object-cover rounded-lg mb-4" />
 </div>
 
 
@@ -251,12 +273,15 @@ const selectGender = (selectedGender) => {
           id="name"
           maxlength="20"
           v-model="formPost.name"
-          placeholder="Name of pets"
+          placeholder="Your pet name"
           @input="validateName"
+          @blur="() => handleInputBlur('name')"
+          :class="{ 'border-red-500': touchedInputs.name && !formPost.name }"
           required
           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
         />
         <p v-if="nameError" class="text-red-500 text-sm">{{ nameError }}</p>
+        <!-- <p v-if="!formPost.name" class="text-red-500 text-sm">*</p> -->
       </div>
 
       <div class="grid gap-3 mb-4 md:grid-cols-3">
@@ -284,6 +309,8 @@ const selectGender = (selectedGender) => {
         <label class="form-control w-full max-w-xs">
           <select
             class="select select-bordered"
+            @blur="() => handleInputBlur('type')"
+          :class="{ 'border-red-500': touchedInputs.type && !formPost.type }"
             required
             v-model="formPost.type"
           >
@@ -296,6 +323,8 @@ const selectGender = (selectedGender) => {
         <label class="form-control w-full max-w-xs">
           <select
             class="select select-bordered"
+            @blur="() => handleInputBlur('gender')"
+          :class="{ 'border-red-500': touchedInputs.gender && !formPost.gender }"
             required
             v-model="formPost.gender"
           >
@@ -339,10 +368,13 @@ const selectGender = (selectedGender) => {
             id="color"
             v-model="formPost.color"
             placeholder="Color"
-            maxlength="10"
+            maxlength="50"
+            @blur="() => handleInputBlur('color')"
+          :class="{ 'border-red-500': touchedInputs.color && !formPost.color }"
             required
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
           />
+          <!-- <p v-if="!formPost.color" class="text-red-500 text-sm">Color is required.</p> -->
         </div>
       </div>
       <div>

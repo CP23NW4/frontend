@@ -9,6 +9,7 @@ const route = useRoute();
 const goBack = () => router.go(-1);
 const getDet = ref({});
 
+
 const formatDate = (timestamp) => {
   const date = new Date(timestamp);
   return date.toLocaleString("en-US", {
@@ -57,7 +58,7 @@ const getPostById = async () => {
 // const getUsers = async () => {
 //   try {
 //     const res = await fetch(
-//       `${import.meta.env.VITE_APP_TITLE}/api/users`,
+//       `${import.meta.env.VITE_APP_TITLE}/users`,
 //       {
 //         method: "GET",
 //       }
@@ -123,6 +124,10 @@ const capitalizeFirstLetter = (str) => {
   if (!str) return "";
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
+
+
+
+
 </script>
 <template>
   <!-- {{ getDet }} -->
@@ -145,6 +150,27 @@ const capitalizeFirstLetter = (str) => {
         />
       </div>
       <div class="w-full bg-white shadow-lg p-8 my-10 rounded-md text-left">
+        
+
+        <!-- <div x-data="{ isOpen: false }">
+  <button @click="isOpen = !isOpen" class="btn btn-square btn-ghost">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+    </svg>
+  </button>
+
+  <div x-show="isOpen" class="absolute right-0 mt-2 bg-white border rounded-md shadow-md" @click="isOpen = false">
+    <button @click.stop="editPost(getDet._id)" class="block w-full text-left px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100">
+      Edit
+    </button>
+    <button @click.stop="removePost" class="block w-full text-left px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100">
+      Delete
+    </button>
+  </div>
+</div> -->
+
+
+        
         <div class="flex mb-4">
           <img class="w-10 h-10 rounded-full" src="/pf.png" alt="" />
           <div class="font-medium dark:text-white">
@@ -236,6 +262,7 @@ const capitalizeFirstLetter = (str) => {
               </button>
             </form>
           </div>
+          
         </div>
       </dialog>
     </div>
