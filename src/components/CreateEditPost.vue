@@ -1,227 +1,240 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { ref, onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-const router = useRouter();
-const route = useRoute();
-const minCount = 0;
-const maxCountDesc = 500;
-let nameError = "";
-
+const router = useRouter()
+const route = useRoute()
+const minCount = 0
+const maxCountDesc = 500
+let nameError = ''
 
 const validateName = () => {
-  const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>]/;
+  const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>]/
 
-  const trimmedName = formPost.name?.trim();
+  const trimmedName = formPost.name?.trim()
 
   // if (!trimmedName) {
   //   nameError = "Name is required.";
   // } else
   if (trimmedName?.length > 20) {
-    nameError = "Name cannot exceed 20 characters.";
+    nameError = 'Name cannot exceed 20 characters.'
   } else if (specialCharacterRegex.trimmedName) {
-    nameError = "Special characters are not allowed.";
-    console.log(specialCharacterRegex);
+    nameError = 'Special characters are not allowed.'
+    console.log(specialCharacterRegex)
   } else {
-    nameError = "";
+    nameError = ''
   }
-};
+}
 
 const formPost = ref({
-  name: "",
-  type: "",
-  gender: "",
-  color: "",
-  description: "",
-  picture: "/noimg.png",
+  name: '',
+  type: '',
+  gender: '',
+  color: '',
+  description: '',
+  picture: '/noimg.png',
   createdOn: new Date().toISOString(),
-});
+})
 
 const touchedInputs = ref({
   name: false,
   type: false,
   gender: false,
   color: false,
-});
-
+})
 
 const getPostById = async () => {
   try {
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`,
       {
-        method: "GET",
+        method: 'GET',
       }
-    );
+    )
 
     if (res.status === 200) {
-      const data = await res.json();
-      formPost.value = data;
-    } else {
+      const data = await res.json()
+      formPost.value = data
+    } 
+    else {
       if (res.status === 404) {
-        console.error("Error: Post not found");
-      } else if (res.status === 500) {
-        console.error("Error: Internal Server Error");
+        console.error('Error: Post not found')
+        router.push({
+          name: 'notfound',
+        })
+      } 
+      else if (res.status === 500) {
+        console.error('Error: Internal Server Error')
       } else if (res.status === 400) {
-        console.error("Not validate");
+        console.error('Not validate')
       } else {
-        console.error("Error:", res.status, res.statusText);
+        console.error('Error:', res.status, res.statusText)
       }
     }
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
-};
+}
 
 const updatePost = async () => {
-  const confirmed = window.confirm("Are you sure you want to update the post?");
+  const confirmed = window.confirm('Are you sure you want to update the post?')
 
   if (confirmed) {
     try {
       const res = await fetch(
         `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`,
         {
-          method: "PUT",
+          method: 'PUT',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify(formPost.value),
         }
-      );
+      )
 
       if (res.status === 200) {
-        const data = await res.json();
-        console.log("Post updated successfully:", data);
-        router.go(-1);
+        const data = await res.json()
+        console.log('Post updated successfully:', data)
+        router.go(-1)
       } else {
         if (res.status === 404) {
-          console.error("Error: Post not found");
+          console.error('Error: Post not found')
           router.push({
-            name: "notfound",
-          });
+            name: 'notfound',
+          })
         } else if (res.status === 500) {
-          console.error("Error: Internal Server Error");
+          console.error('Error: Internal Server Error')
         } else if (res.status === 400) {
-        console.error("Not validate");
-        const confirmed = window.confirm("Not validate");
+          console.error('Not validate')
+          const confirmed = window.confirm('Not validate')
         } else {
-          console.error("Error:", res.status, res.statusText);
+          console.error('Error:', res.status, res.statusText)
         }
       }
     } catch (error) {
-      console.error("Error updating post:", error);
+      console.error('Error updating post:', error)
     }
   } else {
     // The user canceled the update
-    console.log("Update canceled by user");
+    console.log('Update canceled by user')
   }
-};
+}
 
 const createPost = async () => {
   try {
-    const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/strayAnimals`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formPost.value),
-      }
-    );
+    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formPost.value),
+    })
 
     if (res.status === 200 || res.status === 201) {
-      const data = await res.json();
-      console.log("Post created successfully:", data);
+      const data = await res.json()
+      console.log('Post created successfully:', data)
       router.push({
-        name: "home",
-      });
+        name: 'home',
+      })
     } else {
       if (res.status === 404) {
-        console.error("Error: Post not found");
+        console.error('Error: Post not found')
         router.push({
-          name: "notfound",
-        });
+          name: 'notfound',
+        })
       } else if (res.status === 500) {
-        console.error("Error: Internal Server Error");
+        console.error('Error: Internal Server Error')
       } else {
-        console.error("Error:", res.status, res.statusText);
+        console.error('Error:', res.status, res.statusText)
       }
     }
   } catch (error) {
-    console.error("Error creating post:", error);
+    console.error('Error creating post:', error)
   }
-};
+}
 
 const handleFileUpload = async (event) => {
-  const file = event.target.files[0];
+  const file = event.target.files[0]
 
   if (file) {
-    const formData = new FormData();
-    formData.append('picture', file);
+    const formData = new FormData()
+    formData.append('picture', file)
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals/upload`, {
-        method: 'POST',
-        body: formData,
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_APP_TITLE}/strayAnimals/upload`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      )
 
       if (res.status === 200) {
-        const data = await res.json();
-        console.log('Image uploaded successfully', data);
-        formPost.picture = data.filePath;
+        const data = await res.json()
+        console.log('Image uploaded successfully', data)
+        formPost.picture = data.filePath
       } else {
-        console.error('Error uploading image:', res.status, res.statusText);
+        console.error('Error uploading image:', res.status, res.statusText)
       }
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error('Error uploading image:', error)
     }
   }
-};
-
-
+}
 
 const handleInputBlur = (inputName) => {
-  touchedInputs.value[inputName] = true;
-  if (formPost[inputName]?.trim() === "") {
-    formPost[inputName] = ""; // Set to empty string to trigger class change
+  touchedInputs.value[inputName] = true
+  if (formPost[inputName]?.trim() === '') {
+    formPost[inputName] = '' // Set to empty string to trigger class change
   }
-};
+}
 
 const handleSubmit = async () => {
   if (route.params.id) {
     // If ID update post
-    updatePost();
+    updatePost()
   } else {
     // else create new post
-    createPost();
+    createPost()
   }
-};
+}
 
 onMounted(() => {
   if (route.params.id) {
     // Fetch data if ID is present
-    getPostById();
+    getPostById()
   }
-});
+})
 
 const selectGender = (selectedGender) => {
-  formPost.gender = selectedGender;
-};
+  formPost.gender = selectedGender
+}
 
-watch(formPost, (newValue, oldValue) => {
-  for (const inputName in touchedInputs.value) {
-    if (newValue[inputName] !== oldValue[inputName] && touchedInputs.value[inputName]) {
-      validateName(); // You can add similar validation for other inputs
+watch(
+  formPost,
+  (newValue, oldValue) => {
+    for (const inputName in touchedInputs.value) {
+      if (
+        newValue[inputName] !== oldValue[inputName] &&
+        touchedInputs.value[inputName]
+      ) {
+        validateName() // You can add similar validation for other inputs
+      }
     }
-  }
-}, { deep: true });
+  },
+  { deep: true }
+)
 </script>
 
 <template>
   <!-- {{ formPost }} -->
   <div class="flex items-center justify-center">
-    <form @submit.prevent="handleSubmit" action="#" method="POST" class="max-w-lg mx-auto text-center">
+    <form
+      @submit.prevent="handleSubmit"
+      action="#"
+      method="POST"
+      class="max-w-lg mx-auto text-center"
+    >
       <!-- images -->
       <div class="flex items-center justify-center w-full mb-4">
         <label
@@ -264,7 +277,6 @@ watch(formPost, (newValue, oldValue) => {
       <!-- <div v-if="formPost.picture">
   <img :src="formPost.picture" alt="Uploaded Image" class="w-full h-full object-cover rounded-lg mb-4" />
 </div> -->
-
 
       <div class="mb-4">
         <input
@@ -309,7 +321,7 @@ watch(formPost, (newValue, oldValue) => {
           <select
             class="select select-bordered"
             @blur="() => handleInputBlur('type')"
-          :class="{ 'border-red-500': touchedInputs.type && !formPost.type }"
+            :class="{ 'border-red-500': touchedInputs.type && !formPost.type }"
             required
             v-model="formPost.type"
           >
@@ -323,7 +335,9 @@ watch(formPost, (newValue, oldValue) => {
           <select
             class="select select-bordered"
             @blur="() => handleInputBlur('gender')"
-          :class="{ 'border-red-500': touchedInputs.gender && !formPost.gender }"
+            :class="{
+              'border-red-500': touchedInputs.gender && !formPost.gender,
+            }"
             required
             v-model="formPost.gender"
           >
@@ -369,7 +383,9 @@ watch(formPost, (newValue, oldValue) => {
             placeholder="Color"
             maxlength="50"
             @blur="() => handleInputBlur('color')"
-          :class="{ 'border-red-500': touchedInputs.color && !formPost.color }"
+            :class="{
+              'border-red-500': touchedInputs.color && !formPost.color,
+            }"
             required
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
           />
@@ -416,7 +432,7 @@ watch(formPost, (newValue, oldValue) => {
           type="submit"
           class="px-4 py-2 bg-blue-500 text-white rounded-md"
         >
-          {{ route.params.id ? "Update" : "Create" }}
+          {{ route.params.id ? 'Update' : 'Create' }}
         </button>
       </div>
     </form>
