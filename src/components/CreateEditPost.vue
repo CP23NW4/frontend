@@ -1,66 +1,241 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-import { useRoute, useRouter } from "vue-router";
+const router = useRouter()
+const route = useRoute()
+const minCount = 0
+const maxCountDesc = 500
+let nameError = ''
 
-const router = useRouter();
-const route = useRoute();
+const validateName = () => {
+  const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>]/
 
+  const trimmedName = formPost.name?.trim()
 
-const minCount = 0; // ตัวแปรเพื่อบอกจำนวนตัวอักษรของ name, notes
-const maxCountNotes = 500; // ตัวแปรเพื่อบอกว่า notes ใส่ได้สูงสุด 500 ตัว
+  // if (!trimmedName) {
+  //   nameError = "Name is required.";
+  // } else
+  if (trimmedName?.length > 20) {
+    nameError = 'Name cannot exceed 20 characters.'
+  } else if (specialCharacterRegex.trimmedName) {
+    nameError = 'Special characters are not allowed.'
+    console.log(specialCharacterRegex)
+  } else {
+    nameError = ''
+  }
+}
+
 const formPost = ref({
-  name: "",
-  type: "",
-  gender: "",
-  color: "",
-  notes: "",
-  image: null,
-  createdOn: null,
-});
+  name: '',
+  type: '',
+  gender: '',
+  color: '',
+  description: '',
+  picture: '/noimg.png',
+  createdOn: new Date().toISOString(),
+})
 
-const handleSubmit = async () => {
+const touchedInputs = ref({
+  name: false,
+  type: false,
+  gender: false,
+  color: false,
+})
+
+const getPostById = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/api/strayAnimals`,
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`,
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formPost.value),
+        method: 'GET',
       }
-    );
+    )
 
-    if (res.ok) {
-      const data = await res.json();
-      console.log("Post created successfully:", data);
-      formPost.value = {
-        name: "",
-        type: "",
-        gender: "",
-        color: "",
-        notes: "",
-        image: null,
-        createdOn: new Date().toISOString(),
-      };
-      alert("Post created successfully");
-      router.push({
-        name: "home",
-      });
-    } else {
-      console.error("Error creating post:", res.status, res.statusText);
+    if (res.status === 200) {
+      const data = await res.json()
+      formPost.value = data
+    } 
+    else {
+      if (res.status === 404) {
+        console.error('Error: Post not found')
+        router.push({
+          name: 'notfound',
+        })
+      } 
+      else if (res.status === 500) {
+        console.error('Error: Internal Server Error')
+      } else if (res.status === 400) {
+        console.error('Not validate')
+      } else {
+        console.error('Error:', res.status, res.statusText)
+      }
     }
   } catch (error) {
-    console.error("Error creating post:", error);
+    console.error(error)
   }
-};
+}
+
+const updatePost = async () => {
+  const confirmed = window.confirm('Are you sure you want to update the post?')
+
+  if (confirmed) {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formPost.value),
+        }
+      )
+
+      if (res.status === 200) {
+        const data = await res.json()
+        console.log('Post updated successfully:', data)
+        router.go(-1)
+      } else {
+        if (res.status === 404) {
+          console.error('Error: Post not found')
+          router.push({
+            name: 'notfound',
+          })
+        } else if (res.status === 500) {
+          console.error('Error: Internal Server Error')
+        } else if (res.status === 400) {
+          console.error('Not validate')
+          const confirmed = window.confirm('Not validate')
+        } else {
+          console.error('Error:', res.status, res.statusText)
+        }
+      }
+    } catch (error) {
+      console.error('Error updating post:', error)
+    }
+  } else {
+    // The user canceled the update
+    console.log('Update canceled by user')
+  }
+}
+
+const createPost = async () => {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formPost.value),
+    })
+
+    if (res.status === 200 || res.status === 201) {
+      const data = await res.json()
+      console.log('Post created successfully:', data)
+      router.push({
+        name: 'home',
+      })
+    } else {
+      if (res.status === 404) {
+        console.error('Error: Post not found')
+        router.push({
+          name: 'notfound',
+        })
+      } else if (res.status === 500) {
+        console.error('Error: Internal Server Error')
+      } else {
+        console.error('Error:', res.status, res.statusText)
+      }
+    }
+  } catch (error) {
+    console.error('Error creating post:', error)
+  }
+}
+
+const handleFileUpload = async (event) => {
+  const file = event.target.files[0]
+
+  if (file) {
+    const formData = new FormData()
+    formData.append('picture', file)
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_APP_TITLE}/strayAnimals/upload`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      )
+
+      if (res.status === 200) {
+        const data = await res.json()
+        console.log('Image uploaded successfully', data)
+        formPost.picture = data.filePath
+      } else {
+        console.error('Error uploading image:', res.status, res.statusText)
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error)
+    }
+  }
+}
+
+const handleInputBlur = (inputName) => {
+  touchedInputs.value[inputName] = true
+  if (formPost[inputName]?.trim() === '') {
+    formPost[inputName] = '' // Set to empty string to trigger class change
+  }
+}
+
+const handleSubmit = async () => {
+  if (route.params.id) {
+    // If ID update post
+    updatePost()
+  } else {
+    // else create new post
+    createPost()
+  }
+}
+
+onMounted(() => {
+  if (route.params.id) {
+    // Fetch data if ID is present
+    getPostById()
+  }
+})
+
+const selectGender = (selectedGender) => {
+  formPost.gender = selectedGender
+}
+
+watch(
+  formPost,
+  (newValue, oldValue) => {
+    for (const inputName in touchedInputs.value) {
+      if (
+        newValue[inputName] !== oldValue[inputName] &&
+        touchedInputs.value[inputName]
+      ) {
+        validateName() // You can add similar validation for other inputs
+      }
+    }
+  },
+  { deep: true }
+)
 </script>
 
 <template>
-{{ formPost }}
+  <!-- {{ formPost }} -->
   <div class="flex items-center justify-center">
-    <form @submit.prevent="handleSubmit" action="#" method="POST">
+    <form
+      @submit.prevent="handleSubmit"
+      action="#"
+      method="POST"
+      class="max-w-lg mx-auto text-center"
+    >
+      <!-- images -->
       <div class="flex items-center justify-center w-full mb-4">
         <label
           for="dropzone-file"
@@ -90,23 +265,38 @@ const handleSubmit = async () => {
               SVG, PNG or JPG up tp 10MB
             </p>
           </div>
-          <input id="dropzone-file" type="file" class="hidden" />
+          <input
+            id="dropzone-file"
+            type="file"
+            accept="images/*"
+            @change="handleFileUpload"
+            class="hidden"
+          />
         </label>
       </div>
+      <!-- <div v-if="formPost.picture">
+  <img :src="formPost.picture" alt="Uploaded Image" class="w-full h-full object-cover rounded-lg mb-4" />
+</div> -->
 
       <div class="mb-4">
         <input
           type="text"
           id="name"
+          maxlength="20"
           v-model="formPost.name"
-          placeholder="Name of pets"
+          placeholder="Your pet name"
+          @input="validateName"
+          @blur="() => handleInputBlur('name')"
+          :class="{ 'border-red-500': touchedInputs.name && !formPost.name }"
           required
           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
         />
+        <p v-if="nameError" class="text-red-500 text-sm">{{ nameError }}</p>
+        <!-- <p v-if="!formPost.name" class="text-red-500 text-sm">*</p> -->
       </div>
 
       <div class="grid gap-3 mb-4 md:grid-cols-3">
-        <div>
+        <!-- <div>
           <input
             type="text"
             id="type"
@@ -115,9 +305,9 @@ const handleSubmit = async () => {
             required
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
           />
-        </div>
+        </div> -->
 
-        <div>
+        <!-- <div>
           <input
             type="text"
             id="gender"
@@ -126,7 +316,44 @@ const handleSubmit = async () => {
             required
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
           />
-        </div>
+        </div> -->
+        <label class="form-control w-full max-w-xs">
+          <select
+            class="select select-bordered"
+            @blur="() => handleInputBlur('type')"
+            :class="{ 'border-red-500': touchedInputs.type && !formPost.type }"
+            required
+            v-model="formPost.type"
+          >
+            <option value="" disabled selected>Type</option>
+            <option value="Cat">Cat</option>
+            <option value="Dog">Dog</option>
+          </select>
+        </label>
+
+        <label class="form-control w-full max-w-xs">
+          <select
+            class="select select-bordered"
+            @blur="() => handleInputBlur('gender')"
+            :class="{
+              'border-red-500': touchedInputs.gender && !formPost.gender,
+            }"
+            required
+            v-model="formPost.gender"
+          >
+            <option value="" disabled selected>Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </label>
+
+        <!-- <details class="dropdown">
+  <summary class="m-1 btn">Gender</summary>
+  <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+    <li><a @click="selectGender('Male')">Male</a></li>
+    <li><a @click="selectGender('Female')">Female</a></li>
+  </ul>
+</details> -->
 
         <!-- <div class="relative inline-block text-left">
   <button id="genderDropdownButton" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -154,21 +381,30 @@ const handleSubmit = async () => {
             id="color"
             v-model="formPost.color"
             placeholder="Color"
+            maxlength="50"
+            @blur="() => handleInputBlur('color')"
+            :class="{
+              'border-red-500': touchedInputs.color && !formPost.color,
+            }"
             required
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
           />
+          <!-- <p v-if="!formPost.color" class="text-red-500 text-sm">Color is required.</p> -->
         </div>
       </div>
       <div>
         <textarea
-          v-model="formPost.notes"
+          v-model="formPost.description"
           placeholder=" Write your description..."
           cols="5"
           rows="5"
+          maxlength="500"
           class="bg-white border border-gray-300 text-black text-m focus:ring-0 w-[100%] rounded-lg"
         ></textarea>
         <span class="text-xs ml-[95%] text-gray-400"
-          >{{ minCount + formPost.notes.length }}/{{ maxCountNotes }}</span
+          >{{
+            minCount + (formPost.description ? formPost.description.length : 0)
+          }}/{{ maxCountDesc }}</span
         >
       </div>
       <!-- <div class="mb-4">
@@ -196,7 +432,7 @@ const handleSubmit = async () => {
           type="submit"
           class="px-4 py-2 bg-blue-500 text-white rounded-md"
         >
-          {{ strayAnimal ? "Update" : "Create" }}
+          {{ route.params.id ? 'Update' : 'Create' }}
         </button>
       </div>
     </form>

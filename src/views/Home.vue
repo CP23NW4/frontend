@@ -1,27 +1,42 @@
 <script setup>
 import Banner from '../components/Banner.vue';
+import BannerSlide from '../components/BannerSlide.vue';
 import Card from '../components/Card.vue';
 
 import { ref, onMounted } from 'vue';
 
+import { useRoute, useRouter } from "vue-router";
+const route = useRoute();
+const router = useRouter();
+
+
 
 const strayAnimals = ref([])
 
+
 const getPost = async () => {
   try {
-    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/strayAnimals`, {
+
+    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals`, {
         method: 'GET',
       }
     )
     if (res.status === 200) {
       const data = await res.json();
-      console.log('success');
+      console.log('success', data);
       strayAnimals.value = data;
     } else {
-      console.error('Error:', res.status, res.statusText)
+      if (res.status === 404) {
+        console.error('Error: Post not found');
+      } else if (res.status === 500) {
+        console.error('Error: Internal Server Error');
+      } else {
+        console.error('Error:', res.status, res.statusText);
+      }
     }
   } catch (error) {
-    console.error('Error fetching data:', error)
+    console.error('Error fetching data:', error);
+    
   }
 }
 
@@ -31,7 +46,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Banner />
+  <BannerSlide />
   <div class="min-h-screen">
     <br />
     <h1 class="font-bold text-left m-8">Finding Home</h1>
