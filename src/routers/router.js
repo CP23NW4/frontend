@@ -1,10 +1,13 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
-import Home from '../views/Home.vue';
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router';
+import Home from '../home-views/Home.vue';
 import Health from '../views/Health.vue';
 import Login from '../views/Login.vue';
 import Posts from '../views/Posts.vue';
 import Detail from '../views/Detail.vue';
 import NotFound from '../views/NotFound.vue';
+import AboutUs from '../views/AboutUs.vue';
+import Dog from '../home-views/Dog.vue';
+import Cat from '../home-views/Cat.vue';
 
 const routes = [
   {
@@ -16,6 +19,11 @@ const routes = [
     path: '/health',
     name: 'health',
     component: Health,
+  },
+  {
+    path: '/about-us',
+    name: 'about-us',
+    component: AboutUs,
   },
   {
     path: '/login',
@@ -38,6 +46,16 @@ const routes = [
     component: Detail,
   },
   {
+    path: '/cat',
+    name: 'cat',
+    component: Cat,
+  },
+  {
+    path: '/dog',
+    name: 'dog',
+    component: Dog,
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'notfound',
     component: NotFound,
@@ -45,7 +63,8 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHashHistory('/'),
+  history: createWebHistory('/'),
+  // history: createWebHashHistory()('/'),
   routes,
 });
 

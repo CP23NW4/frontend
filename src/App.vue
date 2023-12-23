@@ -1,5 +1,5 @@
  <script setup>
-import Navbar from "./components/Navbar.vue";
+import Navbar from "./bar/Navbar.vue";
 // import LoginRegister from "./components/LoginRegister.vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
