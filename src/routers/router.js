@@ -8,6 +8,7 @@ import NotFound from '../views/NotFound.vue';
 import AboutUs from '../views/AboutUs.vue';
 import Dog from '../home-views/Dog.vue';
 import Cat from '../home-views/Cat.vue';
+import Profile from '../views/Profile.vue';
 
 const routes = [
   {
@@ -30,11 +31,11 @@ const routes = [
     name: 'login',
     component: Login,
   },
-  {
-    path: '/posts',
-    name: 'posts',
-    component: Posts,
-  },
+  // {
+  //   path: '/posts',
+  //   name: 'posts',
+  //   component: Posts,
+  // },
   {
     path: '/posts/:id',
     name: 'posts-detail',
@@ -54,6 +55,11 @@ const routes = [
     path: '/dog',
     name: 'dog',
     component: Dog,
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: Profile,
   },
   {
     path: '/:pathMatch(.*)*',

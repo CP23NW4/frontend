@@ -18,7 +18,7 @@ console.log(id)
 
 <template>
 <!-- {{ strayAnimal }} -->
-  <div @click="showDetail(props.strayAnimal._id)" class="mx-12 mb-10 text-left block max-w-sm bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 focus:translate-y-0 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+  <div @click="showDetail(props.strayAnimal._id)" class="mx-8 mb-10 text-left block max-w-sm bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 focus:translate-y-0 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
     <div class="relative w-full h-52">
         <img v-if="strayAnimal.picture !== null" :src="strayAnimal.picture" class="w-full h-full object-cover rounded-lg" alt="Animal Image">
         <img v-else-if="strayAnimal.picture === null" src="/nodata.png" class="w-full h-full object-cover rounded-lg" alt="Animal Image">

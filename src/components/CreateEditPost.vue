@@ -1,9 +1,12 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, defineProps, defineEmits } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-
 const router = useRouter()
 const route = useRoute()
+
+const props = defineProps(['closeModal']);
+const emit = defineEmits();
+
 const minCount = 0
 const maxCountDesc = 500
 let nameError = ''
@@ -105,7 +108,8 @@ const updatePost = async () => {
         } else if (res.status === 500) {
           console.error('Error: Internal Server Error')
         } else if (res.status === 400) {
-          console.error('Not validate')
+          console.log("No Valid");
+          alert("400 Bad Request");
           const confirmed = window.confirm('Not validate')
         } else {
           console.error('Error:', res.status, res.statusText)
@@ -121,6 +125,7 @@ const updatePost = async () => {
 }
 
 const createPost = async () => {
+  // const props = defineProps(['closeModal',true]);
   try {
     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals`, {
       method: 'POST',
@@ -133,15 +138,20 @@ const createPost = async () => {
     if (res.status === 200 || res.status === 201) {
       const data = await res.json()
       console.log('Post created successfully:', data)
-      router.push({
-        name: 'home',
-      })
+      // router.push({
+      //   name: 'home',
+      // })
+      alert("Create Successful!");
+      emit('closeModal', true);
     } else {
       if (res.status === 404) {
         console.error('Error: Post not found')
         router.push({
           name: 'notfound',
         })
+      }  else if (res.status === 400) {
+          console.log("No Valid");
+          alert("400 Bad Request");
       } else if (res.status === 500) {
         console.error('Error: Internal Server Error')
       } else {
@@ -397,7 +407,7 @@ watch(
           v-model="formPost.description"
           placeholder=" Write your description..."
           cols="5"
-          rows="5"
+          rows="3"
           maxlength="500"
           class="bg-white border border-gray-300 text-black text-m focus:ring-0 w-[100%] rounded-lg"
         ></textarea>

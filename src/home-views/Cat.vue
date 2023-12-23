@@ -18,16 +18,16 @@ const { strayAnimals } = useStrayAnimals('Cat');
       <div v-if="strayAnimals.length === 0">
         <p class="text-center text-lg mt-10">No Stray Animals</p>
       </div>
-      <div class="grid grid-cols-3 gap-4">
+      <div class="grid grid-cols-4 gap-0">
         <div v-for="strayAnimal in strayAnimals" :key="strayAnimal._id">
           <Card :strayAnimal="strayAnimal" />
         </div>
       </div>
     </div>
-    <router-link to="/posts" class="fixed bottom-10 right-12">
+    <!-- <router-link to="/posts" class="fixed bottom-10 right-12">
       <div class="text-white px-7 py-2 bg-indigo-950 rounded-3xl justify-start items-center flex hover:bg-orange-600 hover:text-white">
         Creat Post
       </div>
-    </router-link>
+    </router-link> -->
   </template>
   

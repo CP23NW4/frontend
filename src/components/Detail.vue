@@ -1,5 +1,6 @@
 <script setup>
 import ConfirmCard from "./ConfirmCard.vue";
+import Comment from "./Comment.vue";
 
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -149,28 +150,20 @@ const capitalizeFirstLetter = (str) => {
           alt="Animal Image"
         />
       </div>
-      <div class="w-full bg-white shadow-lg p-8 my-10 rounded-md text-left">
-        
+      <div class="relative w-full bg-white shadow-lg p-8 my-10 rounded-md text-left">
 
-        <!-- <div x-data="{ isOpen: false }">
-  <button @click="isOpen = !isOpen" class="btn btn-square btn-ghost">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
-    </svg>
-  </button>
+<div class="dropdown dropdown-end absolute top-0 right-2 p-4">
+      <div tabindex="0" role="button" class="btn btn-sm bg-transparent border-transparent shadow-transparent">
+        <div class="w-4 rounded-full">
+          <img src="/menu.png" />
+        </div>
+      </div>
+      <ul tabindex="0" class="mt-0 z-[1] p-2 shadow-lg menu menu-sm dropdown-content bg-white rounded-box w-52">
+        <li><a @click="editPost(getDet._id)">Edit</a></li>
+        <li><a class="text-red-700" onclick="my_modal_1.showModal()">Delete</a></li>
+      </ul>
+    </div>
 
-  <div x-show="isOpen" class="absolute right-0 mt-2 bg-white border rounded-md shadow-md" @click="isOpen = false">
-    <button @click.stop="editPost(getDet._id)" class="block w-full text-left px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100">
-      Edit
-    </button>
-    <button @click.stop="removePost" class="block w-full text-left px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100">
-      Delete
-    </button>
-  </div>
-</div> -->
-
-
-        
         <div class="flex mb-4">
           <img class="w-10 h-10 rounded-full" src="/pf.png" alt="" />
           <div class="font-medium dark:text-white">
@@ -213,19 +206,19 @@ const capitalizeFirstLetter = (str) => {
         >
           ขอรับเลี้ยง
         </button> -->
-      <button
+      <!-- <button
         class="m-2 px-4 py-2 bg-blue-500 text-white rounded-md"
         @click="goBack"
       >
         Close
-      </button>
+      </button> -->
 
-      <button
+      <!-- <button
         class="m-2 bg-amber-400 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
         @click="editPost(getDet._id)"
       >
         Edit
-      </button>
+      </button> -->
 
       <!-- <button
         type="button"
@@ -235,12 +228,13 @@ const capitalizeFirstLetter = (str) => {
         Delete
       </button> -->
 
-      <button
+      <!-- <button
         class="m-2 bg-red-700 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
         onclick="my_modal_1.showModal()"
       >
         Delete
-      </button>
+      </button> -->
+      
       <dialog id="my_modal_1" class="modal">
         <div class="modal-box flex flex-col items-center justify-center">
           <img src="/modal.svg" />
@@ -266,5 +260,6 @@ const capitalizeFirstLetter = (str) => {
         </div>
       </dialog>
     </div>
+
   </div>
 </template>
