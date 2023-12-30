@@ -5,6 +5,15 @@ import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 
+let checkSignIn= ref(localStorage.getItem('token'))     
+
+const SignOut = () => {
+  if (confirm("Sign Out?")) {
+    localStorage.removeItem("token");
+     location.reload();
+  }
+
+};
 
 </script>
 
@@ -26,14 +35,13 @@ const router = useRouter();
 
   <div class="flex items-center md:order-2">
     <!-- <img class="w-5 mr-4" src="/noti3.png"> -->
-  
     <router-link :to="{ name: 'login' }">
-        <div class="mr-4 px-7 py-2 bg-orange-600 rounded-3xl justify-start items-center flex hover:bg-amber-400 hover:text-white">
+        <div v-if="!checkSignIn" class="mr-4 px-7 py-2 bg-orange-600 rounded-3xl justify-start items-center flex hover:bg-amber-400 hover:text-white">
             <a class="text-white text-sm font-medium">Sign in</a>
         </div>
     </router-link>
 
-<div class="dropdown dropdown-end">
+<div v-if="checkSignIn" class="dropdown dropdown-end">
       <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
         <div class="w-10 rounded-full">
           <img alt="user profile" src="/cat.jpg" />
@@ -41,40 +49,17 @@ const router = useRouter();
       </div>
       <ul tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
         <li>
+          <router-link :to="{ name: 'profile' }">
           <a class="justify-between">
             Profile
           </a>
+        </router-link>
         </li>
         <li><a>Settings</a></li>
-        <li><a class="text-red-700">Sign out</a></li>
+        <li><a class="text-red-700" @click="SignOut">Sign out</a></li>
       </ul>
     </div>
 
-
-      <button type="button" class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-        <span class="sr-only">Open user menu</span>
-        <img class="w-8 h-8 rounded-full object-cover" src="/cat.jpg" alt="user photo">  
-<!-- use profile img path from users data {{ users.img }} -->
-<!-- add default image when image==null use defaul image -->
-      </button>
-<!-- Dropdown menu -->
-      <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
-        <div class="px-4 py-3">
-          <span class="block text-sm text-gray-900 dark:text-white">millieme.m</span>
-          <span class="block text-sm  text-gray-500 truncate dark:text-gray-400">millie@gmail.com</span>
-        </div>
-        <ul aria-labelledby="user-menu-button">
-          <li>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">My Pets</a>
-          </li>
-          <li>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
-          </li>
-          <li>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
-          </li>
-        </ul>
-      </div>
   </div>
   <div class="justify-start items-start gap-4 flex">
   <router-link :to="{ name: 'home' }" class="underline-none">
@@ -95,11 +80,11 @@ const router = useRouter();
     </div>
   </router-link>
 
-  <router-link :to="{ name: 'profile' }" class="underline-none">
+  <!-- <router-link :to="{ name: 'profile' }" class="underline-none">
     <div class="px-7 py-2 border-b-2 border-transparent hover:border-indigo-950 transition duration-300">
       <a class="text-indigo-950 text-sm font-extrabold">PROFILE</a>
     </div>
-  </router-link>
+  </router-link> -->
 </div>
 
  </div>

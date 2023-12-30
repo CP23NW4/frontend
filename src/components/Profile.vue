@@ -1,4 +1,5 @@
-<script setup></script>
+<script setup>
+</script>
 
 <template>
   <link
@@ -40,6 +41,7 @@
     </button>
   </div>
 </div>
+
 
             <div class="w-full lg:w-4/12 px-4 lg:order-1">
               <div class="flex justify-center py-4 lg:pt-4 pt-8">

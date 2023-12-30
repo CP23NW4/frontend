@@ -1,16 +1,32 @@
 <script setup>
+import { ref, onMounted, computed } from 'vue';
 import Filterbar from '../bar/Filterbar.vue';
-import Banner from '../components/Banner.vue';
+import Searchbar from '../bar/Searchbar.vue';
 import BannerSlide from '../components/BannerSlide.vue';
-import Card from '../components/Card.vue';
+import Card from './Card.vue';
+import Snowfall from '../components/Snowfall.vue';
 import useStrayAnimals from '../composition/useStrayAnimals';
 
-const { strayAnimals } = useStrayAnimals('Dog');
+const { strayAnimals } = useStrayAnimals();
+const keyword = ref('')
+const filteredStrayAnimals = computed(() => {
+  return strayAnimals.value.filter(
+    (strayAnimals) =>
+    (strayAnimals.toLowerCase().includes(keyword.value.toLowerCase()) ))
+  
+})
+const setSearchKeyword = (keyword) => {
+  keyword.value = keyword
+}
+
 </script>
 
 
 <template>
+  <div>
     <BannerSlide />
+    <!-- <Searchbar @search="filteredStrayAnimals" /> -->
+    <Snowfall />
     <Filterbar />
     <div class="min-h-screen">
       <br />
@@ -24,10 +40,6 @@ const { strayAnimals } = useStrayAnimals('Dog');
         </div>
       </div>
     </div>
-    <!-- <router-link to="/posts" class="fixed bottom-10 right-12">
-      <div class="text-white px-7 py-2 bg-indigo-950 rounded-3xl justify-start items-center flex hover:bg-orange-600 hover:text-white">
-        Creat Post
-      </div>
-    </router-link> -->
-  </template>
   
+  </div>
+</template>

@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router';
-import Home from '../home-views/Home.vue';
+import Home from '../home/Home.vue';
 import Health from '../views/Health.vue';
-import Login from '../views/Login.vue';
+import Login from '../authen/Login.vue';
 import Posts from '../views/Posts.vue';
 import Detail from '../views/Detail.vue';
 import NotFound from '../views/NotFound.vue';
 import AboutUs from '../views/AboutUs.vue';
-import Dog from '../home-views/Dog.vue';
-import Cat from '../home-views/Cat.vue';
+import Dog from '../home/Dog.vue';
+import Cat from '../home/Cat.vue';
 import Profile from '../views/Profile.vue';
 
 const routes = [
@@ -27,7 +27,7 @@ const routes = [
     component: AboutUs,
   },
   {
-    path: '/login',
+    path: '/sign-in',
     name: 'login',
     component: Login,
   },
@@ -69,8 +69,8 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory('/'),
-  // history: createWebHashHistory()('/'),
+  // history: createWebHistory('/'),
+  history: createWebHashHistory('/'),
   routes,
 });
 
