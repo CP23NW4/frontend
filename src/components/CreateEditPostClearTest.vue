@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, watch, defineProps, defineEmits } from "vue";
 import { useRoute, useRouter } from "vue-router";
+// import { getPostById, createPost, updatePost } from '../composition/useStrayAnimals';
 const router = useRouter();
 const route = useRoute();
 
@@ -46,116 +47,33 @@ const touchedInputs = ref({
   color: false,
 });
 
-const getPostById = async () => {
+const fetchPostData = async () => {
   try {
-    const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`,
-      {
-        method: "GET",
-      }
-    );
-
-    if (res.status === 200) {
-      const data = await res.json();
-      formPost.value = data;
-    } else if (res.status === 404) {
-      console.error("Error: Post not found");
-      router.push({
-        name: "notfound",
-      });
-    } else if (res.status === 500) {
-      console.error("Error: Internal Server Error");
-    } else if (res.status === 400) {
-      console.error("Not validate");
-    } else {
-      console.error("Error:", res.status, res.statusText);
-    }
+    const data = await getPostById(id);
+    formPost.value = data;
   } catch (error) {
-    console.error(error);
+    console.error('Error fetching post:', error);
   }
 };
 
-const updatePost = async () => {
-  const confirmed = window.confirm("Are you sure you want to update the post?");
-
-  if (confirmed) {
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formPost.value),
-        }
-      );
-
-      if (res.status === 200) {
-        const data = await res.json();
-        console.log("Post updated successfully:", data);
-        router.go(-1);
-      } else {
-        if (res.status === 404) {
-          console.error("Error: Post not found");
-          router.push({
-            name: "notfound",
-          });
-        } else if (res.status === 500) {
-          console.error("Error: Internal Server Error");
-        } else if (res.status === 400) {
-          console.log("No Valid");
-          alert("400 Bad Request");
-          const confirmed = window.confirm("Not validate");
-        } else {
-          console.error("Error:", res.status, res.statusText);
-        }
-      }
-    } catch (error) {
-      console.error("Error updating post:", error);
-    }
-  } else {
-    // The user canceled the update
-    console.log("Update canceled by user");
+const handleUpdate = async () => {
+  try {
+    const data = await updatePost(id, formPost.value);
+    console.log('Post updated successfully:', data);
+    router.go(-1);
+  } catch (error) {
+    console.error('Error updating post:', error);
   }
 };
 
-const createPost = async () => {
-  // const props = defineProps(['closeModal',true]);
+const handleCreate = async () => {
   try {
-    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formPost.value),
-    });
-
-    if (res.status === 200 || res.status === 201) {
-      const data = await res.json();
-      console.log("Post created successfully:", data);
-      // router.push({
-      //   name: 'home',
-      // })
-      alert("Create Successful!");
-      emit("closeModal", true);
-    } else {
-      if (res.status === 404) {
-        console.error("Error: Post not found");
-        router.push({
-          name: "notfound",
-        });
-      } else if (res.status === 400) {
-        console.log("No Valid");
-        alert("400 Bad Request");
-      } else if (res.status === 500) {
-        console.error("Error: Internal Server Error");
-      } else {
-        console.error("Error:", res.status, res.statusText);
-      }
-    }
+    const data = await createPost(formPost.value);
+    console.log('Post created successfully:', data);
+    alert('Create Successful!');
+    emit('closeModal', true);
   } catch (error) {
-    console.error("Error creating post:", error);
+    console.error('Error creating post:', error);
   }
 };
 
@@ -198,10 +116,10 @@ const handleInputBlur = (inputName) => {
 const handleSubmit = async () => {
   if (route.params.id) {
     // If ID update post
-    updatePost();
+    handleUpdate();
   } else {
     // else create new post
-    createPost();
+    handleCreate();
   }
 };
 

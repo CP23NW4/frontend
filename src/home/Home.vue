@@ -5,9 +5,9 @@ import Searchbar from '../bar/Searchbar.vue';
 import BannerSlide from '../components/BannerSlide.vue';
 import Card from './Card.vue';
 import Snowfall from '../components/Snowfall.vue';
-import useStrayAnimals from '../composition/useStrayAnimals';
+import getStrayAnimals from '../composition/useStrayAnimals';
 
-const { strayAnimals } = useStrayAnimals();
+const { strayAnimals } = getStrayAnimals();
 const keyword = ref('')
 const filteredStrayAnimals = computed(() => {
   return strayAnimals.value.filter(

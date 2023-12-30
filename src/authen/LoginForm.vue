@@ -1,11 +1,11 @@
 <script setup>
 import { ref, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
+import { handleAuthentication } from "../composition/auth";
+
 const router = useRouter();
-
-
-const identifier = ref("");
-const password = ref("");
+const identifier = ref('');
+const password = ref('');
 
 
 onBeforeMount(() => {
@@ -22,40 +22,7 @@ const login = async () => {
     identifier: identifier.value,
     password: password.value,
   };
-  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/users/login`, {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-    },
-    body: JSON.stringify(loginData),
-  });
-  if (res.status === 200) {
-    const token = await res.json();
-    localStorage.setItem("token", token.token);
-    console.log(token.token);
-    console.log(token);
-    alert("Login successful!");
-    console.log("login successfully");
-
-    location.reload();
-  } else if (res.status === 401) {
-    alert("Password Incorrect");
-    console.log(res.status);
-  } else if (res.status === 403) {
-    console.log("go to login");
-    localStorage.removeItem("accessToken");
-    router.push({
-      name: "login",
-    });
-  } else if (res.status === 404) {
-    router.push({
-      name: "notfound",
-    });
-    console.log(res.status);
-  } else {
-    console.log("Error, something went wrong");
-    console.error("Error:", res.status, res.statusText);
-  }
+  await handleAuthentication("/users/login", loginData, "Login successful!");
 };
 
 </script>
@@ -135,7 +102,8 @@ const login = async () => {
           </button>
         </div>
 
-        <p>Don't have an account? <a @click="toggleForm" class="text-blue-500 cursor-pointer">Create account here</a></p>
+        <p>Don't have an account? <router-link :to="{ name: 'sign-up' }"><a @click="toggleForm" class="text-blue-500 cursor-pointer">Create account here</a>
+        </router-link></p>
       </form>
     </div>
   </div>

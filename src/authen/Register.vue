@@ -1,11 +1,11 @@
 <script setup>
-import LoginRegister from '../components/LoginRegister.vue'
+import RegisterForm from './RegisterForm.vue'
 console.log('hh')
 </script>
 
 <template>
   <div>
-    <LoginRegister />
+    <RegisterForm />
   </div>
 
 </template>

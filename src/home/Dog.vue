@@ -3,9 +3,9 @@ import Filterbar from '../bar/Filterbar.vue';
 import Banner from '../components/Banner.vue';
 import BannerSlide from '../components/BannerSlide.vue';
 import Card from './Card.vue';
-import useStrayAnimals from '../composition/useStrayAnimals';
+import getStrayAnimals from '../composition/useStrayAnimals';
 
-const { strayAnimals } = useStrayAnimals('Dog');
+const { strayAnimals } = getStrayAnimals('Dog');
 </script>
 
 
