@@ -35,7 +35,7 @@ const formPost = ref({
   gender: "",
   color: "",
   description: "",
-  picture: "/noimg.png",
+  picture: "",
   createdOn: new Date().toISOString(),
 });
 
@@ -168,7 +168,7 @@ const handleFileUpload = async (event) => {
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_APP_TITLE}/strayAnimals/upload`,
+        `${import.meta.env.VITE_APP_TITLE}/strayAnimals`,
         {
           method: "POST",
           body: formData,
@@ -280,8 +280,12 @@ watch(
           />
         </label>
       </div>
+
+
+
+
       <!-- <div v-if="formPost.picture">
-  <img :src="formPost.picture" alt="Uploaded Image" class="w-full h-full object-cover rounded-lg mb-4" />
+  <img :src="formPost.picature" alt="Uploaded Image" class="w-full h-full object-cover rounded-lg mb-4" />
 </div> -->
 
       <div class="mb-4">

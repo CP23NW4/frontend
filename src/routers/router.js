@@ -10,6 +10,7 @@ import AboutUs from '../views/AboutUs.vue';
 import Dog from '../home/Dog.vue';
 import Cat from '../home/Cat.vue';
 import Profile from '../views/Profile.vue';
+import EditProfile from '../views/EditProfile.vue';
 
 const routes = [
   {
@@ -66,6 +67,11 @@ const routes = [
     path: '/profile',
     name: 'profile',
     component: Profile,
+  },
+  {
+    path: '/edit-profile',
+    name: 'edit-profile',
+    component: EditProfile,
   },
   {
     path: '/:pathMatch(.*)*',

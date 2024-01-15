@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import CreateEditPost from '../components/CreateEditPostClearTest.vue';
+import CreateEditPost from '../components/CreateEditPost.vue';
 
 const route = useRoute();
 const router = useRouter();
