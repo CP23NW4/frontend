@@ -1,5 +1,5 @@
 <script setup>
-// import LoginRegister from './LoginRegister.vue'
+// import LoginForm from './LoginRegister.vue'
 import LoginForm from './LoginForm.vue'
 
 </script>
@@ -9,4 +9,4 @@ import LoginForm from './LoginForm.vue'
     <LoginForm />
   </div>
 
-</template>
+</template>``

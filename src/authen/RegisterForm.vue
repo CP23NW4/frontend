@@ -44,7 +44,7 @@ const signup = async () => {
 
 
 <template>
-  <div class="min-h-screen flex items-center justify-center">
+  <div class="mt-10 min-h-screen flex items-center justify-center">
 
     <div>
       <h2 class="text-2xl font-bold mb-4 text-left">Create new account</h2>

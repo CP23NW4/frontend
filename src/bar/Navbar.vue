@@ -5,6 +5,16 @@ import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 
+const mobileMenuOpen = ref(false);
+
+const toggleMobileMenu = () => {
+  mobileMenuOpen.value = !mobileMenuOpen.value;
+};
+
+const closeMobileMenu = () => {
+  mobileMenuOpen.value = false;
+};
+
 let checkSignIn= ref(localStorage.getItem('token'))     
 
 const SignOut = () => {
@@ -33,7 +43,38 @@ const SignOut = () => {
   </router-link>
 
 
-  <div class="flex items-center md:order-2">
+  <div class="md:hidden" >
+    <button @click="toggleMobileMenu" class="text-gray-600 focus:outline-none absolute top-4 right-4">
+      <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+           xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16m-7 6h7"></path>
+      </svg>
+    </button>
+
+        <div v-if="mobileMenuOpen" style="background-color: #F1EFED" class="fixed top-0 left-0 w-full h-full bg-white">
+      <div class="p-4 flex justify-end">
+        <button @click="closeMobileMenu" class="text-gray-600 focus:outline-none">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+               xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="p-4">
+        <router-link :to="{ name: 'home' }" @click="closeMobileMenu" class="block text-gray-800 py-2 border-b border-gray-300">Home</router-link>
+        <router-link :to="{ name: 'health' }" @click="closeMobileMenu" class="block text-gray-800 py-2 border-b border-gray-300">Health</router-link>
+        <router-link :to="{ name: 'about-us' }" @click="closeMobileMenu" class="block text-gray-800 py-2 border-b border-gray-300">About Me</router-link>
+        <router-link :to="{ name: 'profile' }" @click="closeMobileMenu" class="block text-gray-800 py-2 border-b border-gray-300">About Me</router-link>
+        <router-link :to="{ name: 'login' }" @click="closeMobileMenu" class="block text-red-800 py-2" v-if="!checkSignIn">Sign in</router-link>
+        <!-- <router-link :to="{ name: 'login' }" @click="SignOut" class="block text-red-800 py-2" v-if="checkSignIn">Sign out</router-link> -->
+        <a class="text-red-700 cursor-pointer" v-if="checkSignIn" @click="SignOut">Sign out</a>
+    </div>
+      </div>
+      </div>
+
+  <div class="flex items-center md:order-2 hidden md:block lg:block ">
     <!-- <img class="w-5 mr-4" src="/noti3.png"> -->
     <router-link :to="{ name: 'login' }">
         <div v-if="!checkSignIn" class="mr-4 px-7 py-2 bg-orange-600 rounded-3xl justify-start items-center flex hover:bg-amber-400 hover:text-white">
@@ -62,29 +103,24 @@ const SignOut = () => {
 
   </div>
   <div class="justify-start items-start gap-4 flex">
-  <router-link :to="{ name: 'home' }" class="underline-none">
+  <router-link :to="{ name: 'home' }" class="hidden md:block underline-none">
     <div class="px-7 py-2 border-b-2 border-transparent hover:border-indigo-950 transition duration-300">
       <a class="text-indigo-950 text-sm font-extrabold">HOME</a>
     </div>
   </router-link>
 
-  <router-link :to="{ name: 'health' }" class="underline-none">
+  <router-link :to="{ name: 'health' }" class="hidden md:block underline-none">
     <div class="px-7 py-2 border-b-2 border-transparent hover:border-indigo-950 transition duration-300">
       <a class="text-indigo-950 text-sm font-extrabold">HEALTH</a>
     </div>
   </router-link>
 
-  <router-link :to="{ name: 'about-us' }" class="underline-none">
+  <router-link :to="{ name: 'about-us' }" class="hidden md:block underline-none">
     <div class="px-7 py-2 border-b-2 border-transparent hover:border-indigo-950 transition duration-300">
       <a class="text-indigo-950 text-sm font-extrabold">ABOUT US</a>
     </div>
   </router-link>
 
-  <!-- <router-link :to="{ name: 'profile' }" class="underline-none">
-    <div class="px-7 py-2 border-b-2 border-transparent hover:border-indigo-950 transition duration-300">
-      <a class="text-indigo-950 text-sm font-extrabold">PROFILE</a>
-    </div>
-  </router-link> -->
 </div>
 
  </div>

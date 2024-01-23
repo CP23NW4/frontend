@@ -24,12 +24,59 @@ const login = async () => {
   };
   await handleAuthentication("/users/login", loginData, "Login successful!");
 };
+// const login = async () => {
+//   const data = {
+//     identifier: identifier.value,
+//     password: password.value,
+//   };
+//   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/users/login`, {
+//     method: "POST",
+//     headers: {
+//       "content-type": "application/json",
+//     },
+//     body: JSON.stringify(data),
+//   });
+//   if (res.status === 200) {
+//     const token = await res.json();
+//     localStorage.setItem("refreshToken", token.refreshToken);
+//     localStorage.setItem("accessToken", token.accessToken);
+//     console.log(token.accessToken);
+//     console.log(token);
+//     alert("Login successful!");
+//     console.log("login successfully");
+
+//     location.reload();
+//   } else if (res.status === 401) {
+//     alert("Password Incorrect");
+//     console.log(res.status);
+//   } else if (res.status === 403) {
+//     console.log("go to login");
+//     localStorage.removeItem("accessToken");
+//     localStorage.removeItem("refreshToken");
+//     router.push({
+//       name: "log-in",
+//     });
+//   } else if (res.status === 404) {
+//     router.push({
+//       name: "notfound",
+//     });
+//     console.log(res.status);
+//   } else {
+//     console.log("Error, something went wrong");
+//     console.error("Error:", res.status, res.statusText);
+//   }
+// };
 
 </script>
 
 <template>
   <div class="min-h-screen flex items-center justify-center">
-    <img src="/mnw.png" class="w-96 drop-shadow-lg" />
+    <img
+    src="/mnw.png"
+    class="w-96 drop-shadow-lg hidden md:block lg:block"
+    alt="Logo"
+  />
+
     <div>
       <div class="mb-4">
         <a class="flex items-center">

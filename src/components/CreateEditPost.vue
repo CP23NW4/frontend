@@ -35,7 +35,7 @@ const formPost = ref({
   gender: "",
   color: "",
   description: "",
-  picture: "",
+  picture: null,
   createdOn: new Date().toISOString(),
 });
 
@@ -120,39 +120,64 @@ const updatePost = async () => {
   }
 };
 
+// const createPost = async () => {
+//   try {
+//     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals`, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(formPost.value),
+//     });
+
+//     if (res.status === 200 || res.status === 201) {
+//       const data = await res.json();
+//       console.log("Post created successfully:", data);
+//       alert("Create Successful!");
+//       emit("closeModal", true);
+//     } else {
+//       if (res.status === 404) {
+//         console.error("Error: Post not found");
+//         router.push({
+//           name: "notfound",
+//         });
+//       } else if (res.status === 400) {
+//         console.log("No Valid");
+//         alert("400 Bad Request");
+//       } else if (res.status === 500) {
+//         console.error("Error: Internal Server Error");
+//       } else {
+//         console.error("Error:", res.status, res.statusText);
+//       }
+//     }
+//   } catch (error) {
+//     console.error("Error creating post:", error);
+//   }
+// };
+
 const createPost = async () => {
-  // const props = defineProps(['closeModal',true]);
   try {
+    const formData = new FormData();
+    formData.append("name", formPost.value.name);
+    formData.append("type", formPost.value.type);
+    formData.append("gender", formPost.value.gender);
+    formData.append("color", formPost.value.color);
+    formData.append("description", formPost.value.description);
+    formData.append("picture", formPost.value.picture);
+
     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formPost.value),
+      body: formData,
     });
 
     if (res.status === 200 || res.status === 201) {
       const data = await res.json();
       console.log("Post created successfully:", data);
-      // router.push({
-      //   name: 'home',
-      // })
       alert("Create Successful!");
       emit("closeModal", true);
     } else {
-      if (res.status === 404) {
-        console.error("Error: Post not found");
-        router.push({
-          name: "notfound",
-        });
-      } else if (res.status === 400) {
-        console.log("No Valid");
-        alert("400 Bad Request");
-      } else if (res.status === 500) {
-        console.error("Error: Internal Server Error");
-      } else {
-        console.error("Error:", res.status, res.statusText);
-      }
+      // Handle errors
+      console.error("Error:", res.status, res.statusText);
     }
   } catch (error) {
     console.error("Error creating post:", error);
@@ -163,28 +188,28 @@ const handleFileUpload = async (event) => {
   const file = event.target.files[0];
 
   if (file) {
-    const formData = new FormData();
-    formData.append("picture", file);
+    // const formData = new FormData();
+    // formData.append("picture", file);
+formPost.value.picture = file
+  //   try {
+  //     const res = await fetch(
+  //       `${import.meta.env.VITE_APP_TITLE}/strayAnimals`,
+  //       {
+  //         method: "POST",
+  //         body: formData,
+  //       }
+  //     );
 
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_APP_TITLE}/strayAnimals`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      if (res.status === 200) {
-        const data = await res.json();
-        console.log("Image uploaded successfully", data);
-        formPost.picture = data.filePath;
-      } else {
-        console.error("Error uploading image:", res.status, res.statusText);
-      }
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    }
+  //     if (res.status === 200) {
+  //       const data = await res.json();
+  //       console.log("Image uploaded successfully", data);
+  //       formPost.picture = data.filePath;
+  //     } else {
+  //       console.error("Error uploading image:", res.status, res.statusText);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error uploading image:", error);
+  //   }
   }
 };
 

@@ -1,16 +1,24 @@
 <script setup>
+import { ref, onMounted, computed } from 'vue';
 import Filterbar from '../bar/Filterbar.vue';
-import Banner from '../components/Banner.vue';
+import Searchbar from '../bar/Searchbar.vue';
 import BannerSlide from '../components/BannerSlide.vue';
 import Card from './Card.vue';
+import Snowfall from '../components/Snowfall.vue';
 import getStrayAnimals from '../composition/useStrayAnimals';
+import searchFilter from '../composition/searchFilter';
 
 const { strayAnimals } = getStrayAnimals('Cat');
+const { keyword, filteredStrayAnimals, setSearchKeyword } = searchFilter(strayAnimals);
+
 </script>
 
 
 <template>
+  <div>
     <BannerSlide />
+    <Searchbar @setSearchKeyword="setSearchKeyword" />
+    <Snowfall />
     <Filterbar />
     <div class="min-h-screen">
       <br />
@@ -18,16 +26,13 @@ const { strayAnimals } = getStrayAnimals('Cat');
       <div v-if="strayAnimals.length === 0">
         <p class="text-center text-lg mt-10">No Stray Animals</p>
       </div>
-      <div class="grid grid-cols-4 gap-0">
-        <div v-for="strayAnimal in strayAnimals" :key="strayAnimal._id">
+
+      <div class="grid lg:grid-cols-4 gap-0 md:grid-cols-3">
+        <div v-for="strayAnimal in filteredStrayAnimals" :key="strayAnimal._id">
           <Card :strayAnimal="strayAnimal" />
         </div>
       </div>
     </div>
-    <!-- <router-link to="/posts" class="fixed bottom-10 right-12">
-      <div class="text-white px-7 py-2 bg-indigo-950 rounded-3xl justify-start items-center flex hover:bg-orange-600 hover:text-white">
-        Creat Post
-      </div>
-    </router-link> -->
-  </template>
   
+  </div>
+</template>

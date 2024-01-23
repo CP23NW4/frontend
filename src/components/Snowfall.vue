@@ -3,6 +3,9 @@
       <div v-for="flake in flakes" :key="flake.id" class="snowflake" :style="{ top: flake.y + 'px', left: flake.x + 'px' }">
         ❄
       </div>
+      <!-- <div v-for="flake in flakes" :key="flake.id" class="snowflake" :style="{ top: flake.y + 'px', left: flake.x + 'px' }">
+        🧧🌷
+      </div> -->
     </div>
   </template>
   

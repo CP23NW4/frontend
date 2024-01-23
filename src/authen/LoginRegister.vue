@@ -20,9 +20,9 @@ const toggleForm = () => {
   showLogin.value = !showLogin.value;
 };
 
-const login = () => {
-  console.log("Logging in:", loginData.value);
-};
+// const login = () => {
+//   console.log("Logging in:", loginData.value);
+// };
 
 const register = () => {
   if (loginData.value.password !== loginData.value.confirmPassword) {
@@ -43,48 +43,48 @@ const register = () => {
   console.log("Registering:", loginData.value);
 };
 
-// const login = async () => {
-//   const data = {
-//     email: email.value,
-//     password: password.value,
-//   };
-//   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/login`, {
-//     method: "POST",
-//     headers: {
-//       "content-type": "application/json",
-//     },
-//     body: JSON.stringify(data),
-//   });
-//   if (res.status === 200) {
-//     const token = await res.json();
-//     localStorage.setItem("refreshToken", token.refreshToken);
-//     localStorage.setItem("accessToken", token.accessToken);
-//     console.log(token.accessToken);
-//     console.log(token);
-//     alert("Login successful!");
-//     console.log("login successfully");
+const login = async () => {
+  const data = {
+    email: email.value,
+    password: password.value,
+  };
+  const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/api/login`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  if (res.status === 200) {
+    const token = await res.json();
+    localStorage.setItem("refreshToken", token.refreshToken);
+    localStorage.setItem("accessToken", token.accessToken);
+    console.log(token.accessToken);
+    console.log(token);
+    alert("Login successful!");
+    console.log("login successfully");
 
-//     location.reload();
-//   } else if (res.status === 401) {
-//     alert("Password Incorrect");
-//     console.log(res.status);
-//   } else if (res.status === 403) {
-//     console.log("go to login");
-//     localStorage.removeItem("accessToken");
-//     localStorage.removeItem("refreshToken");
-//     router.push({
-//       name: "log-in",
-//     });
-//   } else if (res.status === 404) {
-//     router.push({
-//       name: "notfound",
-//     });
-//     console.log(res.status);
-//   } else {
-//     console.log("Error, something went wrong");
-//     console.error("Error:", res.status, res.statusText);
-//   }
-// };
+    location.reload();
+  } else if (res.status === 401) {
+    alert("Password Incorrect");
+    console.log(res.status);
+  } else if (res.status === 403) {
+    console.log("go to login");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    router.push({
+      name: "log-in",
+    });
+  } else if (res.status === 404) {
+    router.push({
+      name: "notfound",
+    });
+    console.log(res.status);
+  } else {
+    console.log("Error, something went wrong");
+    console.error("Error:", res.status, res.statusText);
+  }
+};
 
 
 </script>
