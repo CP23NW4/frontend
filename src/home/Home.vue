@@ -6,18 +6,10 @@ import BannerSlide from '../components/BannerSlide.vue';
 import Card from './Card.vue';
 import Snowfall from '../components/Snowfall.vue';
 import getStrayAnimals from '../composition/useStrayAnimals';
+import searchFilter from '../composition/searchFilter';
 
 const { strayAnimals } = getStrayAnimals();
-const keyword = ref('')
-const filteredStrayAnimals = computed(() => {
-  return strayAnimals.value.filter(
-    (strayAnimals) =>
-    (strayAnimals.toLowerCase().includes(keyword.value.toLowerCase()) ))
-  
-})
-const setSearchKeyword = (keyword) => {
-  keyword.value = keyword
-}
+const { keyword, filteredStrayAnimals, setSearchKeyword } = searchFilter(strayAnimals);
 
 </script>
 
@@ -25,7 +17,7 @@ const setSearchKeyword = (keyword) => {
 <template>
   <div>
     <BannerSlide />
-    <!-- <Searchbar @search="filteredStrayAnimals" /> -->
+    <Searchbar @setSearchKeyword="setSearchKeyword" />
     <Snowfall />
     <Filterbar />
     <div class="min-h-screen">
@@ -34,8 +26,9 @@ const setSearchKeyword = (keyword) => {
       <div v-if="strayAnimals.length === 0">
         <p class="text-center text-lg mt-10">No Stray Animals</p>
       </div>
-      <div class="grid grid-cols-4 gap-0">
-        <div v-for="strayAnimal in strayAnimals" :key="strayAnimal._id">
+
+      <div class="grid lg:grid-cols-4 gap-0 md:grid-cols-3">
+        <div v-for="strayAnimal in filteredStrayAnimals" :key="strayAnimal._id">
           <Card :strayAnimal="strayAnimal" />
         </div>
       </div>
