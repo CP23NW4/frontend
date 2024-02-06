@@ -1,5 +1,6 @@
 <script setup>
 import ConfirmCard from "./ConfirmCard.vue";
+import Comment from "./Comment.vue";
 
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -8,6 +9,7 @@ const router = useRouter();
 const route = useRoute();
 const goBack = () => router.go(-1);
 const getDet = ref({});
+
 
 const formatDate = (timestamp) => {
   const date = new Date(timestamp);
@@ -24,9 +26,10 @@ const formatDate = (timestamp) => {
 const getPostById = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/api/strayAnimals/${route.query.id}`,
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`,
       {
         method: "GET",
+        headers: {'Content-Type':'application/json'}
       }
     );
 
@@ -56,7 +59,7 @@ const getPostById = async () => {
 // const getUsers = async () => {
 //   try {
 //     const res = await fetch(
-//       `${import.meta.env.VITE_APP_TITLE}/api/users`,
+//       `${import.meta.env.VITE_APP_TITLE}/users`,
 //       {
 //         method: "GET",
 //       }
@@ -91,7 +94,7 @@ onMounted(() => {
 const removePost = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/api/strayAnimals/${route.query.id}`,
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`,
       {
         method: "DELETE",
       }
@@ -111,14 +114,21 @@ const removePost = async () => {
   }
 };
 
-
 const editPost = (id) => {
   console.log(id);
   router.push({
-    name: "posts",
-    query: { id: id },
+    name: "posts-detail",
+    params: { id: id },
   });
 };
+const capitalizeFirstLetter = (str) => {
+  if (!str) return "";
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+
+
+
 </script>
 <template>
   <!-- {{ getDet }} -->
@@ -140,7 +150,20 @@ const editPost = (id) => {
           alt="Animal Image"
         />
       </div>
-      <div class="w-full bg-white shadow-lg p-8 my-10 rounded-md text-left">
+      <div class="relative w-full bg-white shadow-lg p-8 my-10 rounded-md text-left">
+
+<div class="dropdown dropdown-end absolute top-0 right-2 p-4">
+      <div tabindex="0" role="button" class="btn btn-sm bg-transparent border-transparent shadow-transparent">
+        <div class="w-4 rounded-full">
+          <img src="/menu.png" />
+        </div>
+      </div>
+      <ul tabindex="0" class="mt-0 z-[1] p-2 shadow-lg menu menu-sm dropdown-content bg-white rounded-box w-52">
+        <li><a @click="editPost(getDet._id)">Edit</a></li>
+        <li><a class="text-red-700" onclick="my_modal_1.showModal()">Delete</a></li>
+      </ul>
+    </div>
+
         <div class="flex mb-4">
           <img class="w-10 h-10 rounded-full" src="/pf.png" alt="" />
           <div class="font-medium dark:text-white">
@@ -155,8 +178,15 @@ const editPost = (id) => {
         <div class="mt-4">
           <ul>
             <li><a class="font-bold m-2">ชื่อ :</a> {{ getDet.name }}</li>
-            <li><a class="font-bold m-2">เพศ :</a> {{ getDet.gender }}</li>
-            <li><a class="font-bold m-2">ประเภท :</a> {{ getDet.type }}</li>
+            <li>
+              <a class="font-bold m-2">เพศ :</a>
+              {{ capitalizeFirstLetter(getDet.gender) }}
+            </li>
+
+            <li>
+              <a class="font-bold m-2">ประเภท :</a>
+              {{ capitalizeFirstLetter(getDet.type) }}
+            </li>
             <li><a class="font-bold m-2">สี :</a> {{ getDet.color }}</li>
             <li>
               <a class="font-bold m-2">คำอธิบาย :</a> {{ getDet.description }}
@@ -176,19 +206,19 @@ const editPost = (id) => {
         >
           ขอรับเลี้ยง
         </button> -->
-      <button
+      <!-- <button
         class="m-2 px-4 py-2 bg-blue-500 text-white rounded-md"
         @click="goBack"
       >
         Close
-      </button>
+      </button> -->
 
-      <button
+      <!-- <button
         class="m-2 bg-amber-400 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
-        @click="editPost(getDet.id)"
+        @click="editPost(getDet._id)"
       >
         Edit
-      </button>
+      </button> -->
 
       <!-- <button
         type="button"
@@ -198,34 +228,38 @@ const editPost = (id) => {
         Delete
       </button> -->
 
-      <button
+      <!-- <button
         class="m-2 bg-red-700 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
         onclick="my_modal_1.showModal()"
       >
         Delete
-      </button>
+      </button> -->
+      
       <dialog id="my_modal_1" class="modal">
-  <div class="modal-box flex flex-col items-center justify-center">
-    <img src="/modal.svg"/>
-    <h1 class="font-bold text-2xl text-amber-500 mt-2">Delete Post?</h1>
-    <p class="py-2">Would you like to delete your post?</p>
-    <div class="modal-action flex">
-      <form method="dialog">
-        <button 
-          class="m-2 bg-slate-400 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
-        >Cancel</button>
-        <button
-          type="button"
-          @click="removePost"
-          class="m-2 bg-orange-600 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
-        >
-          Confirm
-        </button>
-      </form>
+        <div class="modal-box flex flex-col items-center justify-center">
+          <img src="/modal.svg" />
+          <h1 class="font-bold text-2xl text-amber-500 mt-2">Delete Post?</h1>
+          <p class="py-2">Would you like to delete your post?</p>
+          <div class="modal-action flex">
+            <form method="dialog">
+              <button
+                class="m-2 bg-slate-400 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                @click="removePost"
+                class="m-2 bg-orange-600 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
+              >
+                Confirm
+              </button>
+            </form>
+          </div>
+          
+        </div>
+      </dialog>
     </div>
-  </div>
-</dialog>
 
-    </div>
   </div>
 </template>
