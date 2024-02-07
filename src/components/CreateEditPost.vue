@@ -115,45 +115,9 @@ const updatePost = async () => {
       console.error("Error updating post:", error);
     }
   } else {
-    // The user canceled the update
     console.log("Update canceled by user");
   }
 };
-
-// const createPost = async () => {
-//   try {
-//     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals`, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify(formPost.value),
-//     });
-
-//     if (res.status === 200 || res.status === 201) {
-//       const data = await res.json();
-//       console.log("Post created successfully:", data);
-//       alert("Create Successful!");
-//       emit("closeModal", true);
-//     } else {
-//       if (res.status === 404) {
-//         console.error("Error: Post not found");
-//         router.push({
-//           name: "notfound",
-//         });
-//       } else if (res.status === 400) {
-//         console.log("No Valid");
-//         alert("400 Bad Request");
-//       } else if (res.status === 500) {
-//         console.error("Error: Internal Server Error");
-//       } else {
-//         console.error("Error:", res.status, res.statusText);
-//       }
-//     }
-//   } catch (error) {
-//     console.error("Error creating post:", error);
-//   }
-// };
 
 const createPost = async () => {
   try {
@@ -163,7 +127,11 @@ const createPost = async () => {
     formData.append("gender", formPost.value.gender);
     formData.append("color", formPost.value.color);
     formData.append("description", formPost.value.description);
-    formData.append("picture", formPost.value.picture);
+    
+    // Check if formPost.value.picture is not null before appending
+    if (formPost.value.picture) {
+      formData.append("picture", formPost.value.picture);
+    }
 
     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals`, {
       method: "POST",
@@ -176,7 +144,6 @@ const createPost = async () => {
       alert("Create Successful!");
       emit("closeModal", true);
     } else {
-      // Handle errors
       console.error("Error:", res.status, res.statusText);
     }
   } catch (error) {
@@ -184,34 +151,25 @@ const createPost = async () => {
   }
 };
 
+
 const handleFileUpload = async (event) => {
   const file = event.target.files[0];
 
   if (file) {
-    // const formData = new FormData();
-    // formData.append("picture", file);
-formPost.value.picture = file
-  //   try {
-  //     const res = await fetch(
-  //       `${import.meta.env.VITE_APP_TITLE}/strayAnimals`,
-  //       {
-  //         method: "POST",
-  //         body: formData,
-  //       }
-  //     );
+    const maxSizeInBytes =  1024 * 1024;
 
-  //     if (res.status === 200) {
-  //       const data = await res.json();
-  //       console.log("Image uploaded successfully", data);
-  //       formPost.picture = data.filePath;
-  //     } else {
-  //       console.error("Error uploading image:", res.status, res.statusText);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error uploading image:", error);
-  //   }
+    if (file.size <= maxSizeInBytes) {
+      formPost.value.picture = file;
+    } else {
+      alert("File size exceeds the limit (1MB). Please choose a smaller file.");
+    }
   }
 };
+
+
+
+
+
 
 const handleInputBlur = (inputName) => {
   touchedInputs.value[inputName] = true;

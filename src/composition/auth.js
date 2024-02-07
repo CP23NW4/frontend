@@ -11,8 +11,8 @@ export const handleAuthentication = async (url, data, successMessage) => {
       if (res.status === 200 || res.status === 201) {
         const token = await res.json();
         localStorage.setItem("token", token.token);
-        const userId = decodedToken.PAYLOAD_FIELD;
-        localStorage.setItem("userId", userId);
+        // const userId = decodedToken.PAYLOAD_FIELD;
+        // localStorage.setItem("userId", userId);
         console.log(token.token);
         console.log(token);
         alert(successMessage);
