@@ -47,6 +47,7 @@ const routes = [
     path: '/posts/:id',
     name: 'posts-detail',
     component: Posts,
+    meta: { requiresAuth: true }
   },
   {
     path: '/detail/:id',
@@ -72,6 +73,7 @@ const routes = [
     path: '/edit-profile',
     name: 'edit-profile',
     component: EditProfile,
+    meta: { requiresAuth: true }
   },
   {
     path: '/:pathMatch(.*)*',
@@ -84,6 +86,19 @@ const router = createRouter({
   // history: createWebHistory('/'),
   history: createWebHashHistory('/'),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    const token = localStorage.getItem('token');
+    if (token) {
+      next();
+    } else {
+      next({ name: 'login' });
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;
