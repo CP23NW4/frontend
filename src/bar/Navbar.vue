@@ -20,10 +20,11 @@ let checkSignIn= ref(localStorage.getItem('token'))
 const SignOut = () => {
   if (confirm("Sign Out?")) {
     localStorage.removeItem("token");
-     location.reload();
+    location.reload();
   }
 
 };
+
 
 </script>
 
@@ -73,7 +74,7 @@ const SignOut = () => {
     </div>
       </div>
       </div>
-
+  
   <div class="flex items-center md:order-2 hidden md:block lg:block ">
     <!-- <img class="w-5 mr-4" src="/noti3.png"> -->
     <router-link :to="{ name: 'login' }">

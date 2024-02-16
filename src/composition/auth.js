@@ -19,7 +19,9 @@ export const handleAuthentication = async (url, data, successMessage) => {
         console.log("Operation successful");
   
         location.reload();
-      } else if (res.status === 401) {
+      } else if (res.status === 400) {
+        console.log(res.status, error);
+      }else if (res.status === 401) {
         alert("Password Incorrect");
         console.log(res.status);
       } else if (res.status === 403) {

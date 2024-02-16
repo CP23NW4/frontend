@@ -41,6 +41,13 @@ const signup = async () => {
   await handleAuthentication("/users/register", data, "Sign Up successful!");
 };
 
+const onInput = (input) => {
+  if (input === 'firstName') {
+    isFirstNameFocused.value = true;
+  } else if (input === 'lastName') {
+    isPasswordFocused.value = true;
+  }
+};
 
 
 </script>
@@ -52,28 +59,48 @@ const signup = async () => {
     <div>
       <h2 class="text-2xl font-bold mb-4 text-left">Create new account</h2>
       <form @submit.prevent="register" action="#" method="POST">
-        <div class="grid gap-3 mb-4 md:grid-cols-2">
-          <div>
-            <input
-              type="text"
-              id="firstName"
-              v-model="registerData.firstName"
-              placeholder="First Name (ภาษาไทย)"
-              required
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
-            />
-          </div>
 
-          <div>
-            <input
-              type="text"
-              id="lastName"
-              v-model="registerData.lastName"
-              placeholder="Last Name (ภาษาไทย)"
-              required
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
-            />
-          </div>
+        <div class="grid gap-3 mb-4 md:grid-cols-2">
+        <!-- First Name -->
+        <div class="relative">
+          <input
+            type="text"
+            id="firstName"
+            v-model="registerData.firstName"
+            placeholder=" "
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
+            @input="onInput('firstName')"
+          />
+          <label
+            for="email"
+            class="absolute left-4 top-2 transition-all text-gray-400 bg-white px-1"
+            :class="{ 'text-xs': isFirstNameFocused || registerData.firstName }"
+          >
+            First Name (ภาษาไทย)
+          </label>
+        </div>
+
+        <!-- Last Name -->
+        <div class="relative">
+          <input
+            type="text"
+            id="lastName"
+            v-model="registerData.lastName"
+            placeholder=" "
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
+            @input="onInput('lastName')"
+          />
+          <label
+            for="lastName"
+            class="absolute left-4 top-2 transition-all text-gray-400 bg-white px-1"
+            :class="{ 'text-xs': isPasswordFocused || registerData.lastName }"
+          >
+          Last Name (ภาษาไทย)
+          </label>
+        </div>
+
           <div>
             <input
               type="text"
@@ -172,3 +199,16 @@ const signup = async () => {
     </div>
   </div>
 </template>
+<style scoped>
+/* Add any additional styling you need */
+input:focus + label,
+input:not(:placeholder-shown) + label {
+  top: -0.5rem; 
+  font-size: 0.75rem; 
+  color: #4b5563; 
+  transition: top 0.3s ease; 
+}
+/* input {
+  background-color: transparent;
+} */
+</style>

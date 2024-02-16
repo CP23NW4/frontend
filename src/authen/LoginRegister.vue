@@ -20,6 +20,15 @@ const toggleForm = () => {
   showLogin.value = !showLogin.value;
 };
 
+const passwordsMatch = computed(() => {
+  return loginData.value.password === loginData.value.confirmPassword;
+});
+
+const checkPasswordMatch = () => {
+  if (!passwordsMatch.value) {
+    console.log("Passwords do not match.");
+  }
+};
 // const login = () => {
 //   console.log("Logging in:", loginData.value);
 // };

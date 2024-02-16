@@ -24,48 +24,14 @@ const login = async () => {
   };
   await handleAuthentication("/users/login", loginData, "Login successful!");
 };
-// const login = async () => {
-//   const data = {
-//     identifier: identifier.value,
-//     password: password.value,
-//   };
-//   const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/users/login`, {
-//     method: "POST",
-//     headers: {
-//       "content-type": "application/json",
-//     },
-//     body: JSON.stringify(data),
-//   });
-//   if (res.status === 200) {
-//     const token = await res.json();
-//     localStorage.setItem("refreshToken", token.refreshToken);
-//     localStorage.setItem("accessToken", token.accessToken);
-//     console.log(token.accessToken);
-//     console.log(token);
-//     alert("Login successful!");
-//     console.log("login successfully");
 
-//     location.reload();
-//   } else if (res.status === 401) {
-//     alert("Password Incorrect");
-//     console.log(res.status);
-//   } else if (res.status === 403) {
-//     console.log("go to login");
-//     localStorage.removeItem("accessToken");
-//     localStorage.removeItem("refreshToken");
-//     router.push({
-//       name: "log-in",
-//     });
-//   } else if (res.status === 404) {
-//     router.push({
-//       name: "notfound",
-//     });
-//     console.log(res.status);
-//   } else {
-//     console.log("Error, something went wrong");
-//     console.error("Error:", res.status, res.statusText);
-//   }
-// };
+const onInput = (input) => {
+  if (input === 'email') {
+    isEmailFocused.value = true;
+  } else if (input === 'password') {
+    isPasswordFocused.value = true;
+  }
+};
 
 </script>
 
@@ -97,28 +63,46 @@ const login = async () => {
       </h2>
 
       <form @submit.prevent="login" action="#" method="POST">
-        <div class="mb-4">
-          <div class="mb-4">
-            <input
-              type="text"
-              id="email"
-              v-model="identifier"
-              placeholder="Email or Username"
-              required
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
-            />
-          </div>
-          <div class="mb-4">
-            <input
-              type="password"
-              id="password"
-              v-model="password"
-              placeholder="Password"
-              required
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
-            />
-          </div>
+<!-- Email or Username Input -->
+<div class="mb-4 relative">
+          <input
+            type="text"
+            id="email"
+            v-model="identifier"
+            placeholder=" "
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
+            @input="onInput('email')"
+          />
+          <label
+            for="email"
+            class="absolute left-4 top-2 transition-all text-gray-400 bg-white px-1"
+            :class="{ 'text-xs': isEmailFocused || identifier }"
+          >
+            Email or Username
+          </label>
         </div>
+
+        <!-- Password Input -->
+        <div class="mb-4 relative">
+          <input
+            type="password"
+            id="password"
+            v-model="password"
+            placeholder=" "
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
+            @input="onInput('password')"
+          />
+          <label
+            for="password"
+            class="absolute left-4 top-2 transition-all text-gray-400 bg-white px-1"
+            :class="{ 'text-xs': isPasswordFocused || password }"
+          >
+            Password
+          </label>
+        </div>
+
 
         <div class="flex items-center h-5 mb-4">
           <input
@@ -155,3 +139,16 @@ const login = async () => {
     </div>
   </div>
 </template>
+<style scoped>
+/* Add any additional styling you need */
+input:focus + label,
+input:not(:placeholder-shown) + label {
+  top: -0.5rem; 
+  font-size: 0.75rem; 
+  color: #4b5563; 
+  transition: top 0.3s ease; 
+}
+/* input {
+  background-color: transparent;
+} */
+</style>

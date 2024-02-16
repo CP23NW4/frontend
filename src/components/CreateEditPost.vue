@@ -86,6 +86,7 @@ const updatePost = async () => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
           },
           body: JSON.stringify(formPost.value),
         }
@@ -103,6 +104,12 @@ const updatePost = async () => {
           });
         } else if (res.status === 500) {
           console.error("Error: Internal Server Error");
+        } else if (res.status === 401) {
+          alert("No authentication, Go to signin");
+          localStorage.removeItem("token");
+          router.push({
+            name: "login",
+          });
         } else if (res.status === 400) {
           console.log("No Valid");
           alert("400 Bad Request");
@@ -127,7 +134,7 @@ const createPost = async () => {
     formData.append("gender", formPost.value.gender);
     formData.append("color", formPost.value.color);
     formData.append("description", formPost.value.description);
-    
+
     // Check if formPost.value.picture is not null before appending
     if (formPost.value.picture) {
       formData.append("picture", formPost.value.picture);
@@ -135,6 +142,9 @@ const createPost = async () => {
 
     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals`, {
       method: "POST",
+      headers: {
+        Authorization: localStorage.getItem("token"),
+      },
       body: formData,
     });
 
@@ -143,6 +153,12 @@ const createPost = async () => {
       console.log("Post created successfully:", data);
       alert("Create Successful!");
       emit("closeModal", true);
+    } else if (res.status === 401) {
+      alert("No authentication, Go to signin");
+      localStorage.removeItem("token");
+      router.push({
+        name: "login",
+      });
     } else {
       console.error("Error:", res.status, res.statusText);
     }
@@ -151,25 +167,20 @@ const createPost = async () => {
   }
 };
 
-
 const handleFileUpload = async (event) => {
   const file = event.target.files[0];
 
   if (file) {
-    const maxSizeInBytes =  1024 * 1024;
+    const maxSizeInBytes = 10 * 1024 * 1024;
 
     if (file.size <= maxSizeInBytes) {
       formPost.value.picture = file;
+      console.log(formPost.value.picture);
     } else {
       alert("File size exceeds the limit (1MB). Please choose a smaller file.");
     }
   }
 };
-
-
-
-
-
 
 const handleInputBlur = (inputName) => {
   touchedInputs.value[inputName] = true;
@@ -225,7 +236,19 @@ watch(
       class="max-w-lg mx-auto text-center"
     >
       <!-- images -->
-      <div class="flex items-center justify-center w-full mb-4">
+      {{ formPost.picture }}
+
+      <img
+        v-if="formPost.picture !== null"
+        :src="formPost.picture"
+        class="w-full h-full object-cover rounded-lg mb-4"
+        alt="Animal Image"
+      />
+
+      <div
+        v-else-if="formPost.picture === null"
+        class="flex items-center justify-center w-full mb-4"
+      >
         <label
           for="dropzone-file"
           class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
@@ -251,7 +274,7 @@ watch(
               drop
             </p>
             <p class="text-xs text-gray-500 dark:text-gray-400">
-              SVG, PNG or JPG up tp 10MB
+              SVG, PNG or JPG up to 10MB
             </p>
           </div>
           <input
@@ -263,9 +286,6 @@ watch(
           />
         </label>
       </div>
-
-
-
 
       <!-- <div v-if="formPost.picture">
   <img :src="formPost.picature" alt="Uploaded Image" class="w-full h-full object-cover rounded-lg mb-4" />

@@ -44,6 +44,12 @@ console.log(id)
           <div class="text-[16px] font-bold leading-none tracking-tight" v-if="strayAnimal.description === null">
             ไม่ระบุชื่อ
           </div>
+          <!-- <div v-if="strayAnimal.owner.ownerUsername !== null">
+          {{ strayAnimal.owner.ownerUsername }}
+          </div>
+          <div v-else>
+          ไม่มี
+          </div> -->
         </div>
     </div>
   </div>
