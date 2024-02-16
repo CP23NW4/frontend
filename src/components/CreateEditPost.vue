@@ -1,214 +1,214 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { ref, onMounted, watch, defineProps, defineEmits } from "vue";
+import { useRoute, useRouter } from "vue-router";
+const router = useRouter();
+const route = useRoute();
 
-const router = useRouter()
-const route = useRoute()
-const minCount = 0
-const maxCountDesc = 500
-let nameError = ''
+const props = defineProps(["closeModal"]);
+const emit = defineEmits();
+
+const minCount = 0;
+const maxCountDesc = 500;
+let nameError = "";
 
 const validateName = () => {
-  const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>]/
+  const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>]/;
 
-  const trimmedName = formPost.name?.trim()
+  const trimmedName = formPost.name?.trim();
 
   // if (!trimmedName) {
   //   nameError = "Name is required.";
   // } else
   if (trimmedName?.length > 20) {
-    nameError = 'Name cannot exceed 20 characters.'
+    nameError = "Name cannot exceed 20 characters.";
   } else if (specialCharacterRegex.trimmedName) {
-    nameError = 'Special characters are not allowed.'
-    console.log(specialCharacterRegex)
+    nameError = "Special characters are not allowed.";
+    console.log(specialCharacterRegex);
   } else {
-    nameError = ''
+    nameError = "";
   }
-}
+};
 
 const formPost = ref({
-  name: '',
-  type: '',
-  gender: '',
-  color: '',
-  description: '',
-  picture: '/noimg.png',
+  name: "",
+  type: "",
+  gender: "",
+  color: "",
+  description: "",
+  picture: null,
   createdOn: new Date().toISOString(),
-})
+});
 
 const touchedInputs = ref({
   name: false,
   type: false,
   gender: false,
   color: false,
-})
+});
 
 const getPostById = async () => {
   try {
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`,
       {
-        method: 'GET',
+        method: "GET",
       }
-    )
+    );
 
     if (res.status === 200) {
-      const data = await res.json()
-      formPost.value = data
-    } 
-    else {
-      if (res.status === 404) {
-        console.error('Error: Post not found')
-        router.push({
-          name: 'notfound',
-        })
-      } 
-      else if (res.status === 500) {
-        console.error('Error: Internal Server Error')
-      } else if (res.status === 400) {
-        console.error('Not validate')
-      } else {
-        console.error('Error:', res.status, res.statusText)
-      }
+      const data = await res.json();
+      formPost.value = data;
+    } else if (res.status === 404) {
+      console.error("Error: Post not found");
+      router.push({
+        name: "notfound",
+      });
+    } else if (res.status === 500) {
+      console.error("Error: Internal Server Error");
+    } else if (res.status === 400) {
+      console.error("Not validate");
+    } else {
+      console.error("Error:", res.status, res.statusText);
     }
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-}
+};
 
 const updatePost = async () => {
-  const confirmed = window.confirm('Are you sure you want to update the post?')
+  const confirmed = window.confirm("Are you sure you want to update the post?");
 
   if (confirmed) {
     try {
       const res = await fetch(
         `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`,
         {
-          method: 'PUT',
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
           },
           body: JSON.stringify(formPost.value),
         }
-      )
+      );
 
       if (res.status === 200) {
-        const data = await res.json()
-        console.log('Post updated successfully:', data)
-        router.go(-1)
+        const data = await res.json();
+        console.log("Post updated successfully:", data);
+        router.go(-1);
       } else {
         if (res.status === 404) {
-          console.error('Error: Post not found')
+          console.error("Error: Post not found");
           router.push({
-            name: 'notfound',
-          })
+            name: "notfound",
+          });
         } else if (res.status === 500) {
-          console.error('Error: Internal Server Error')
+          console.error("Error: Internal Server Error");
+        } else if (res.status === 401) {
+          alert("No authentication, Go to signin");
+          localStorage.removeItem("token");
+          router.push({
+            name: "login",
+          });
         } else if (res.status === 400) {
-          console.error('Not validate')
-          const confirmed = window.confirm('Not validate')
+          console.log("No Valid");
+          alert("400 Bad Request");
+          const confirmed = window.confirm("Not validate");
         } else {
-          console.error('Error:', res.status, res.statusText)
+          console.error("Error:", res.status, res.statusText);
         }
       }
     } catch (error) {
-      console.error('Error updating post:', error)
+      console.error("Error updating post:", error);
     }
   } else {
-    // The user canceled the update
-    console.log('Update canceled by user')
+    console.log("Update canceled by user");
   }
-}
+};
 
 const createPost = async () => {
   try {
+    const formData = new FormData();
+    formData.append("name", formPost.value.name);
+    formData.append("type", formPost.value.type);
+    formData.append("gender", formPost.value.gender);
+    formData.append("color", formPost.value.color);
+    formData.append("description", formPost.value.description);
+
+    // Check if formPost.value.picture is not null before appending
+    if (formPost.value.picture) {
+      formData.append("picture", formPost.value.picture);
+    }
+
     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        Authorization: localStorage.getItem("token"),
       },
-      body: JSON.stringify(formPost.value),
-    })
+      body: formData,
+    });
 
     if (res.status === 200 || res.status === 201) {
-      const data = await res.json()
-      console.log('Post created successfully:', data)
+      const data = await res.json();
+      console.log("Post created successfully:", data);
+      alert("Create Successful!");
+      emit("closeModal", true);
+    } else if (res.status === 401) {
+      alert("No authentication, Go to signin");
+      localStorage.removeItem("token");
       router.push({
-        name: 'home',
-      })
+        name: "login",
+      });
     } else {
-      if (res.status === 404) {
-        console.error('Error: Post not found')
-        router.push({
-          name: 'notfound',
-        })
-      } else if (res.status === 500) {
-        console.error('Error: Internal Server Error')
-      } else {
-        console.error('Error:', res.status, res.statusText)
-      }
+      console.error("Error:", res.status, res.statusText);
     }
   } catch (error) {
-    console.error('Error creating post:', error)
+    console.error("Error creating post:", error);
   }
-}
+};
 
 const handleFileUpload = async (event) => {
-  const file = event.target.files[0]
+  const file = event.target.files[0];
 
   if (file) {
-    const formData = new FormData()
-    formData.append('picture', file)
+    const maxSizeInBytes = 10 * 1024 * 1024;
 
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_APP_TITLE}/strayAnimals/upload`,
-        {
-          method: 'POST',
-          body: formData,
-        }
-      )
-
-      if (res.status === 200) {
-        const data = await res.json()
-        console.log('Image uploaded successfully', data)
-        formPost.picture = data.filePath
-      } else {
-        console.error('Error uploading image:', res.status, res.statusText)
-      }
-    } catch (error) {
-      console.error('Error uploading image:', error)
+    if (file.size <= maxSizeInBytes) {
+      formPost.value.picture = file;
+      console.log(formPost.value.picture);
+    } else {
+      alert("File size exceeds the limit (1MB). Please choose a smaller file.");
     }
   }
-}
+};
 
 const handleInputBlur = (inputName) => {
-  touchedInputs.value[inputName] = true
-  if (formPost[inputName]?.trim() === '') {
-    formPost[inputName] = '' // Set to empty string to trigger class change
+  touchedInputs.value[inputName] = true;
+  if (formPost[inputName]?.trim() === "") {
+    formPost[inputName] = ""; // Set to empty string to trigger class change
   }
-}
+};
 
 const handleSubmit = async () => {
   if (route.params.id) {
     // If ID update post
-    updatePost()
+    updatePost();
   } else {
     // else create new post
-    createPost()
+    createPost();
   }
-}
+};
 
 onMounted(() => {
   if (route.params.id) {
     // Fetch data if ID is present
-    getPostById()
+    getPostById();
   }
-})
+});
 
 const selectGender = (selectedGender) => {
-  formPost.gender = selectedGender
-}
+  formPost.gender = selectedGender;
+};
 
 watch(
   formPost,
@@ -218,12 +218,12 @@ watch(
         newValue[inputName] !== oldValue[inputName] &&
         touchedInputs.value[inputName]
       ) {
-        validateName() // You can add similar validation for other inputs
+        validateName(); // You can add similar validation for other inputs
       }
     }
   },
   { deep: true }
-)
+);
 </script>
 
 <template>
@@ -236,7 +236,19 @@ watch(
       class="max-w-lg mx-auto text-center"
     >
       <!-- images -->
-      <div class="flex items-center justify-center w-full mb-4">
+      {{ formPost.picture }}
+
+      <img
+        v-if="formPost.picture !== null"
+        :src="formPost.picture"
+        class="w-full h-full object-cover rounded-lg mb-4"
+        alt="Animal Image"
+      />
+
+      <div
+        v-else-if="formPost.picture === null"
+        class="flex items-center justify-center w-full mb-4"
+      >
         <label
           for="dropzone-file"
           class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
@@ -262,7 +274,7 @@ watch(
               drop
             </p>
             <p class="text-xs text-gray-500 dark:text-gray-400">
-              SVG, PNG or JPG up tp 10MB
+              SVG, PNG or JPG up to 10MB
             </p>
           </div>
           <input
@@ -274,8 +286,9 @@ watch(
           />
         </label>
       </div>
+
       <!-- <div v-if="formPost.picture">
-  <img :src="formPost.picture" alt="Uploaded Image" class="w-full h-full object-cover rounded-lg mb-4" />
+  <img :src="formPost.picature" alt="Uploaded Image" class="w-full h-full object-cover rounded-lg mb-4" />
 </div> -->
 
       <div class="mb-4">
@@ -397,7 +410,7 @@ watch(
           v-model="formPost.description"
           placeholder=" Write your description..."
           cols="5"
-          rows="5"
+          rows="3"
           maxlength="500"
           class="bg-white border border-gray-300 text-black text-m focus:ring-0 w-[100%] rounded-lg"
         ></textarea>
@@ -432,7 +445,7 @@ watch(
           type="submit"
           class="px-4 py-2 bg-blue-500 text-white rounded-md"
         >
-          {{ route.params.id ? 'Update' : 'Create' }}
+          {{ route.params.id ? "Update" : "Create" }}
         </button>
       </div>
     </form>
