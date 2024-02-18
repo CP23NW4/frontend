@@ -110,7 +110,7 @@ const SignOut = () => {
     </div>
   </router-link>
 
-  <router-link :to="{ name: 'health' }" class="hidden md:block underline-none">
+  <!-- <router-link :to="{ name: 'health' }" class="hidden md:block underline-none">
     <div class="px-7 py-2 border-b-2 border-transparent hover:border-indigo-950 transition duration-300">
       <a class="text-indigo-950 text-sm font-extrabold">HEALTH</a>
     </div>
@@ -120,7 +120,7 @@ const SignOut = () => {
     <div class="px-7 py-2 border-b-2 border-transparent hover:border-indigo-950 transition duration-300">
       <a class="text-indigo-950 text-sm font-extrabold">ABOUT US</a>
     </div>
-  </router-link>
+  </router-link> -->
 
 </div>
 

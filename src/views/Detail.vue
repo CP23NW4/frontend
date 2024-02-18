@@ -53,38 +53,6 @@ const getPostById = async () => {
   }
 };
 
-// const getUser = ref({});
-// const getUsers = async () => {
-//   try {
-//     const res = await fetch(
-//       `${import.meta.env.VITE_APP_TITLE}/users`,
-//       {
-//         method: "GET",
-//       }
-//     );
-
-//     if (res.status === 200) {
-//       const data = await res.json();
-//       console.log("success");
-//       getUser.value = data;
-//     } else {
-//       if (res.status === 404) {
-//         console.error('Error: Post not found');
-//       } else if (res.status === 500) {
-//         console.error('Error: Internal Server Error');
-//       } else {
-//         console.error('Error:', res.status, res.statusText);
-//       }
-//     }
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
-
-// onMounted(() => {
-//   getUsers();
-// });
-
 onMounted(() => {
   getPostById();
 });
@@ -132,6 +100,59 @@ const capitalizeFirstLetter = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
+const user = ref({});
+
+
+
+const getUsers = async () => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/users/`,
+      {
+        method: "GET",
+        headers: {'Content-Type':'application/json',
+        Authorization: localStorage.getItem("token"),},
+      }
+    );
+
+    if (res.status === 200) {
+      const userData = await res.json(); 
+      user.value = userData;
+    } else {
+      if (res.status === 404) {
+        console.error("Error: Post not found");
+        router.push({
+          name: "notfound",
+        });
+      } else if (res.status === 401) {
+        console.error("Login");
+        localStorage.removeItem("token");
+        router.push({
+          name: "login",
+        });
+      } else if (res.status === 500) {
+        console.error("Error: Internal Server Error");
+      } else {
+        console.error("Error:", res.status, res.statusText);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+onMounted(async () => {
+  getUsers();
+});
+
+const showDetail = (id) => {
+console.log(id)
+  router.push({
+    name: 'detail',
+    params: { id: id}
+  })
+}
 
 
 
@@ -158,7 +179,7 @@ const capitalizeFirstLetter = (str) => {
       </div>
       <div class="relative w-full bg-white shadow-lg p-8 my-10 rounded-md text-left">
 
-<div v-if="checkSignIn" class="dropdown dropdown-end absolute top-0 right-2 p-4">
+<div v-if="checkSignIn && user._id === getDet.owner?.ownerId" class="dropdown dropdown-end absolute top-0 right-2 p-4">
       <div tabindex="0" role="button" class="btn btn-sm bg-transparent border-transparent shadow-transparent">
         <div class="w-4 rounded-full">
           <img src="/menu.png" />
@@ -207,7 +228,7 @@ const capitalizeFirstLetter = (str) => {
         </div>
       </div>
 
-              <router-link :to="{ name: 'reqform' }" class="m-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800">Adopt</router-link>
+              <router-link :to="{ name: 'reqform' }" v-if="user._id !== getDet.owner?.ownerId" class="m-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800">Adopt</router-link>
 
       <dialog id="my_modal_1" class="modal">
         <div class="modal-box flex flex-col items-center justify-center">

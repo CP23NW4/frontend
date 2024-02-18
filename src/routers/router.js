@@ -69,6 +69,7 @@ const routes = [
     path: '/profile',
     name: 'profile',
     component: Profile,
+    meta: { requiresAuth: true }
   },
   {
     path: '/edit-profile',
@@ -85,6 +86,7 @@ const routes = [
     path: '/detail/:id/request-form',
     name: 'reqform',
     component: ReqForm,
+    meta: { requiresAuth: true }
   },
 ];
 

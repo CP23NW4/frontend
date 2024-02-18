@@ -1,5 +1,5 @@
 <script setup>
-import reqForm from './reqForm.vue'
+import reqForm from './Profile2.vue'
 
 
 </script>

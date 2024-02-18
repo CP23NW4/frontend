@@ -236,7 +236,7 @@ watch(
       class="max-w-lg mx-auto text-center"
     >
       <!-- images -->
-      {{ formPost.picture }}
+      <!-- {{ formPost.picture }} -->
 
       <img
         v-if="formPost.picture !== null"
@@ -245,8 +245,12 @@ watch(
         alt="Animal Image"
       />
 
-      <div
-        v-else-if="formPost.picture === null"
+<div>
+<label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Upload Picture</label>
+<input @change="handleFileUpload" class="mb-4 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file">
+</div>
+      <!-- <div
+        v-else
         class="flex items-center justify-center w-full mb-4"
       >
         <label
@@ -285,7 +289,7 @@ watch(
             class="hidden"
           />
         </label>
-      </div>
+      </div> -->
 
       <!-- <div v-if="formPost.picture">
   <img :src="formPost.picature" alt="Uploaded Image" class="w-full h-full object-cover rounded-lg mb-4" />

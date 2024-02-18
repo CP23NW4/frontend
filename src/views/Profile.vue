@@ -1,32 +1,48 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import Filterbar from "../bar/Filterbar.vue";
+import Searchbar from "../bar/Searchbar.vue";
+import CreateButton from "../components/CreateButton.vue";
+import BannerSlide from "../components/BannerSlide.vue";
+import Card from "../home/CardOwner.vue";
+import Snowfall from "../components/Snowfall.vue";
+import getStrayAnimals from "../composition/useStrayAnimals";
+import searchFilter from "../composition/searchFilter";
+
+let checkSignIn = ref(localStorage.getItem("token"));
+const { strayAnimals } = getStrayAnimals();
+const { keyword, filteredStrayAnimals, setSearchKeyword } =
+  searchFilter(strayAnimals);
 
 const user = ref({});
-const router = useRouter(); 
-const route = useRoute(); 
-
+const router = useRouter();
+const route = useRoute();
 
 const getUsers = async () => {
   try {
-    const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/users/`,
-      {
-        method: "GET",
-        headers: {'Content-Type':'application/json',
-        Authorization: localStorage.getItem("token"),},
-        
-      }
-    );
+    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/users/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
+      },
+    });
 
     if (res.status === 200) {
-      const userData = await res.json(); 
+      const userData = await res.json();
       user.value = userData;
     } else {
       if (res.status === 404) {
         console.error("Error: Post not found");
         router.push({
           name: "notfound",
+        });
+      } else if (res.status === 401) {
+        console.error("Login");
+        localStorage.removeItem("token");
+        router.push({
+          name: "login",
         });
       } else if (res.status === 500) {
         console.error("Error: Internal Server Error");
@@ -39,103 +55,68 @@ const getUsers = async () => {
   }
 };
 
-
 onMounted(async () => {
   getUsers();
 });
-
-// onMounted(() => {
-//   if (route.params.id) {
-//     getUsers();
-//   }
-// });
 </script>
 
+
 <template>
-  <section class="relative block h-500-px overflow-hidden">
-  <div class="top-0 mt-20 w-full h-full bg-center bg-cover overflow-hidden">
-  <img
-      src="/banner1.png"
-      class="min-w-screen w-full h-full object-cover rounded-3xl"
-      alt="Banner"
-    />
-    </div>
-  </section>
-  <section class="relative py-16">
-    <div class="container mx-auto px-4">
-      <div
-        class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64"
-      >
-        <div class="px-6">
-          <div class="flex flex-wrap justify-center">
-            <div class="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
-              <img class="w-36 h-36 rounded-full object-cover shadow-xl align-middle absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px" src="/cat1.jpg" alt="user photo">  
+  <div>
+    <section class="mt-20">
+      <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto overflow-hidden">
+          <div class="p-8">
+            <!-- User Info Section -->
+            <div class="flex items-center">
+              <div class="mr-8">
+                <img
+                  class="w-32 h-32 rounded-full object-cover shadow-xl"
+                  src="/cat.jpg"
+                  alt="user photo"
+                />
+              </div>
+              <div>
+                <h2 class="text-3xl font-semibold text-gray-800">
+                  {{ user.username }}
+                </h2>
+                <p class="text-sm text-gray-700">{{ user.email }}</p>
+              </div>
+              <router-link
+                :to="{ name: 'edit-profile' }"
+                class="ml-48 bg-gray-200 hover:bg-gray-700 rounded-lg text-gray-700 font-bold py-2 px-8 border-gray-700 hover:border-gray-800 hover:text-white"
+                >Edit profile</router-link
+              >
             </div>
 
-            <div class="w-full lg:w-4/12 px-3 lg:order-3 lg:text-right lg:self-start">
-  <div class="py-6 px-3 mt-10 sm:mt-0">
-    <button
-      class="bg-zinc-700 active:bg-pink-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
-      type="button"
-    >
-      Edit profile
-    </button>
+            <hr class="my-8 border-t border-gray-400">
 
-    <router-link :to="{ name: 'edit-profile' }" class="underline-none">
-    <div class="px-7 py-2 border-b-2 border-transparent hover:border-indigo-950 transition duration-300">
-      <a class="text-indigo-950 text-sm font-extrabold">Edit profile</a>
-    </div>
-  </router-link>
-  </div>
+            <!-- Pets Section -->
+            <div>
+              <h3 class="text-m text-left font-semibold text-indigo-900 mb-2">
+                My Pets
+              </h3>
+            </div>
+            <div v-if="strayAnimals.length === 0">
+              <p class="text-center text-lg mt-10">No Pets</p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-0 md:grid-cols-3">
+  <template v-for="strayAnimal in filteredStrayAnimals">
+    <template v-if="strayAnimal.owner.ownerId === user._id">
+      <div :key="strayAnimal._id">
+        <Card :strayAnimal="strayAnimal" />
+      </div>
+    </template>
+  </template>
 </div>
 
-
-            <div class="w-full lg:w-4/12 px-4 lg:order-1">
-              <div class="flex justify-center py-4 lg:pt-4 pt-8">
-                <div class="mx-2 p-3 pl-10 text-center">
-                  <span
-                    class="text-xl font-bold block uppercase tracking-wide text-blueGray-600"
-                    >22</span
-                  ><span class="text-sm text-blueGray-400">Friends</span>
-                </div>
-                <div class="mx-2 p-3 text-center">
-                  <span
-                    class="text-xl font-bold block uppercase tracking-wide text-blueGray-600"
-                    >10</span
-                  ><span class="text-sm text-blueGray-400">Posts</span>
-                </div>
-                <div class="mx-2 mr-20 p-3 text-center">
-                  <span
-                    class="text-xl font-bold block uppercase tracking-wide text-blueGray-600"
-                    >89</span
-                  ><span class="text-sm text-blueGray-400">Likes</span>
-                </div>
-              </div>
-            </div>
           </div>
-          <div class="text-center mt-4">
-            <h3
-              class="text-4xl font-semibold leading-normal mb-0 text-blueGray-700"
-            >
-              {{ user.username }}
-            </h3>
-            <div
-              class="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase"
-            >{{ user }} <br>
-              Bangkok, Thailand
-            </div>
-            <div class="mb-2 text-blueGray-600 mt-10">
-              <i class="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i
-              >Welcome to my feed
-            </div>
-          </div>
-          <hr class="my-4">
-          <div class="text-indigo-950 text-sm font-extrabold"> MY PETS
-<p>lucky</p>
-          </div>
-
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <!-- <Snowfall /> -->
+  </div>
+  <CreateButton v-if="checkSignIn" />
 </template>
