@@ -110,7 +110,12 @@ const updatePost = async () => {
           router.push({
             name: "login",
           });
-        } else if (res.status === 400) {
+        } else if (res.status === 403) {
+          alert("You do not have permission to edit other post, Check your role");
+          router.push({
+            name: "home",
+          });
+        }else if (res.status === 400) {
           console.log("No Valid");
           alert("400 Bad Request");
           const confirmed = window.confirm("Not validate");
