@@ -4,20 +4,33 @@ import { useRouter } from 'vue-router';
 import CreateEditPost from './CreateEditPost.vue';
 
 
-
-const isHover = ref(false);
-
 const router = useRouter();
-const isCreatePostModalOpen = ref(false);
 const expandButton = ref(false);
+
+const isCreatePostModalOpen = ref(false);
 
 const openCreatePostModal = () => {
   isCreatePostModalOpen.value = true;
 };
+const formPost = ref({
+  name: "",
+  type: "",
+  gender: "",
+  color: "",
+  description: "",
+  picture: null,
+  createdOn: new Date().toISOString(),
+});
 
 const closeCreatePostModal = () => {
-  const shouldClose = window.confirm("Cancel? Changes you made may not be saved.");
-  if (shouldClose) {
+  const hasInputValue = Object.values(formPost.value).some(value => value !== '');
+  
+  if (hasInputValue) {
+    const shouldClose = window.confirm("Are you sure you want to cancel? Changes you made may not be saved.");
+    if (shouldClose) {
+      isCreatePostModalOpen.value = false;
+    }
+  } else {
     isCreatePostModalOpen.value = false;
   }
 };
@@ -27,6 +40,10 @@ const handleCreatePostModalClosed = (shouldRefresh) => {
   if (shouldRefresh) {
     router.go(0);
   }
+};
+
+const handleCreateModalCloseWithoutConfirmation = () => {
+  isCreatePostModalOpen.value = false;
 };
 </script>
 <template>
@@ -54,7 +71,7 @@ const handleCreatePostModalClosed = (shouldRefresh) => {
 <teleport to="body">
   <div v-if="isCreatePostModalOpen" @click.self="closeCreatePostModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
     <div @click.stop class="bg-white p-6 rounded-md mt-20">
-      <CreateEditPost @closeModal="handleCreatePostModalClosed" />
+      <CreateEditPost @closeModal="handleCreatePostModalClosed" @closeModalWithoutConfirmation="handleCreateModalCloseWithoutConfirmation" />
     </div>
   </div>
 </teleport>

@@ -1,4 +1,8 @@
 import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router';
+import { ref, onMounted } from 'vue';
+import { useRouter, useRoute } from "vue-router";
+const user = ref({});
+
 import Home from '../home/Home.vue';
 import Health from '../views/Health.vue';
 import Login from '../authen/Login.vue';
@@ -12,6 +16,52 @@ import Cat from '../home/Cat.vue';
 import Profile from '../views/Profile.vue';
 import EditProfile from '../views/EditProfile.vue';
 import ReqForm from '../views/reqForm.vue';
+
+import getStrayAnimals from '../composition/useStrayAnimals';
+const { strayAnimals } = getStrayAnimals();
+
+const getUsers = async () => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/users/`,
+      {
+        method: "GET",
+        headers: {'Content-Type':'application/json',
+        Authorization: localStorage.getItem("token"),},
+        
+      }
+    );
+
+    if (res.status === 200) {
+      const userData = await res.json(); 
+      user.value = userData;
+    } else {
+      if (res.status === 404) {
+        console.error("Error: Post not found");
+        router.push({
+          name: "notfound",
+        });
+      } else if (res.status === 401) {
+        console.error("Login");
+        localStorage.removeItem("token")
+        router.push({
+          name: "login",
+        });
+      }else if (res.status === 500) {
+        console.error("Error: Internal Server Error");
+      } else {
+        console.error("Error:", res.status, res.statusText);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+onMounted(async () => {
+  getUsers();
+});
 
 const routes = [
   {
@@ -39,11 +89,6 @@ const routes = [
     name: 'sign-up',
     component: SignUp,
   },
-  // {
-  //   path: '/posts',
-  //   name: 'posts',
-  //   component: Posts,
-  // },
   {
     path: '/posts/:id',
     name: 'posts-detail',
@@ -102,6 +147,7 @@ router.beforeEach((to, from, next) => {
     if (token) {
       next();
     } else {
+      localStorage.removeItem(token)
       next({ name: 'login' });
     }
   } else {
@@ -110,3 +156,8 @@ router.beforeEach((to, from, next) => {
 });
 
 export default router;
+
+
+
+
+
