@@ -187,6 +187,8 @@ const signup = async () => {
     idCard: registerData.value.idCard,
   };
   await handleAuthentication("/users/register", data, "Sign Up successful!");
+  router.push({ name: "home" });
+  window.location.reload() 
 };
 
 const handleFileUpload = async (event) => {

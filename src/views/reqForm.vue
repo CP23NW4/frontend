@@ -95,6 +95,7 @@ onMounted(async () => {
       const reqData = await res.json();
       console.log("Request Adoption successfull0y:", reqData);
       alert("Request Adoption Successful!");
+      router.go(-1);
       // emit("closeModal", true);
     } else if (res.status === 401) {
       alert("No authentication, Go to signin");
