@@ -193,7 +193,7 @@ const handleFileUpload = async (event) => {
       formPost.value.picture = file;
       console.log(formPost.value.picture);
     } else {
-      alert("File size exceeds the limit (1MB). Please choose a smaller file.");
+      alert("File size exceeds the limit (10MB). Please choose a smaller file.");
     }
   }
 };
