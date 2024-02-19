@@ -20,10 +20,11 @@ let checkSignIn= ref(localStorage.getItem('token'))
 const SignOut = () => {
   if (confirm("Sign Out?")) {
     localStorage.removeItem("token");
-     location.reload();
+    location.reload();
   }
 
 };
+
 
 </script>
 
@@ -66,14 +67,14 @@ const SignOut = () => {
         <router-link :to="{ name: 'home' }" @click="closeMobileMenu" class="block text-gray-800 py-2 border-b border-gray-300">Home</router-link>
         <router-link :to="{ name: 'health' }" @click="closeMobileMenu" class="block text-gray-800 py-2 border-b border-gray-300">Health</router-link>
         <router-link :to="{ name: 'about-us' }" @click="closeMobileMenu" class="block text-gray-800 py-2 border-b border-gray-300">About Me</router-link>
-        <router-link :to="{ name: 'profile' }" @click="closeMobileMenu" class="block text-gray-800 py-2 border-b border-gray-300">About Me</router-link>
+        <router-link :to="{ name: 'profile' }" @click="closeMobileMenu" class="block text-gray-800 py-2 border-b border-gray-300">Profile</router-link>
         <router-link :to="{ name: 'login' }" @click="closeMobileMenu" class="block text-red-800 py-2" v-if="!checkSignIn">Sign in</router-link>
         <!-- <router-link :to="{ name: 'login' }" @click="SignOut" class="block text-red-800 py-2" v-if="checkSignIn">Sign out</router-link> -->
         <a class="text-red-700 cursor-pointer" v-if="checkSignIn" @click="SignOut">Sign out</a>
     </div>
       </div>
       </div>
-
+  
   <div class="flex items-center md:order-2 hidden md:block lg:block ">
     <!-- <img class="w-5 mr-4" src="/noti3.png"> -->
     <router-link :to="{ name: 'login' }">
@@ -109,7 +110,7 @@ const SignOut = () => {
     </div>
   </router-link>
 
-  <router-link :to="{ name: 'health' }" class="hidden md:block underline-none">
+  <!-- <router-link :to="{ name: 'health' }" class="hidden md:block underline-none">
     <div class="px-7 py-2 border-b-2 border-transparent hover:border-indigo-950 transition duration-300">
       <a class="text-indigo-950 text-sm font-extrabold">HEALTH</a>
     </div>
@@ -119,7 +120,7 @@ const SignOut = () => {
     <div class="px-7 py-2 border-b-2 border-transparent hover:border-indigo-950 transition duration-300">
       <a class="text-indigo-950 text-sm font-extrabold">ABOUT US</a>
     </div>
-  </router-link>
+  </router-link> -->
 
 </div>
 

@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from 'vue';
 import Filterbar from '../bar/Filterbar.vue';
 import Searchbar from '../bar/Searchbar.vue';
+import CreateButton from '../components/CreateButton.vue';
 import BannerSlide from '../components/BannerSlide.vue';
 import Card from './Card.vue';
 import Snowfall from '../components/Snowfall.vue';
@@ -35,4 +36,5 @@ const { keyword, filteredStrayAnimals, setSearchKeyword } = searchFilter(strayAn
     </div>
   
   </div>
+  <CreateButton />
 </template>

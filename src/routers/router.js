@@ -11,6 +11,7 @@ import Dog from '../home/Dog.vue';
 import Cat from '../home/Cat.vue';
 import Profile from '../views/Profile.vue';
 import EditProfile from '../views/EditProfile.vue';
+import ReqForm from '../views/reqForm.vue';
 
 const routes = [
   {
@@ -47,6 +48,7 @@ const routes = [
     path: '/posts/:id',
     name: 'posts-detail',
     component: Posts,
+    meta: { requiresAuth: true }
   },
   {
     path: '/detail/:id',
@@ -67,16 +69,24 @@ const routes = [
     path: '/profile',
     name: 'profile',
     component: Profile,
+    meta: { requiresAuth: true }
   },
   {
     path: '/edit-profile',
     name: 'edit-profile',
     component: EditProfile,
+    meta: { requiresAuth: true }
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'notfound',
     component: NotFound,
+  },
+  {
+    path: '/detail/:id/request-form',
+    name: 'reqform',
+    component: ReqForm,
+    meta: { requiresAuth: true }
   },
 ];
 
@@ -84,6 +94,19 @@ const router = createRouter({
   // history: createWebHistory('/'),
   history: createWebHashHistory('/'),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    const token = localStorage.getItem('token');
+    if (token) {
+      next();
+    } else {
+      next({ name: 'login' });
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;

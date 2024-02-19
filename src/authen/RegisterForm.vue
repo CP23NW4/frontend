@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { handleAuthentication } from "../composition/auth";
+import { handleRegister } from "../composition/auth";
 import { calculateAge } from "../composition/validate";
 
 const router = useRouter();
@@ -16,6 +16,7 @@ const registerData = ref({
   birthday: '',
   address: '',
 });
+
 
 
 const signup = async () => {
@@ -37,8 +38,24 @@ const signup = async () => {
     DOB: registerData.value.birthday,
     address: registerData.value.address,
   };
-  await handleAuthentication("/users/register", data, "Sign Up successful!");
+  await handleAuthentication("/users/register", registerData, "Sign Up successful!");
 };
+// const signup = async () => {
+//   const formData = new FormData();
+//   formData.append('name', `${registerData.value.firstName} ${registerData.value.lastName}`);
+//   formData.append('username', registerData.value.username);
+//   formData.append('email', registerData.value.email);
+//   formData.append('password', registerData.value.password);
+//   formData.append('phoneNumber', registerData.value.phoneNumber);
+//   formData.append('DOB', registerData.value.birthday);
+//   formData.append('userAddress', registerData.value.userAddress);
+
+//   if (registerData.value.userPicture) {
+//     formData.append('userPicture', registerData.value.userPicture);
+//   }
+//   await handleRegister("/users/register", formData, "Sign Up successful!");
+// };
+
 
 </script>
 
@@ -166,9 +183,6 @@ const signup = async () => {
           >
         </p>
       </form>
-      <!-- <p v-if="!showLogin && loginData.age > 0">
-        Your age: {{ loginData.age }} years old
-      </p> -->
     </div>
   </div>
 </template>

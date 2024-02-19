@@ -2,12 +2,15 @@
 import { ref, onMounted, computed } from 'vue';
 import Filterbar from '../bar/Filterbar.vue';
 import Searchbar from '../bar/Searchbar.vue';
+import CreateButton from '../components/CreateButton.vue';
 import BannerSlide from '../components/BannerSlide.vue';
 import Card from './Card.vue';
 import Snowfall from '../components/Snowfall.vue';
 import getStrayAnimals from '../composition/useStrayAnimals';
 import searchFilter from '../composition/searchFilter';
 
+
+let checkSignIn= ref(localStorage.getItem('token'))     
 const { strayAnimals } = getStrayAnimals();
 const { keyword, filteredStrayAnimals, setSearchKeyword } = searchFilter(strayAnimals);
 
@@ -35,4 +38,6 @@ const { keyword, filteredStrayAnimals, setSearchKeyword } = searchFilter(strayAn
     </div>
   
   </div>
+  <CreateButton v-if="checkSignIn"/>
+
 </template>

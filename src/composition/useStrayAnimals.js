@@ -41,6 +41,7 @@ export default function getStrayAnimals(type) {
 }
 
 
+
 // export const getPostById = async (postId) => {
 //   try {
 //     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals/${postId}`, {
