@@ -67,7 +67,13 @@ const getPostById = async () => {
       console.error("Error: Internal Server Error");
     } else if (res.status === 400) {
       console.error("Not validate");
-    } else {
+    } else if (res.status === 401) {
+          alert("No authentication, Go to signin");
+          localStorage.removeItem("token");
+          router.push({
+            name: "login",
+          });
+        }else {
       console.error("Error:", res.status, res.statusText);
     }
   } catch (error) {
@@ -245,7 +251,7 @@ watch(
 
       <div v-if="!route.params.id">
         <label
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          class="block mb-2 text-sm text-left font-medium text-gray-900 dark:text-white"
           for="file_input"
           >Upload Picture</label
         >

@@ -29,6 +29,7 @@ export const handleAuthentication = async (url, data, successMessage) => {
           name: "login",
         });
       } else if (res.status === 404) {
+        alert("Email/Username Not found");
         router.push({
           name: "notfound",
         });

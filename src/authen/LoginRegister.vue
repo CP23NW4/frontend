@@ -168,7 +168,6 @@ const login = async () => {
               @click="toggleForm"
               class="text-sm text-blue-500 text-right ml-14"
             >
-              <!-- change to forgot password form -->
               Forgot your password?
             </p>
           </div>

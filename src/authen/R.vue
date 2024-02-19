@@ -6,17 +6,20 @@ import { calculateAge } from "../composition/validate";
 
 const router = useRouter();
 const registerData = ref({
-  firstName: "เทส",
-  lastName: "เทส",
-  phoneNumber: "0937652834",
-  username: "testtest2",
-  email: "test22@gmail.com",
-  password: "testtest123!",
-  confirmPassword: "testtest123!",
+  firstName: "",
+  lastName: "",
+  phoneNumber: "",
+  username: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
   birthday: "",
-  address: "",
+  userAddress: "",
   idCard: "",
 });
+
+const minCount = 0;
+const maxCountAddress = 200;
 
 // const registerData = ref({
 //   firstName: "",
@@ -40,7 +43,7 @@ const touched = {
   confirmPassword: false,
   phoneNumber: false,
   birthday: false,
-  address: false,
+  userAddress: false,
   idCard: false,
 };
 const showPassword = ref(false);
@@ -84,6 +87,10 @@ const isValidIdCard = computed(() => {
   const idCardRegex = /^\d{13}$/;
   return idCardRegex.test(registerData.value.idCard);
 });
+const isValidAddress = computed(() => {
+  const userAddress = registerData.value.userAddress;
+  return userAddress?.length >= 5 && userAddress?.length <= 200;
+});
 
 
 const isValidAge = computed(() => {
@@ -99,7 +106,8 @@ const isValidForm = computed(() => {
     isValidPassword.value &&
     isValidPhoneNumber.value &&
     isValidAge.value &&
-    isValidIdCard.value
+    isValidIdCard.value &&
+    isValidUserAddress.value
   );
 });
 
@@ -144,6 +152,11 @@ const validateIdCard = () => {
   if (!isValidIdCard.value) {
   }
 };
+const validateUserAddress = () => {
+  touched.idCard = true;
+  if (!isValidUserAddress.value) {
+  }
+};
 const validateAge = () => {
   touched.birthday = true;
   if (!isValidAge.value) {
@@ -170,7 +183,7 @@ const signup = async () => {
     password: registerData.value.password,
     phoneNumber: registerData.value.phoneNumber,
     DOB: registerData.value.birthday,
-    address: registerData.value.address,
+    userAddress: registerData.value.userAddress,
     idCard: registerData.value.idCard,
   };
   await handleAuthentication("/users/register", data, "Sign Up successful!");
@@ -387,7 +400,7 @@ const handleFileUpload = async (event) => {
               ID Card
             </label>
             <span v-if="!isValidIdCard && touched.idCard" class="text-red-500 text-xs absolute left-4 bottom-0">
-              ID Card Must be 13 characters.
+              ID Card Must be 13 digits.
             </span>
           </div>
 
@@ -411,18 +424,23 @@ const handleFileUpload = async (event) => {
         <div class="relative mb-4">
           <input
             type="text"
-            id="address"
-            v-model="registerData.address"
+            id="userAddress"
+            v-model="registerData.userAddress"
             placeholder=" "
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
           />
           <label
-            for="address"
+            for="userAddress"
             class="absolute left-4 top-2 transition-all text-gray-400 bg-white px-1"
-            :class="{ 'text-xs': registerData.address }"
+            :class="{ 'text-xs': registerData.userAddress }"
           >
             Address
           </label>
+          <span class="text-xs ml-[95%] text-gray-400"
+          >{{
+            minCount + (registerData.userAddress ? registerData.userAddress.length : 0)
+          }}/{{ maxCountAddress }}</span
+        >
         </div>
         <!-- addess -->
         <!-- <div class="relative mb-4">

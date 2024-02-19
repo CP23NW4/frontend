@@ -41,7 +41,14 @@ const getPostById = async () => {
         router.push({
           name: "notfound",
         });
-      } else if (res.status === 500) {
+      } else if (res.status === 401) {
+          alert("No authentication, Go to signin");
+          localStorage.removeItem("token");
+          router.push({
+            name: "login",
+          });
+        }
+        else if (res.status === 500) {
         console.error("Error: Internal Server Error");
       } else {
         console.error("Error:", res.status, res.statusText);
@@ -80,7 +87,12 @@ const removePost = async () => {
       localStorage.removeItem("token");
       router.push({
         name: "login"})
-      } else {
+      } else if (res.status === 403) {
+          alert("You do not have permission to edit other post, Check your role");
+          router.push({
+            name: "home",
+          });
+        }else {
       console.error("Error deleting post:", res.status, res.statusText);
     }
   } catch (error) {
@@ -125,12 +137,17 @@ const getUsers = async () => {
           name: "notfound",
         });
       } else if (res.status === 401) {
-        console.error("Login");
-        localStorage.removeItem("token");
-        router.push({
-          name: "login",
-        });
-      } else if (res.status === 500) {
+          alert("No authentication, Go to signin");
+          localStorage.removeItem("token");
+          router.push({
+            name: "login",
+          });
+        } else if (res.status === 403) {
+          alert("You do not have permission to edit other post, Check your role");
+          router.push({
+            name: "home",
+          });
+        } else if (res.status === 500) {
         console.error("Error: Internal Server Error");
       } else {
         console.error("Error:", res.status, res.statusText);
@@ -179,7 +196,7 @@ console.log(id)
       </div>
       <div class="relative w-full bg-white shadow-lg p-8 my-10 rounded-md text-left">
 
-<div v-if="checkSignIn && user._id === getDet.owner?.ownerId" class="dropdown dropdown-end absolute top-0 right-2 p-4">
+<div v-if="checkSignIn && user._id === getDet.owner?.ownerId || user._id === '65d231533f0e791b0e10c9d1' " class="dropdown dropdown-end absolute top-0 right-2 p-4">
       <div tabindex="0" role="button" class="btn btn-sm bg-transparent border-transparent shadow-transparent">
         <div class="w-4 rounded-full">
           <img src="/menu.png" />

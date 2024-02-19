@@ -104,7 +104,7 @@ const login = async () => {
         </div>
 
 
-        <div class="flex items-center h-5 mb-4">
+        <!-- <div class="flex items-center h-5 mb-4">
           <input
             id="remember"
             type="checkbox"
@@ -121,12 +121,11 @@ const login = async () => {
           <p @click="toggleForm" class="text-sm text-blue-500 text-right ml-14">
             Forgot your password?
           </p>
-        </div>
+        </div> -->
 
         <div class="mb-6">
           <button
             type="submit"
-            @click="login"
             class="w-full bg-amber-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-orange-500 focus:outline-none"
           >
             Sign in
