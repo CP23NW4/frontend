@@ -42,7 +42,7 @@ console.log(id)
             : strayAnimal.description ? strayAnimal.description.substring(0, 20) + ' ...' : ''}}
           </div>
           <div class="text-[16px] font-bold leading-none tracking-tight" v-if="strayAnimal.description === null">
-            ไม่ระบุชื่อ
+            ไม่ระบุรายละเอียด
           </div>
           <!-- <div v-if="strayAnimal.owner.ownerUsername !== null">
           {{ strayAnimal.owner.ownerUsername }}

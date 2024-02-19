@@ -4,7 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 const router = useRouter();
 const route = useRoute();
 
-const props = defineProps(["closeModal"]);
+const props = defineProps(["closeModal", "formPost"]);
 const emit = defineEmits();
 
 const minCount = 0;
@@ -146,9 +146,11 @@ const createPost = async () => {
     formData.append("color", formPost.value.color);
     formData.append("description", formPost.value.description);
 
-    // Check if formPost.value.picture is not null before appending
     if (formPost.value.picture) {
       formData.append("picture", formPost.value.picture);
+    } else {
+      alert("Please upload a picture.");
+      return; 
     }
 
     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals`, {
@@ -164,7 +166,10 @@ const createPost = async () => {
       console.log("Post created successfully:", data);
       alert("Create Successful!");
       emit("closeModal", true);
-    } else if (res.status === 401) {
+      window.location.reload() 
+    } else if (res.status === 400) {
+      alert("Bad Request: Please check your input data.");
+    }else if (res.status === 401) {
       alert("No authentication, Go to signin");
       localStorage.removeItem("token");
       router.push({
@@ -207,6 +212,7 @@ const handleSubmit = async () => {
   } else {
     // else create new post
     createPost();
+    emit('closeModalWithoutConfirmation');// Emit an event to close the modal without confirmation
   }
 };
 
