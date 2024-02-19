@@ -47,6 +47,7 @@ const getPostById = async () => {
           router.push({
             name: "login",
           });
+          window.location.reload() 
         }
         else if (res.status === 500) {
         console.error("Error: Internal Server Error");
@@ -136,12 +137,7 @@ const getUsers = async () => {
         router.push({
           name: "notfound",
         });
-      } else if (res.status === 401) {
-          alert("No authentication, Go to signin");
-          localStorage.removeItem("token");
-          router.push({
-            name: "login",
-          });
+      
         } else if (res.status === 403) {
           alert("You do not have permission to edit other post, Check your role");
           router.push({
