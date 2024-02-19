@@ -14,8 +14,7 @@ export const handleAuthentication = async (url, data, successMessage) => {
         console.log(token.token);
         console.log(token);
         alert(successMessage);
-        console.log("Operation successful");
-  
+        console.log("Successful");
         location.reload();
       } else if (res.status === 400) {
         console.log(res.status, error);
