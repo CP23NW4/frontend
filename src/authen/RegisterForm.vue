@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { handleRegister } from "../composition/auth";
+// import { handleRegister } from "../composition/auth";
 import { calculateAge } from "../composition/validate";
 
 const router = useRouter();

@@ -1,25 +1,34 @@
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 import { handleAuthentication } from "../composition/auth";
 import { calculateAge } from "../composition/validate";
 
 const router = useRouter();
 const registerData = ref({
-  firstName: "",
-  lastName: "",
-  phoneNumber: "",
-  username: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
+  firstName: "เทส",
+  lastName: "เทสสสสส",
+  phoneNumber: "0886384950",
+  username: "testddtt",
+  email: "tesddst@gmai.com",
+  password: "gfdfg123!",
+  confirmPassword: "gfdfg123!",
   birthday: "",
-  userAddress: "",
-  idCard: "",
+  userAddress: "testtt",
+  idCard: "1234567847452",
 });
 
 const minCount = 0;
 const maxCountAddress = 200;
+
+// onBeforeMount(() => {
+//   const checkLogin = localStorage.getItem("token");
+//   if (!checkLogin) {
+//     router.push({
+//       name: "login",
+//     });
+//   }
+// });
 
 // const registerData = ref({
 //   firstName: "",
@@ -187,9 +196,23 @@ const signup = async () => {
     idCard: registerData.value.idCard,
   };
   await handleAuthentication("/users/register", data, "Sign Up successful!");
-  router.push({ name: "home" });
-  window.location.reload() 
+    localStorage.removeItem("token")
+    location.reload()
+    router.push({ name: "login" });
 };
+
+
+
+
+// localStorage.removeItem("token")
+//   router.push({ name: "home" });
+
+
+// localStorage.removeItem("token")
+//   location.reload()
+//     router.push({
+//       name: "login",
+//     });
 
 const handleFileUpload = async (event) => {
   const file = event.target.files[0];
@@ -201,7 +224,7 @@ const handleFileUpload = async (event) => {
       registerData.value.picture = file;
       console.log(registerData.value.picture);
     } else {
-      alert("File size exceeds the limit (1MB). Please choose a smaller file.");
+      alert("File size exceeds the limit (10MB). Please choose a smaller file.");
     }
   }
 };

@@ -67,10 +67,10 @@ const SignOut = () => {
         <router-link :to="{ name: 'home' }" @click="closeMobileMenu" class="block text-gray-800 py-2 border-b border-gray-300">Home</router-link>
         <!-- <router-link :to="{ name: 'health' }" @click="closeMobileMenu" class="block text-gray-800 py-2 border-b border-gray-300">Health</router-link>
         <router-link :to="{ name: 'about-us' }" @click="closeMobileMenu" class="block text-gray-800 py-2 border-b border-gray-300">About Me</router-link> -->
-        <router-link :to="{ name: 'profile' }" @click="closeMobileMenu" class="block text-gray-800 py-2 border-b border-gray-300" v-if="!checkSignIn">Profile</router-link>
-        <router-link :to="{ name: 'login' }" @click="closeMobileMenu" class="block text-red-800 py-2" v-if="!checkSignIn">Sign in</router-link>
-        <!-- <router-link :to="{ name: 'login' }" @click="SignOut" class="block text-red-800 py-2" v-if="checkSignIn">Sign out</router-link> -->
-        <a class="text-red-700 cursor-pointer" v-if="checkSignIn" @click="SignOut">Sign out</a>
+        <router-link :to="{ name: 'profile' }" @click="closeMobileMenu" class="block text-gray-800 py-2 border-b border-gray-300" v-if="checkSignIn">Profile</router-link>
+        <router-link :to="{ name: 'login' }" @click="closeMobileMenu" class="block font-semibold text-green-600 py-2" v-if="!checkSignIn">Sign in</router-link>
+        <router-link :to="{ name: 'login' }" @click="SignOut" class="block font-semibold text-red-800 py-2" v-if="checkSignIn">Sign out</router-link>
+        <!-- <a class="text-red-700 cursor-pointer" v-if="checkSignIn" @click="SignOut">Sign out</a> -->
     </div>
       </div>
       </div>

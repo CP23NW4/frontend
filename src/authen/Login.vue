@@ -22,7 +22,7 @@ const login = async () => {
     identifier: identifier.value,
     password: password.value,
   };
-  await handleAuthentication("/users/login", loginData, "Login successful!");
+  await handleAuthentication("/users/login", loginData, "Sign in successful!");
 };
 
 // const onInput = (input) => {

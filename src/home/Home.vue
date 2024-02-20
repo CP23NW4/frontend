@@ -13,7 +13,7 @@ import searchFilter from '../composition/searchFilter';
 let checkSignIn= ref(localStorage.getItem('token'))     
 const { strayAnimals } = getStrayAnimals();
 const { keyword, filteredStrayAnimals, setSearchKeyword } = searchFilter(strayAnimals);
-
+// location.reload()
 </script>
 
 

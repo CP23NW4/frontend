@@ -12,6 +12,12 @@ const user = ref({});
 const router = useRouter();
 const route = useRoute();
 
+const goBack = () => {
+  router.push({
+          name: "profile",
+        });
+};
+
 const formattedDOB = computed(() => {
   if (user.value.DOB) {
     const date = new Date(user.value.DOB);
@@ -171,7 +177,6 @@ const updateProfile = async () => {
 };
 
 
-
 // const updateProfile = async () => {
 //   try {
 //     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/users/`, {
@@ -257,7 +262,6 @@ onMounted(async () => {
   <div class="flex justify-between">
     <!-- Cancel Button -->
     <button @click="goBack" class="text-gray-600 font-semibold py-2 px-4 rounded-md hover:text-gray-800 focus:outline-none">Cancel</button>
-    
     <!-- Submit Button -->
     <button type="submit" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-500 focus:outline-none">Update Profile</button>
   </div>

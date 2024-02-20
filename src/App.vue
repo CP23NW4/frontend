@@ -8,7 +8,6 @@ const clearConsole = () => {
   console.clear();
 };
 
-// Use the router's afterEach hook to clear the console when navigating
 router.afterEach(() => {
   clearConsole();
 });

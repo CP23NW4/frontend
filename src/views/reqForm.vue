@@ -12,6 +12,8 @@ const getDet = ref({});
     note: ''
   });
 
+  const goBack = () => router.go(-1);
+
   // const reqForm = {
   //   reqAddress: '',
   //   reqPhone: '',
@@ -200,10 +202,10 @@ onMounted(() => {
         </form>
       </div>
     </div>
+    <div class="text-left"> 
+      <button @click="goBack" class="text-gray-600 font-semibold px-4 rounded-md hover:text-gray-800 focus:outline-none">Back</button>
+          </div>  
+    
   </template>
   
-  
-  <style scoped>
-  /* Add any additional styling here */
-  </style>
   

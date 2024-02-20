@@ -51,8 +51,14 @@ const getPostById = async () => {
         }
         else if (res.status === 500) {
         console.error("Error: Internal Server Error");
+        router.push({
+          name: "notfound",
+        });
       } else {
         console.error("Error:", res.status, res.statusText);
+        router.push({
+          name: "notfound",
+        });
       }
     }
   } catch (error) {
@@ -145,6 +151,9 @@ const getUsers = async () => {
           });
         } else if (res.status === 500) {
         console.error("Error: Internal Server Error");
+        router.push({
+          name: "notfound",
+        });
       } else {
         console.error("Error:", res.status, res.statusText);
       }
@@ -166,7 +175,6 @@ console.log(id)
     params: { id: id}
   })
 }
-
 
 
 </script>
@@ -231,17 +239,19 @@ console.log(id)
             <li>
               <a class="font-bold m-2">คำอธิบาย :</a> {{ getDet.description }}
             </li>
-            <!-- <li>
-              <a class="font-bold m-2">ที่อยู่ : </a> {{ getDet.ownerId }}
-            </li>
-            <li>
-              <a class="font-bold m-2">เบอร์ติดต่อ :</a> {{ getDet.ownerId }}
-            </li> -->
           </ul>
+<br>
+            <router-link :to="{ name: 'reqform' }" v-if="user._id !== getDet.owner?.ownerId && checkSignIn" class="block mx-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt</router-link>
+            <!-- <router-link :to="{ name: 'reqform' }" v-if="user._id !== getDet.owner?.ownerId" class="m-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800">Adopt</router-link> -->
+  
         </div>
       </div>
 
-              <router-link :to="{ name: 'reqform' }" v-if="user._id !== getDet.owner?.ownerId" class="m-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800">Adopt</router-link>
+      <div class="text-left"> 
+      <button @click="goBack" class="text-gray-600 font-semibold py-2 px-4 rounded-md hover:text-gray-800 focus:outline-none">Back</button>
+          </div>   
+          
+          <!-- <router-link :to="{ name: 'reqform' }" v-if="user._id !== getDet.owner?.ownerId" class="m-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800">Adopt</router-link> -->
 
       <dialog id="my_modal_1" class="modal">
         <div class="modal-box flex flex-col items-center justify-center">

@@ -6,7 +6,7 @@ const route = useRoute();
 
 const props = defineProps(["closeModal", "formPost"]);
 const emit = defineEmits();
-
+const goBack = () => router.go(-1);
 const minCount = 0;
 const maxCountDesc = 500;
 let nameError = "";
@@ -63,8 +63,13 @@ const getPostById = async () => {
       router.push({
         name: "notfound",
       });
+      location.reload();
     } else if (res.status === 500) {
       console.error("Error: Internal Server Error");
+      router.push({
+          name: "notfound",
+        });
+      location.reload();
     } else if (res.status === 400) {
       console.error("Not validate");
     } else if (res.status === 401) {
@@ -73,6 +78,7 @@ const getPostById = async () => {
           router.push({
             name: "login",
           });
+          location.reload();
         }else {
       console.error("Error:", res.status, res.statusText);
     }
@@ -193,7 +199,7 @@ const handleFileUpload = async (event) => {
       formPost.value.picture = file;
       console.log(formPost.value.picture);
     } else {
-      alert("File size exceeds the limit (1MB). Please choose a smaller file.");
+      alert("File size exceeds the limit (10MB). Please choose a smaller file.");
     }
   }
 };
@@ -245,7 +251,7 @@ watch(
 
 <template>
   <!-- {{ formPost }} -->
-  <div class="flex items-center justify-center">
+  <div class="flex items-center justify-center flex-col">
     <form
       @submit.prevent="handleSubmit"
       action="#"
@@ -366,6 +372,7 @@ watch(
             :class="{ 'border-red-500': touchedInputs.type && !formPost.type }"
             required
             v-model="formPost.type"
+            :disabled="route.params.id"
           >
             <option value="" disabled selected>Type</option>
             <option value="Cat">Cat</option>
@@ -472,11 +479,19 @@ watch(
       <div class="mb-4">
         <button
           type="submit"
-          class="px-4 py-2 bg-blue-500 text-white rounded-md"
+          class="block w-full px-4 py-2 bg-blue-500 text-white rounded-md"
         >
           {{ route.params.id ? "Update" : "Create" }}
         </button>
       </div>
+      
     </form>
+    
   </div>
+  <div class="text-left mt-4 ">
+      <button v-if="route.params.id" @click="goBack" class="text-gray-600 font-semibold py-2 px-4 rounded-md hover:text-gray-800 focus:outline-none">Back</button>
+    </div> 
 </template>
+<style scoped>
+
+</style>
