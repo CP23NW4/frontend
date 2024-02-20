@@ -1,21 +1,21 @@
 <script setup>
 import { ref, computed, watch, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
-import { handleAuthentication } from "../composition/auth";
+import { handleSignup } from "../composition/auth";
 import { calculateAge } from "../composition/validate";
 
 const router = useRouter();
 const registerData = ref({
-  firstName: "เทส",
-  lastName: "เทสสสสส",
-  phoneNumber: "0886384950",
-  username: "testddtt",
-  email: "tesddst@gmai.com",
-  password: "gfdfg123!",
-  confirmPassword: "gfdfg123!",
+  firstName: "",
+  lastName: "",
+  phoneNumber: "",
+  username: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
   birthday: "",
-  userAddress: "testtt",
-  idCard: "1234567847452",
+  userAddress: "",
+  idCard: "",
 });
 
 const minCount = 0;
@@ -195,10 +195,10 @@ const signup = async () => {
     userAddress: registerData.value.userAddress,
     idCard: registerData.value.idCard,
   };
-  await handleAuthentication("/users/register", data, "Sign Up successful!");
-    localStorage.removeItem("token")
-    location.reload()
-    router.push({ name: "login" });
+  await handleSignup("/users/register", data, "Sign Up successful!");
+    // localStorage.removeItem("token")
+    // location.reload()
+    // router.push({ name: "login" });
 };
 
 

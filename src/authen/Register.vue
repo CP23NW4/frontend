@@ -1,7 +1,7 @@
 <script setup>
 import RegisterForm from './RegisterForm.vue'
 import R from './R.vue'
-console.log('hh')
+console.log('Sign Up')
 </script>
 
 <template>
