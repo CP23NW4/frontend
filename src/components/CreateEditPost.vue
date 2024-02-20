@@ -251,7 +251,7 @@ watch(
 
 <template>
   <!-- {{ formPost }} -->
-  <div class="flex items-center justify-center">
+  <div class="flex items-center justify-center flex-col">
     <form
       @submit.prevent="handleSubmit"
       action="#"
@@ -486,10 +486,11 @@ watch(
       </div>
       
     </form>
-    <div class="text-left mt-4"> 
-    <button @click="goBack" class="text-gray-600 font-semibold py-2 px-4 rounded-md hover:text-gray-800 focus:outline-none">Back</button>
-  </div>  
+    
   </div>
+  <div class="text-left mt-4 ">
+      <button v-if="route.params.id" @click="goBack" class="text-gray-600 font-semibold py-2 px-4 rounded-md hover:text-gray-800 focus:outline-none">Back</button>
+    </div> 
 </template>
 <style scoped>
 
