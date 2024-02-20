@@ -97,7 +97,7 @@ const SignOut = () => {
           </a>
         </router-link>
         </li>
-        <li><a>Settings</a></li>
+        <!-- <li><a>Settings</a></li> -->
         <li><a class="text-red-700" @click="SignOut">Sign out</a></li>
       </ul>
     </div>
