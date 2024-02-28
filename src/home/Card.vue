@@ -1,9 +1,19 @@
 <script setup>
-import { defineProps } from 'vue';
+import { ref, onMounted, defineProps } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
-const router = useRouter()
 
+const router = useRouter()
 const props = defineProps(['strayAnimal']);
+// const route = useRoute(); 
+
+// import { getUser } from "../composition/useUsers";
+// const getUsers = async () => {
+//   await getUser("/users/", "Sign in successful!");
+// };
+
+// onMounted(async () => {
+//   getUsers();
+// });
 
 const showDetail = (id) => {
 console.log(id)
@@ -12,6 +22,7 @@ console.log(id)
     params: { id: id}
   })
 }
+
 
 </script>
 <template>

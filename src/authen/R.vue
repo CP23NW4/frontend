@@ -57,6 +57,9 @@ const touched = {
 };
 const showPassword = ref(false);
 
+
+//validation
+
 const isValidThaiFirstName = computed(() => {
   const thaiNameRegex = /^[\u0E01-\u0E5B]+$/;
   return thaiNameRegex.test(registerData.value.firstName);

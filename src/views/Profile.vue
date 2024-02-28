@@ -5,19 +5,22 @@ import Filterbar from "../bar/Filterbar.vue";
 import Searchbar from "../bar/Searchbar.vue";
 import CreateButton from "../components/CreateButton.vue";
 import BannerSlide from "../components/BannerSlide.vue";
-import Card from "../home/CardOwner.vue";
+import Card from "../home/Card.vue";
 import Snowfall from "../components/Snowfall.vue";
 import getStrayAnimals from "../composition/useStrayAnimals";
 import searchFilter from "../composition/searchFilter";
 
 let checkSignIn = ref(localStorage.getItem("token"));
 const { strayAnimals } = getStrayAnimals();
-const { keyword, filteredStrayAnimals, setSearchKeyword } =
-  searchFilter(strayAnimals);
+// const { keyword, filteredStrayAnimals, setSearchKeyword } = searchFilter(strayAnimals);
 
 const user = ref({});
 const router = useRouter();
 const route = useRoute();
+// import { getUser } from "../composition/useUsers";
+// const getUsers = async () => {
+//   await getUser("/users/", "Sign in successful!");
+// };
 
 const getUsers = async () => {
   try {
@@ -102,7 +105,7 @@ onMounted(async () => {
             </div>
 
             <div class="grid lg:grid-cols-3 gap-0 md:grid-cols-3">
-  <template v-for="strayAnimal in filteredStrayAnimals">
+  <template v-for="strayAnimal in strayAnimals">
     <template v-if="strayAnimal.owner.ownerId === user._id">
       <div :key="strayAnimal._id">
         <Card :strayAnimal="strayAnimal" />
