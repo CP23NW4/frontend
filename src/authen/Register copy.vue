@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onBeforeMount } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { handleSignup } from "../composition/auth";
 import { calculateAge } from "../composition/validate";
@@ -14,34 +14,18 @@ const registerData = ref({
   password: "",
   confirmPassword: "",
   birthday: "",
-  userAddress: "",
+  // userAddress: "",
+  postCode: "10100",
+  tambonThaiShort: 'จักรวรรดิ' ,
+  districtThaiShort: 'สัมพันธวงศ์' ,
+  provinceThai: 'กรุงเทพมหานคร' ,
+  addressLine1: 'Apt 101',
+  addressLine2: 'Apt 101',
   idCard: "",
 });
 
 const minCount = 0;
 const maxCountAddress = 200;
-
-// onBeforeMount(() => {
-//   const checkLogin = localStorage.getItem("token");
-//   if (!checkLogin) {
-//     router.push({
-//       name: "login",
-//     });
-//   }
-// });
-
-// const registerData = ref({
-//   firstName: "",
-//   lastName: "",
-//   phoneNumber: "",
-//   username: "",
-//   email: "",
-//   password: "",
-//   confirmPassword: "",
-//   birthday: "",
-//   address: "",
-//   idCard: "",
-// });
 
 const touched = {
   firstName: false,
@@ -195,7 +179,14 @@ const signup = async () => {
     password: registerData.value.password,
     phoneNumber: registerData.value.phoneNumber,
     DOB: registerData.value.birthday,
-    userAddress: registerData.value.userAddress,
+    userAddress: {
+        postCode: registerData.value.userAddress.postCode,
+        tambonThaiShort: registerData.value.userAddress.tambonThaiShort,
+        districtThaiShort: registerData.value.userAddress.districtThaiShort,
+        provinceThai: registerData.value.userAddress.provinceThai,
+        addressLine1: registerData.value.userAddress.addressLine1,
+        addressLine2: registerData.value.userAddress.addressLine2,
+    },
     idCard: registerData.value.idCard,
   };
   await handleSignup("/users/register", data, "Sign Up successful!");
@@ -232,6 +223,40 @@ const handleFileUpload = async (event) => {
   }
 };
 
+const thailandData = ref("");
+const selectedProvince = ref('');
+const provinces = ref([]);
+const uniqueProvinces = ref([]);
+const getThailandData = async () => {
+    try {
+        const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/thailand`, {
+            method: 'GET',
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            console.log('Thailand data:', data);
+            provinces.value = data;
+            uniqueProvinces.value = [...new Set(data.map(item => item.provinceThai))];
+            // Handle the received Thailand data as needed
+        } else {
+            if (res.status === 404) {
+                console.error('Error: Thailand data not found');
+                router.push({ name: 'notfound' });
+            } else if (res.status === 500) {
+                console.error('Error: Internal Server Error');
+            } else {
+                console.error('Error:', res.status, res.statusText);
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching Thailand data:', error);
+    }
+};
+
+onMounted(() => {
+    getThailandData();
+});
 
 </script>
 
@@ -239,6 +264,15 @@ const handleFileUpload = async (event) => {
 <template>
   <div class="mt-10 min-h-screen flex items-center justify-center">
     <div>
+      <!-- {{ thailandData.ProvinceThai }} -->
+      <div>
+    <label for="province">Select Province:</label>
+    <select id="province" v-model="selectedProvince">
+      <option disabled value="">Please select a province</option>
+      <option v-for="province in provinces" :key="province.id" :value="province.provinceThai">{{ province.provinceThai }}</option>
+    </select>
+  </div>
+      {{ registerData }}
       <h2 class="text-2xl font-bold mb-4 text-left">Create new account</h2>
       <form @submit.prevent="signup" action="#" method="POST">
         <div class="grid gap-3 mb-4 md:grid-cols-1">

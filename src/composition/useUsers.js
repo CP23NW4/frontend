@@ -25,8 +25,10 @@ export const getUser = async (url, successMessage) => {
           name: "login",
         });
       } else if (res.status === 404) {
-        alert("404 Not found");
         console.log(res.status);
+        router.push({
+            name: "notfound",
+          });
       } else {
         console.log("Error, something went wrong");
         console.error("Error:", res.status, res.statusText);

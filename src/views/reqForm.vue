@@ -6,10 +6,8 @@ const router = useRouter();
 const route = useRoute(); 
 const getDet = ref({});
   const reqForm = ref({
-    reqAddress: '',
-    reqPhone: '',
-    reqIdCard: '',
-    note: ''
+    note: '',
+    homePicture: ''
   });
 
   const goBack = () => router.go(-1);
@@ -49,6 +47,7 @@ const getUsers = async () => {
           name: "notfound",
         });
       } else if (res.status === 401) {
+        alert("go to sign in pleasee")
         console.error("Login");
         localStorage.removeItem("token")
         router.push({
@@ -83,6 +82,14 @@ onMounted(async () => {
 
   const reqAdoption = async () => {
   try {
+    const formData = new FormData();
+    formData.append('note', reqForm.value.note);
+    // formData.append('homePicture', reqForm.value.homePicture);
+    if (reqForm.value.homePicture) {
+    formData.append('homePicture', reqForm.value.homePicture);
+  }
+
+
     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}/reqAdoption`, {
       method: "POST",
       headers: {
@@ -90,7 +97,7 @@ onMounted(async () => {
         'Authorization': localStorage.getItem("token"),
       },
       // body: JSON.stringify(reqForm.value),
-      body : JSON.stringify(reqForm.value),
+      body: formData,
     });
 
     if (res.status === 200 || res.status === 201) {
@@ -112,6 +119,23 @@ onMounted(async () => {
     console.error("Error creating post:", error);
   }
 };
+
+const handleFileUpload = async (event) => {
+  const file = event.target.files[0];
+
+  if (file) {
+    const maxSizeInBytes = 3 * 1024 * 1024;
+
+    if (file.size <= maxSizeInBytes) {
+      registerData.value.homePicture = file;
+      console.log(registerData.value.homePicture);
+    } else {
+      alert("File size exceeds the limit (3MB). Please choose a smaller file.");
+    }
+  }
+};
+
+
 
 const getPostById = async () => {
   try {

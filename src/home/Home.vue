@@ -9,8 +9,6 @@ import Snowfall from '../components/Snowfall.vue';
 import getStrayAnimals from '../composition/useStrayAnimals';
 import searchFilter from '../composition/searchFilter';
 
-
-let checkSignIn= ref(localStorage.getItem('token'))     
 const { strayAnimals } = getStrayAnimals();
 const { keyword, filteredStrayAnimals, setSearchKeyword } = searchFilter(strayAnimals);
 // location.reload()
@@ -38,6 +36,6 @@ const { keyword, filteredStrayAnimals, setSearchKeyword } = searchFilter(strayAn
     </div>
   
   </div>
-  <CreateButton v-if="checkSignIn"/>
+  <CreateButton />
 
 </template>

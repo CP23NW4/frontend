@@ -213,7 +213,7 @@ console.log(id)
     </div>
 
         <div class="flex mb-4">
-          <img class="w-10 h-10 rounded-full" src="/pf.png" alt="" />
+          <img class="w-10 h-10 rounded-full mr-2" src="/pf.png" alt="" />
           <div class="font-medium dark:text-white">
             <div class="font-bold">{{ getDet.owner?.ownerUsername }}</div>
             <div class="text-sm text-gray-500 dark:text-gray-400">
@@ -236,8 +236,8 @@ console.log(id)
               {{ capitalizeFirstLetter(getDet.type) }}
             </li>
             <li><a class="font-bold m-2">สี :</a> {{ getDet.color }}</li>
-            <li>
-              <a class="font-bold m-2">คำอธิบาย :</a> {{ getDet.description }}
+            <li class="mx-2">  
+              <a class="font-bold">คำอธิบาย :</a> {{ getDet.description }}
             </li>
           </ul>
 <br>

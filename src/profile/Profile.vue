@@ -8,19 +8,60 @@ import BannerSlide from "../components/BannerSlide.vue";
 import Card from "../home/Card.vue";
 import Snowfall from "../components/Snowfall.vue";
 import getStrayAnimals from "../composition/useStrayAnimals";
+import getSigninStrayAnimals from "../composition/useStrayAnimals";
 import searchFilter from "../composition/searchFilter";
+import Profilebar from "../bar/Profilebar.vue";
 
 let checkSignIn = ref(localStorage.getItem("token"));
 const { strayAnimals } = getStrayAnimals();
 // const { keyword, filteredStrayAnimals, setSearchKeyword } = searchFilter(strayAnimals);
 
 const user = ref({});
+const posts = ref({});
 const router = useRouter();
 const route = useRoute();
 // import { getUser } from "../composition/useUsers";
 // const getUsers = async () => {
 //   await getUser("/users/", "Sign in successful!");
 // };
+
+
+const getPosts = async () => {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
+      },
+    });
+
+    if (res.status === 200) {
+      const postsData = await res.json();
+      posts.value = postsData;
+    } else {
+      if (res.status === 404) {
+        console.error("Error: Post not found");
+        router.push({
+          name: "notfound",
+        });
+      } else if (res.status === 401) {
+        console.error("Login");
+        localStorage.removeItem("token");
+        router.push({
+          name: "login",
+        });
+      } else if (res.status === 500) {
+        console.error("Error: Internal Server Error");
+      } else {
+        console.error("Error:", res.status, res.statusText);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
 const getUsers = async () => {
   try {
@@ -61,6 +102,9 @@ const getUsers = async () => {
 onMounted(async () => {
   getUsers();
 });
+onMounted(async () => {
+  getPosts();
+});
 </script>
 
 
@@ -75,7 +119,7 @@ onMounted(async () => {
               <div class="mr-8">
                 <img
                   class="w-32 h-32 rounded-full object-cover shadow-xl"
-                  src="/cat.jpg"
+                  :src="user.userPicture"
                   alt="user photo"
                 />
               </div>
@@ -84,6 +128,7 @@ onMounted(async () => {
                   {{ user.username }}
                 </h2>
                 <p class="text-sm text-gray-700">{{ user.email }}</p>
+                <p class="text-sm text-gray-700">{{ user.userAddress?.provinceThai }}</p>
               </div>
               <router-link
                 :to="{ name: 'edit-profile' }"
@@ -95,9 +140,11 @@ onMounted(async () => {
             <hr class="my-8 border-t border-gray-400">
 
             <!-- Pets Section -->
+            address: {{ user.userAddress }}
+         <Profilebar />
             <div>
               <h3 class="text-m text-left font-semibold text-indigo-900 mb-2">
-                My Pets
+                My Posts
               </h3>
             </div>
             <div v-if="strayAnimals.length === 0">
@@ -113,7 +160,15 @@ onMounted(async () => {
     </template>
   </template>
 </div>
-
+ยังไม่ได้แบบเรียกจากแบคซักที เครียดละ เดี๋ยวมาใหม่ 3/3/24
+{{ posts }}
+<!-- <div v-for="post in posts">
+    <template v-if="strayAnimal.owner.ownerId === user._id">
+      <div :key="post._id">
+        <Card :posts="post" />
+      </div>
+    </template>
+  </div> -->
           </div>
         </div>
       </div>

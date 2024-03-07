@@ -13,8 +13,10 @@ import NotFound from '../views/NotFound.vue';
 import AboutUs from '../views/AboutUs.vue';
 import Dog from '../home/Dog.vue';
 import Cat from '../home/Cat.vue';
-import Profile from '../views/Profile.vue';
-import EditProfile from '../views/EditProfile.vue';
+import Profile from '../profile/Profile.vue';
+import EditProfile from '../profile/EditProfile.vue';
+import AdoptHistory from '../profile/AdoptHistory.vue';
+import History from '../profile/History.vue';
 import ReqForm from '../views/reqForm.vue';
 
 
@@ -69,6 +71,18 @@ const routes = [
     path: '/profile',
     name: 'profile',
     component: Profile,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/adopt-his',
+    name: 'adopt-his',
+    component: AdoptHistory,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/history',
+    name: 'history',
+    component: History,
     meta: { requiresAuth: true }
   },
   {

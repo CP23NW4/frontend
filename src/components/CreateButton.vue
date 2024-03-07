@@ -1,9 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import CreateEditPost from './CreateEditPost.vue';
+import CreateEditPost from '../views/Posts.vue';
 
-
+let checkSignIn= ref(localStorage.getItem('token'))     
 const router = useRouter();
 const expandButton = ref(false);
 
@@ -47,6 +47,7 @@ const handleCreateModalCloseWithoutConfirmation = () => {
 };
 </script>
 <template>
+  <div v-if="checkSignIn">
     <!-- Create Post Button -->
     <div
     @mouseenter="expandButton = true"
@@ -75,7 +76,7 @@ const handleCreateModalCloseWithoutConfirmation = () => {
     </div>
   </div>
 </teleport>
-
+</div>
 </template>
 
 
