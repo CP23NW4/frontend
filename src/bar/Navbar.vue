@@ -15,7 +15,8 @@ const closeMobileMenu = () => {
   mobileMenuOpen.value = false;
 };
 
-let checkSignIn= ref(localStorage.getItem('token'))     
+let checkSignIn= ref(localStorage.getItem('token'))    
+
 
 const SignOut = () => {
   if (confirm("Sign Out?")) {
@@ -27,7 +28,7 @@ const SignOut = () => {
 
 const getUsers = async () => {
   try {
-    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/users/`, {
+    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/users/user/info`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -127,6 +128,7 @@ onMounted(async () => {
         <div class="w-10 rounded-full">
           <img alt="user profile" :src="user.userPicture"/>
         </div>
+
       </div>
       <ul tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
         <li>

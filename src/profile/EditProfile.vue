@@ -4,8 +4,15 @@ import { useRouter, useRoute } from "vue-router";
 import axios from 'axios';
 
 const profileForm = ref({
+  username: '',
   phoneNumber: '',
-  userAddress: '',
+  userAddress: {
+    postCode: '',
+    tambonThaiShort: '',
+    districtThaiShort: '',
+    provinceThai: '',
+    addressLine1: ''
+  }
 });
 
 const user = ref({});
@@ -21,11 +28,8 @@ const goBack = () => {
 const formattedDOB = computed(() => {
   if (user.value.DOB) {
     const date = new Date(user.value.DOB);
-    const day = date.getDate();
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const month = monthNames[date.getMonth()];
     const year = date.getFullYear();
-    return `${day} ${month}, ${year}`;
+    return year.toString();
   } else {
     return '';
   }
@@ -34,7 +38,7 @@ const formattedDOB = computed(() => {
 
 const getUsers = async () => {
   try {
-    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/users/`, {
+    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/users/user/info`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -46,11 +50,17 @@ const getUsers = async () => {
       const userData = await res.json();
       user.value = userData;
       profileForm.value = {
-        username: userData.username,
-        email: userData.email,
-        phoneNumber: userData.phoneNumber,
-        userAddress: userData.userAddress,
-      };
+    username: userData.username,
+    email: userData.email,
+    phoneNumber: userData.phoneNumber,
+    userAddress: {
+      postCode: userData.userAddress.postCode,
+      tambonThaiShort: userData.userAddress.tambonThaiShort,
+      districtThaiShort: userData.userAddress.districtThaiShort,
+      provinceThai: userData.userAddress.provinceThai,
+      addressLine1: userData.userAddress.addressLine1,
+    }
+  };
     } else {
       if (res.status === 404) {
         console.error("Error: Post not found");
@@ -176,51 +186,6 @@ const updateProfile = async () => {
   }
 };
 
-
-// const updateProfile = async () => {
-//   try {
-//     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/users/`, {
-//       method: "PUT",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: localStorage.getItem("token"),
-//       },
-//       body: JSON.stringify(formPost.value),
-//     });
-    
-
-//     if (res.status === 200) {
-//       alert("Update successfully");
-//       const data = await res.json();
-//         console.log("Updated successfully:", data);
-//         router.go(-1);
-//     } else {
-//       if (res.status === 404) {
-//         console.error("Error: Post not found");
-//         router.push({
-//           name: "notfound",
-//         });
-//       }else if (res.status === 400) {
-//           console.log("No Valid");
-//           alert("400 Bad Request");
-//           const confirmed = window.confirm("Not validate");
-//         } else if (res.status === 401) {
-//         console.error("Unauthorized: Please log in again");
-//         localStorage.removeItem("token");
-//         router.push({
-//           name: "login",
-//         });
-//       } else if (res.status === 500) {
-//         console.error("Error: Internal Server Error");
-//       } else {
-//         console.error("Error:", res.status, res.statusText);
-//       }
-//     }
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
-
 onMounted(async () => {
   getUsers();
 });
@@ -233,7 +198,7 @@ onMounted(async () => {
     <form @submit.prevent="updateProfile" class="space-y-4">
       <div class="flex items-center">
         <label for="username" class="w-1/2 text-left mr-4">Username:</label>
-        <input v-model="profileForm.username" disabled type="text" id="username" class="w-3/4 px-3 py-2 border border-gray-300 rounded-md">
+        <input v-model="profileForm.username" type="text" id="username" class="w-3/4 px-3 py-2 border border-gray-300 rounded-md">
       </div>
       <div class="flex items-center">
         <label for="email" class="w-1/2 text-left mr-4">Email:</label>
@@ -241,7 +206,7 @@ onMounted(async () => {
       </div>
 
       <div class="flex items-center">
-        <label for="dob" class="w-1/2 text-left mr-4">Date of Birth:</label>
+        <label for="dob" class="w-1/2 text-left mr-4">Year of Birth:</label>
         <input v-model="formattedDOB" disabled type="text" id="dob" class="w-3/4 px-3 py-2 border border-gray-300 rounded-md">
       </div>
 
@@ -252,7 +217,7 @@ onMounted(async () => {
 
       <div class="flex items-center">
   <label for="address" class="w-1/2 text-left mr-4">Address:</label>
-  <textarea v-model="profileForm.userAddress" id="address" class="w-3/4 px-3 py-2 border border-gray-300 rounded-md" :maxlength="200" rows="4"></textarea>
+  <textarea v-model="profileForm.userAddress.provinceThai" disabled id="address" class="w-3/4 px-3 py-2 border border-gray-300 rounded-md" :maxlength="200" rows="4"></textarea>
 </div>
 <div>
   <!-- Delete your Account -->

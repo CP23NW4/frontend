@@ -9,6 +9,11 @@ const getDet = ref({});
 let checkSignIn= ref(localStorage.getItem('token'))     
 
 
+const showAlert = () => {
+  alert("You need to sign in before adopting!");
+};
+
+
 const formatDate = (timestamp) => {
   const date = new Date(timestamp);
   return date.toLocaleString("en-US", {
@@ -239,11 +244,17 @@ console.log(id)
             <li class="mx-2">  
               <a class="font-bold">คำอธิบาย :</a> {{ getDet.description }}
             </li>
+            <li class="mx-2">  
+              <a class="font-bold">สถานะ :</a> 
+              <span class="text-emerald-600" v-if="getDet.status === 'Available'">{{ getDet.status }}</span>
+              <span class="text-red-600" v-if="getDet.status === 'Unavailable'">{{ getDet.status }}</span>
+            </li>
           </ul>
 <br>
-            <router-link :to="{ name: 'reqform' }" v-if="user._id !== getDet.owner?.ownerId && checkSignIn" class="block mx-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt</router-link>
-            <!-- <router-link :to="{ name: 'reqform' }" v-if="user._id !== getDet.owner?.ownerId" class="m-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800">Adopt</router-link> -->
-  
+
+    <!-- Button to adopt -->
+    <router-link v-if="user._id !== getDet.owner?.ownerId && checkSignIn" :to="{ name: 'reqform' }" class="block mx-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt</router-link>
+    <button v-if="user._id !== getDet.owner?.ownerId && !checkSignIn" @click="showAlert" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt</button>
         </div>
       </div>
 

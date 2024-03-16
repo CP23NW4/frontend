@@ -28,7 +28,7 @@ const getDet = ref({});
 const getUsers = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/users/`,
+      `${import.meta.env.VITE_APP_TITLE}/users/user/info`,
       {
         method: "GET",
         headers: {'Content-Type':'application/json',
@@ -93,10 +93,8 @@ onMounted(async () => {
     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}/reqAdoption`, {
       method: "POST",
       headers: {
-        'Content-Type': "application/json",
         'Authorization': localStorage.getItem("token"),
       },
-      // body: JSON.stringify(reqForm.value),
       body: formData,
     });
 
