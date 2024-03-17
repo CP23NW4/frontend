@@ -1,0 +1,25 @@
+name: Frontend Deployment
+
+on:
+  push:
+    branches:
+      - frontend-punch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout frontend code
+      uses: actions/checkout@v2
+      with:
+        ref: frontend-punch
+
+    - name: Build and deploy frontend
+      run: |
+        # Add commands to build and deploy your frontend application locally
+        # Example:
+        npm install
+        npm run dev
+        # npm run build
+        # npm run serve
