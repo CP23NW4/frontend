@@ -27,5 +27,5 @@ jobs:
     - name: Deploy to local
       run: |
         # Use your deployment command here, e.g., serve -s build
-        npx serve dist
+        npx serve dist &
 
