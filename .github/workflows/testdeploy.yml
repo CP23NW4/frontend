@@ -1,4 +1,4 @@
-name: Frontend Deployment
+name: Frontend CI/CD
 
 on:
   push:
@@ -6,21 +6,26 @@ on:
       - frontend-punch
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
+    
     steps:
-    - name: Checkout frontend code
+    - name: Checkout repository
       uses: actions/checkout@v2
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
       with:
-        ref: frontend-punch
-
-    - name: Build and deploy frontend
+        node-version: '14'
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Build and test
+      run: npm run build
+      
+    - name: Deploy to local
       run: |
-        # Add commands to build and deploy your frontend application locally
-        # Example:
-        npm install
-        # npm run dev
-        npm run build
-        # npm run serve
+        # Use your deployment command here, e.g., serve -s build
         npx serve dist
+
