@@ -20,6 +20,7 @@ jobs:
         # Add commands to build and deploy your frontend application locally
         # Example:
         npm install
-        npm run dev
+        # npm run dev
         # npm run build
         # npm run serve
+        npx serve dist
