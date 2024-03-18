@@ -1,4 +1,4 @@
-name: Frontend CI/CD
+name: CI/CD
 
 on:
   push:
@@ -8,24 +8,39 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v2
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20'
-        
+
     - name: Install dependencies
       run: npm install
-      
-    - name: Build and test
-      run: npm run build
-      
-    - name: Deploy to local
-      run: |
-        # Use your deployment command here, e.g., serve -s build
-        npx serve dist &
 
+    - name: Build project
+      run: npm run build
+
+    # Optionally, you can add test steps here
+    # - name: Run tests
+    #   run: npm run test
+
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: dist
+        path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download production artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: dist
+        path: dist
+
+    - name: Deploy to server
+      # Add your deployment script or commands here, for example:
+      run: |
+        npm install -g serve
+        serve dist
