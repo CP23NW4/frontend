@@ -24,7 +24,7 @@ const filteredStrayAnimalsWithStatusAvailable = computed(() => {
     <Searchbar @setSearchKeyword="setSearchKeyword" />
     <Snowfall />
     <Filterbar />
-    <div class="min-h-screen">
+    <div class="min-h-screen lg:px-20">
       <br />
       <!-- <h1 class="font-bold text-left m-8">Finding Home</h1> -->
       <div v-if="strayAnimals.length === 0">
