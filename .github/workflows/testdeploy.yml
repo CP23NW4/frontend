@@ -43,4 +43,4 @@ jobs:
       # Add your deployment script or commands here, for example:
       run: |
         npm install -g serve
-        serve dist
+        serve dist --port 4000
