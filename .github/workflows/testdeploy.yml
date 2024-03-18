@@ -10,37 +10,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Install dependencies
+    - name: Install Dependencies
       run: npm install
 
-    - name: Build project
+    - name: Build Application
       run: npm run build
 
-    # Optionally, you can add test steps here
-    # - name: Run tests
-    #   run: npm run test
-
-    - name: Archive production artifacts
+    - name: Archive Build
       uses: actions/upload-artifact@v2
       with:
-        name: dist
+        name: build
         path: dist
 
   deploy:
-    needs: build
     runs-on: ubuntu-latest
+    needs: build
     steps:
-    - name: Download production artifacts
+    - name: Download Build
       uses: actions/download-artifact@v2
       with:
-        name: dist
+        name: build
         path: dist
 
-    - name: Deploy to server
-      # Add your deployment script or commands here, for example:
+    - name: Deploy to Server
       run: |
         npm install -g serve
-        serve dist
+        serve -s dist
