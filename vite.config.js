@@ -21,4 +21,5 @@ export default defineConfig({
     port: 2304, 
   },
   base: '/',
+  // base: 'https://capstone23.sit.kmutt.ac.th/nw4/',
 })
