@@ -14,14 +14,8 @@ const registerData = ref({
   password: "",
   confirmPassword: "",
   birthday: "",
-  // userAddress: "",
-  // postCode: "",
-  // tambonThaiShort: '' ,
-  // districtThaiShort: '' ,
-  // provinceThai: '' ,
-  // addressLine1: '',
-  // addressLine2: '',
   idCard: "",
+  homeAddress:""
 });
 
 const minCount = 0;
@@ -184,11 +178,12 @@ formData.append('password', registerData.value.password);
 formData.append('phoneNumber', registerData.value.phoneNumber);
 formData.append('DOB', registerData.value.birthday);
 formData.append('idCard', registerData.value.idCard);
+formData.append('userAddress[homeAddress]', registerData.value.homeAddress);
+formData.append('userAddress[PostCode]', selectedTambon.value.PostCode);
+formData.append('userAddress[TambonThaiShort]', selectedTambon.value.TambonThaiShort);
+formData.append('userAddress[DistrictThaiShort]', selectedDistrict.value.DistrictThaiShort);
+formData.append('userAddress[ProvinceThai]', selectedProvince.value.ProvinceThai);
 
-formData.append('userAddress[postCode]', selectedTambon.value.PostCode);
-formData.append('userAddress[tambonThaiShort]', selectedTambon.value.TambonThaiShort);
-formData.append('userAddress[districtThaiShort]', selectedDistrict.value.DistrictThaiShort);
-formData.append('userAddress[provinceThai]', selectedProvince.value.ProvinceThai);
 
 if (registerData.value.userPicture) {
     formData.append('userPicture', registerData.value.userPicture);
@@ -531,14 +526,14 @@ const filteredPostCodes = computed(() => {
           <input
             type="text"
             id="userAddress"
-            v-model="registerData.addressLine1"
+            v-model="registerData.homeAddress"
             placeholder=" "
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
           />
           <label
             for="userAddress"
             class="absolute left-4 top-2 transition-all text-gray-400 bg-white px-1"
-            :class="{ 'text-xs': registerData.userAddress }"
+            :class="{ 'text-xs': registerData.addressLine1 }"
           >
             Address
           </label>

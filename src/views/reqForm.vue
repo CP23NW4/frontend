@@ -125,8 +125,8 @@ const handleFileUpload = async (event) => {
     const maxSizeInBytes = 3 * 1024 * 1024;
 
     if (file.size <= maxSizeInBytes) {
-      registerData.value.homePicture = file;
-      console.log(registerData.value.homePicture);
+      reqForm.value.homePicture = file;
+      console.log(reqForm.value.homePicture);
     } else {
       alert("File size exceeds the limit (3MB). Please choose a smaller file.");
     }
@@ -208,8 +208,13 @@ onMounted(() => {
             <!-- Home Picture -->
             <!-- <div>
               <label for="homePicture" class="block mb-1">Home Picture</label>
-              <input type="file" v-model="formData.homePicture" id="homePicture" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-400">
+              <input type="file" v-model="reqForm.homePicture" id="homePicture" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-400">
             </div> -->
+
+            <div class="grid gap-3 mb-4 md:grid-cols-1">
+<label class="block text-sm font-medium text-gray-900 dark:text-white text-left" for="file_input">Upload Home Picture</label>
+<input @change="handleFileUpload" class="mb-2 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file">
+</div>
             <!-- Note -->
             <div>
               <label for="note" class="block mb- text-left">Note</label>

@@ -4,19 +4,15 @@ import { useRouter, useRoute } from "vue-router";
 import Profile from "./Profile.vue";
 import Card from "../home/Card.vue";
 const route = useRoute;
-const adoptionReq = ref({ adoptionRequests: [] });
+const adoptionReq = ref([]);
 import getStrayAnimals from "../composition/useStrayAnimals";
 import searchFilter from "../composition/searchFilter";
 
 const { strayAnimals } = getStrayAnimals();
 const { keyword, filteredStrayAnimals, setSearchKeyword } =
   searchFilter(strayAnimals);
-const filteredStrayAnimalsWithAdoptionReq = computed(() => {
-  // Extract all saIds from adoption requests
-  const saIds = adoptionReq.value.adoptionRequests.map(
-    (request) => request.animal.saId
-  );
-  // Filter stray animals that have saId matching with adoption requests
+  const filteredStrayAnimalsWithAdoptionReq = computed(() => {
+  const saIds = adoptionReq.value.map((request) => request.animal.saId);
   return filteredStrayAnimals.value.filter((strayAnimal) =>
     saIds.includes(strayAnimal._id)
   );
@@ -66,13 +62,15 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <div class="flex flex-col h-screen">
+  <div class="flex flex-col">
     <Profile />
+
+    <div class="min-h-screen px-20 md:px-20 lg:px-20">
     <div v-if="strayAnimals?.length === 0">
       <p class="text-center text-lg mt-10">No Request History</p>
     </div>
 
-    <div class="grid lg:grid-cols-3 gap-0 md:grid-cols-3">
+    <div class="grid lg:grid-cols-4 gap-0 md:grid-cols-3 grid-cols-1">
       <div
         v-for="strayAnimal in filteredStrayAnimalsWithAdoptionReq"
         :key="strayAnimal._id"
@@ -80,6 +78,6 @@ onMounted(async () => {
         <Card :strayAnimal="strayAnimal" />
       </div>
     </div>
-
+    </div>
   </div>
 </template>

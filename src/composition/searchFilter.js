@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue';
 
 export default function searchFilter(initialData) {
-  const keyword = ref('');
+  let keyword = ref('');
 
   const filteredStrayAnimals = computed(() => {
     return initialData.value.filter((item) =>
@@ -9,12 +9,17 @@ export default function searchFilter(initialData) {
       (item.description && item.description.toLowerCase().includes(keyword.value.toLowerCase())) ||
       (item.type && item.type.toLowerCase().includes(keyword.value.toLowerCase())) ||
       (item.gender && item.gender.toLowerCase().includes(keyword.value.toLowerCase())) ||
-      (item.color && item.color.toLowerCase().includes(keyword.value.toLowerCase()))
+      (item.color && item.color.toLowerCase().includes(keyword.value.toLowerCase())) ||
+      (item.owner.ownerUsername && item.owner.ownerUsername.toLowerCase().includes(keyword.value.toLowerCase()))
     );
   });
 
   const setSearchKeyword = (data) => {
-    keyword.value = data;
+    if (typeof data === 'string' || data instanceof String) {
+      keyword.value = data.toLowerCase();
+    } else {
+      console.error('Search keyword must be a string.');
+    }
   };
 
   return {

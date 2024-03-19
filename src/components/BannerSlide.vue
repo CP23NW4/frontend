@@ -1,7 +1,7 @@
 <template>
   <div class="carousel w-full h-4/6 mt-20 md:mt-20 lg:mt-20">
-    <div v-for="(item, index) in items" :key="index" class="carousel-item w-full" :style="{ transform: `translateX(-${currentIndex * 100}%)` }">
-      <img :src="item.src" class="w-full" />
+    <div v-for="(banner, index) in banners" :key="index" class="carousel-item w-full" :style="{ transform: `translateX(-${currentIndex * 100}%)` }">
+      <img :src="banner.src" class="w-full" />
     </div> 
   </div> 
 </template>
@@ -10,14 +10,14 @@
 import { ref, onMounted } from 'vue';
 
 const currentIndex = ref(0);
-const items = [
-  { src: '/b3.png' },
-  { src: '/b4.png' },
-  { src: '/b3.png' },
-  { src: '/b4.png' }
+const banners = [
+  { src: '/banner/b1.png' },
+  { src: '/banner/b2.png' },
+  { src: '/banner/b3.png' },
+  // { src: '/banner/b4.png' }
 ];
 
-const totalItems = items.length;
+const totalItems = banners.length;
 let forward = true;
 
 onMounted(() => {
@@ -31,7 +31,7 @@ onMounted(() => {
     if (currentIndex.value === totalItems - 1 || currentIndex.value === 0) {
       forward = !forward;
     }
-  }, 2000);
+  }, 3000);
 });
 </script>
 
