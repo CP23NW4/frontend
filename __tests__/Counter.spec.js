@@ -1,0 +1,30 @@
+// frontend/tests/HelloWorld.spec.js
+
+// import { mount } from '@vue/test-utils'
+// import HelloWorld from '../../src/components/HelloWorld.vue'
+
+// describe('HelloWorld.vue', () => {
+//   it('renders props.msg when passed', () => {
+//     const msg = 'new message'
+//     const wrapper = mount(HelloWorld, {
+//       props: { msg },
+//     })
+//     expect(wrapper.text()).toMatch(msg)
+//   })
+// })
+
+import { mount } from '@vue/test-utils';
+import Counter from './Counter.vue';
+
+describe('Counter.vue', () => {
+  it('increments count when button is clicked', async () => {
+    const wrapper = mount(Counter);
+    const button = wrapper.find('button');
+
+    await button.trigger('click');
+
+    expect(wrapper.text()).toContain('Count: 1');
+  });
+});
+
+
