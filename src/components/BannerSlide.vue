@@ -11,9 +11,9 @@ import { ref, onMounted } from 'vue';
 
 const currentIndex = ref(0);
 const banners = [
-  { src: '/banner/b1.png' },
-  { src: '/banner/b2.png' },
-  { src: '/banner/b3.png' },
+  { src: 'https://mnwanimals.blob.core.windows.net/accessories/b1.png' },
+  { src: 'https://mnwanimals.blob.core.windows.net/accessories/b2.png' },
+  { src: 'https://mnwanimals.blob.core.windows.net/accessories/b3.png' },
   // { src: '/banner/b4.png' }
 ];
 
@@ -31,7 +31,7 @@ onMounted(() => {
     if (currentIndex.value === totalItems - 1 || currentIndex.value === 0) {
       forward = !forward;
     }
-  }, 3000);
+  }, 5000);
 });
 </script>
 
@@ -44,7 +44,7 @@ onMounted(() => {
 
 .carousel-item {
   flex: 0 0 100%;
-  transition: transform 0.5s ease;
+  transition: transform 2s ease;
 }
 
 .carousel-item img {

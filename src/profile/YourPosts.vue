@@ -99,6 +99,8 @@ onMounted(async () => {
 
 
 <template>
+
+  
   <div class="flex flex-col h-screen">
     <Profile />
     <div v-if="strayAnimals?.length === 0">
