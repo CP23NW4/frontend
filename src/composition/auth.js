@@ -4,10 +4,7 @@ export const handleAuthentication = async (url, data, successMessage) => {
     try {
       const res = await fetch(`${import.meta.env.VITE_APP_TITLE}${url}`, {
         method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(data),
+        body: data,
       });
   
       if (res.status === 200 || res.status === 201) {
@@ -47,10 +44,7 @@ export const handleAuthentication = async (url, data, successMessage) => {
     try {
       const res = await fetch(`${import.meta.env.VITE_APP_TITLE}${url}`, {
         method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(data),
+        body: data,
       });
   
       if (res.status === 200 || res.status === 201) {

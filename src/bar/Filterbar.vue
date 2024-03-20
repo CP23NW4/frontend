@@ -27,6 +27,12 @@ const router = useRouter();
           </div>
         </router-link>
 
+        <router-link :to="{ name: 'adopted' }" class="underline-none" :class="{ 'border-b-2 border-indigo-950': route.name === 'adopted', 'border-transparent': route.name !== 'adopted' }">
+          <div class="px-7 py-2">
+            <a class="text-indigo-950 text-sm font-extrabold">ADOPTED</a>
+          </div>
+        </router-link>
+
       </div>
     </div>
   </nav>

@@ -17,7 +17,7 @@
         <div class="flex flex-col md:flex-row items-center mb-12">
           <div class="flex-none mr-8">
             <img
-              src="/film.png" 
+              src="https://mnwanimals.blob.core.windows.net/users/film.png" 
               alt="Film's Profile Picture"
               class="w-64 h-64 rounded-full object-cover mb-4"
             />
@@ -35,7 +35,7 @@
         <div class="flex flex-col md:flex-row-reverse items-center mb-12">
           <div class="flex-none ml-8">
             <img
-              src="/mill.png" 
+              src="https://mnwanimals.blob.core.windows.net/users/mill.png" 
               alt="Mill's Profile Picture"
               class="w-64 h-64 rounded-full object-cover mb-4"
             />
@@ -53,7 +53,7 @@
         <div class="flex flex-col md:flex-row items-center mb-12">
           <div class="flex-none mr-8">
             <img
-              src="/punch.png" 
+              src="https://mnwanimals.blob.core.windows.net/users/punch.png" 
               alt="Punch's Profile Picture"
               class="w-64 h-64 rounded-full object-cover mb-4"
             />

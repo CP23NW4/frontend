@@ -6,10 +6,8 @@ const router = useRouter();
 const route = useRoute(); 
 const getDet = ref({});
   const reqForm = ref({
-    reqAddress: '',
-    reqPhone: '',
-    reqIdCard: '',
-    note: ''
+    note: '',
+    homePicture: ''
   });
 
   const goBack = () => router.go(-1);
@@ -30,7 +28,7 @@ const getDet = ref({});
 const getUsers = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/users/`,
+      `${import.meta.env.VITE_APP_TITLE}/users/user/info`,
       {
         method: "GET",
         headers: {'Content-Type':'application/json',
@@ -49,6 +47,7 @@ const getUsers = async () => {
           name: "notfound",
         });
       } else if (res.status === 401) {
+        alert("go to sign in pleasee")
         console.error("Login");
         localStorage.removeItem("token")
         router.push({
@@ -83,14 +82,20 @@ onMounted(async () => {
 
   const reqAdoption = async () => {
   try {
+    const formData = new FormData();
+    formData.append('note', reqForm.value.note);
+    // formData.append('homePicture', reqForm.value.homePicture);
+    if (reqForm.value.homePicture) {
+    formData.append('homePicture', reqForm.value.homePicture);
+  }
+
+
     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}/reqAdoption`, {
       method: "POST",
       headers: {
-        'Content-Type': "application/json",
         'Authorization': localStorage.getItem("token"),
       },
-      // body: JSON.stringify(reqForm.value),
-      body : JSON.stringify(reqForm.value),
+      body: formData,
     });
 
     if (res.status === 200 || res.status === 201) {
@@ -112,6 +117,23 @@ onMounted(async () => {
     console.error("Error creating post:", error);
   }
 };
+
+const handleFileUpload = async (event) => {
+  const file = event.target.files[0];
+
+  if (file) {
+    const maxSizeInBytes = 3 * 1024 * 1024;
+
+    if (file.size <= maxSizeInBytes) {
+      reqForm.value.homePicture = file;
+      console.log(reqForm.value.homePicture);
+    } else {
+      alert("File size exceeds the limit (3MB). Please choose a smaller file.");
+    }
+  }
+};
+
+
 
 const getPostById = async () => {
   try {
@@ -186,8 +208,13 @@ onMounted(() => {
             <!-- Home Picture -->
             <!-- <div>
               <label for="homePicture" class="block mb-1">Home Picture</label>
-              <input type="file" v-model="formData.homePicture" id="homePicture" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-400">
+              <input type="file" v-model="reqForm.homePicture" id="homePicture" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-400">
             </div> -->
+
+            <div class="grid gap-3 mb-4 md:grid-cols-1">
+<label class="block text-sm font-medium text-gray-900 dark:text-white text-left" for="file_input">Upload Home Picture</label>
+<input @change="handleFileUpload" class="mb-2 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file">
+</div>
             <!-- Note -->
             <div>
               <label for="note" class="block mb- text-left">Note</label>

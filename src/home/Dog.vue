@@ -11,7 +11,9 @@ import searchFilter from '../composition/searchFilter';
 
 const { strayAnimals } = getStrayAnimals('Dog');
 const { keyword, filteredStrayAnimals, setSearchKeyword } = searchFilter(strayAnimals);
-
+const filteredStrayAnimalsWithStatusAvailable = computed(() => {
+  return filteredStrayAnimals.value.filter(strayAnimal => strayAnimal.status === 'Available');
+});
 </script>
 
 
@@ -29,7 +31,7 @@ const { keyword, filteredStrayAnimals, setSearchKeyword } = searchFilter(strayAn
       </div>
 
       <div class="grid lg:grid-cols-4 gap-0 md:grid-cols-3">
-        <div v-for="strayAnimal in filteredStrayAnimals" :key="strayAnimal._id">
+        <div v-for="strayAnimal in filteredStrayAnimalsWithStatusAvailable" :key="strayAnimal._id">
           <Card :strayAnimal="strayAnimal" />
         </div>
       </div>
