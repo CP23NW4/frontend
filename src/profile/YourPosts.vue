@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import CreateButton from "../components/CreateButton.vue";
-import CardOwner from "./CardOwner.vue";
+import CardOwner from "../home/Card.vue";
 import Profile from "./Profile.vue";
 
 let checkSignIn = ref(localStorage.getItem("token"));
@@ -99,17 +99,19 @@ onMounted(async () => {
 
 
 <template>
-
-  
-  <div class="flex flex-col h-screen">
+  <div class="flex flex-col">
     <Profile />
+
+    <div class="min-h-screen px-20 md:px-20 lg:px-20">
     <div v-if="strayAnimals?.length === 0">
-      <p class="text-center text-lg mt-10">No Pets</p>
+      <p class="text-center text-lg mt-10">No Request History</p>
     </div>
+
     <div class="grid lg:grid-cols-4 gap-0 md:grid-cols-3 grid-cols-1">
       <div v-for="strayAnimal in strayAnimals" :key="strayAnimal._id">
-        <CardOwner :strayAnimal="strayAnimal" />
+      <CardOwner :strayAnimal="strayAnimal" />
       </div>
+    </div>
     </div>
   </div>
 </template>

@@ -14,7 +14,7 @@ const banners = [
   { src: 'https://mnwanimals.blob.core.windows.net/accessories/b1.png' },
   { src: 'https://mnwanimals.blob.core.windows.net/accessories/b2.png' },
   { src: 'https://mnwanimals.blob.core.windows.net/accessories/b3.png' },
-  // { src: '/banner/b4.png' }
+  // { src: 'https://mnwanimals.blob.core.windows.net/accessories/b4.png' },
 ];
 
 const totalItems = banners.length;

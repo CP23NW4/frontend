@@ -4,6 +4,55 @@ import { useRoute, useRouter } from "vue-router";
 
 const router = useRouter();
 const props = defineProps(["strayAnimal"]);
+const adoptionReq = ref([]);
+const getRequest = async () => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/sender/reqAdoption`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
+
+    if (res.status === 200) {
+      const reqData = await res.json();
+      adoptionReq.value = reqData;
+    } else {
+      if (res.status === 404) {
+        console.error("Error: Post not found");
+        router.push({
+          name: "notfound",
+        });
+      } else if (res.status === 401) {
+        console.error("Login");
+        // localStorage.removeItem("token");
+        // router.push({
+        //   name: "login",
+        // });
+      } else if (res.status === 500) {
+        console.error("Error: Internal Server Error");
+      } else {
+        console.error("Error:", res.status, res.statusText);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+onMounted(async () => {
+  getRequest();
+});
+
+
+const checkAdoptionReq = (animalId) => {
+  return adoptionReq.value.some(item => item.animal?.saId === animalId);
+};
+
 // const route = useRoute();
 
 // import { getUser } from "../composition/useUsers";
@@ -22,16 +71,17 @@ const showDetail = (id) => {
     params: { id: id },
   });
 };
+
+
 </script>
 <template>
-  <div
-    @click="showDetail(props.strayAnimal._id)"
-    :style="{
-      opacity:
-        strayAnimal.picture !== null && strayAnimal.status === 'Unavailable'
-          ? '0.3'
-          : '1',
-    }"
+
+<div
+  @click="strayAnimal.status === 'Available' ? showDetail(props.strayAnimal._id) : null"
+  :style="{
+    opacity: strayAnimal.picture !== null && strayAnimal.status === 'Unavailable' ? '0.3' : '1',
+    cursor: strayAnimal.status === 'Available' ? 'pointer' : 'not-allowed',
+  }"
     class="mx-1 md:mx-4 lg:mx-4 mb-10 text-left rounded-lg block max-w-sm hover:shadow-lg transition-transform transform hover:-translate-y-1 focus:translate-y-0 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
   >
     <div class="relative lg:w-full lg:h-52 md:w-full md:h-36 h-60">
@@ -67,7 +117,6 @@ const showDetail = (id) => {
   />
 </div>
  <div v-else class="mr-4 h-5 font-bold text-2xl">?</div>
-
       <div class="flex flex-col">
         <!-- Use flex-col here -->
         <div
@@ -113,9 +162,15 @@ const showDetail = (id) => {
 
         <div
           class="text-[12px] font-bold leading-none mt-1 tracking-tight text-emerald-600"
-          v-if="strayAnimal.status === 'Available'"
+          v-if="strayAnimal.status === 'Available' && !checkAdoptionReq(strayAnimal._id)"
         >
           {{ strayAnimal.status }}
+        </div>
+        <div
+          class="text-[12px] font-bold leading-none mt-1 tracking-tight text-amber-600"
+          v-else-if="strayAnimal.status === 'Available' && checkAdoptionReq(strayAnimal._id)"
+        >
+        Requested
         </div>
         <div
           class="text-[12px] font-bold leading-none mt-1 tracking-tight text-red-600"

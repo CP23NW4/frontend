@@ -18,6 +18,7 @@ import Profile from '../profile/YourPosts.vue';
 import EditProfile from '../profile/EditProfile.vue';
 import AdoptHistory from '../profile/AdoptHistory.vue';
 import ReqHistory from '../profile/ReqHistory.vue';
+import ReqDeatil from '../profile/ReqDeatil.vue';
 import ReqForm from '../views/reqForm.vue';
 
 
@@ -72,6 +73,12 @@ const routes = [
     path: '/request-history',
     name: 'req-his',
     component: ReqHistory,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/request-history/:id',
+    name: 'req-detail',
+    component: ReqDeatil,
     meta: { requiresAuth: true }
   },
   {

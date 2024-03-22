@@ -6,6 +6,97 @@ const router = useRouter();
 const route = useRoute();
 const goBack = () => router.go(-1);
 const getDet = ref({});
+const adoptionAcc = ref({});
+// const adoptionReq = ref([]);
+const getRequest = async () => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/sender/reqAdoption`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
+
+    if (res.status === 200) {
+      const reqData = await res.json();
+      adoptionReq.value = reqData;
+    } else {
+      if (res.status === 404) {
+        console.error("Error: Post not found");
+        router.push({
+          name: "notfound",
+        });
+      } else if (res.status === 401) {
+        console.error("Login");
+        // localStorage.removeItem("token");
+        // router.push({
+        //   name: "login",
+        // });
+      } else if (res.status === 500) {
+        console.error("Error: Internal Server Error");
+      } else {
+        console.error("Error:", res.status, res.statusText);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+const getAdopt = async () => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/reciever/reqAdoption`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
+
+    if (res.status === 200) {
+      const reqData = await res.json();
+      adoptionAcc.value = reqData;
+    } else {
+      if (res.status === 404) {
+        console.error("Error: Post not found");
+        router.push({
+          name: "notfound",
+        });
+      } else if (res.status === 401) {
+        console.error("Login");
+        // localStorage.removeItem("token");
+        // router.push({
+        //   name: "login",
+        // });
+      } else if (res.status === 500) {
+        console.error("Error: Internal Server Error");
+      } else {
+        console.error("Error:", res.status, res.statusText);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+onMounted(async () => {
+  getRequest();
+  getAdopt();
+});
+
+
+// const checkAdoptionReq = (_id) => {
+//   return adoptionReq.value.some(item => item.animal?.saId === _id);
+// };
+
 let checkSignIn= ref(localStorage.getItem('token'))     
 
 
@@ -25,6 +116,8 @@ const formatDate = (timestamp) => {
     minute: "numeric",
   });
 };
+
+
 
 const getPostById = async () => {
   try {
@@ -184,8 +277,10 @@ console.log(id)
 
 </script>
 <template>
+  <!-- {{ adoptionReq }} -->
   <!-- {{ getDet }} -->
   <!-- {{ getUser }} -->
+  {{ adoptionAcc }}
   <div class="flex items-center justify-center mt-10">
     <div class="items-center gap-4 mb-4 text-center max-w-lg">
       <div class="mb-4">
@@ -253,8 +348,10 @@ console.log(id)
 <br>
 
     <!-- Button to adopt -->
-    <router-link v-if="user._id !== getDet.owner?.ownerId && checkSignIn" :to="{ name: 'reqform' }" class="block mx-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt</router-link>
-    <button v-if="user._id !== getDet.owner?.ownerId && !checkSignIn" @click="showAlert" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt</button>
+    <router-link v-if="user._id !== getDet.owner?.ownerId && checkSignIn" :to="{ name: 'reqform' }" class="block mx-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</router-link>
+<button v-else-if="user._id !== getDet.owner?.ownerId && !checkSignIn" @click="showAlert" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
+<!-- <button v-else-if="checkAdoptionReq" @click="showAlert" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button> -->
+
         </div>
       </div>
 
@@ -285,12 +382,8 @@ console.log(id)
               </button>
             </form>
           </div>
-          
         </div>
-        
       </dialog>
-
-  
     </div>
 
   </div>

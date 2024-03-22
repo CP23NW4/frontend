@@ -7,20 +7,23 @@ const route = useRoute();
 const getDet = ref({});
   const reqForm = ref({
     note: '',
-    addnote: '',
-    salary: '',
     homePicture: ''
   });
 
   const goBack = () => router.go(-1);
 
-
+  // const reqForm = {
+  //   reqAddress: '',
+  //   reqPhone: '',
+  //   reqIdCard: '',
+  //   note: ''
+  // };
   
-const submitForm = () => {
-  reqForm.value.note += `เงินเดือน ${reqForm.value.salary} บาท, ${reqForm.value.addnote} `;
-  reqAdoption();
-  console.log('Data:', reqForm.value);
-};
+  const submitForm = () => {
+    // Handle form submission logic here
+    reqAdoption()
+    console.log('Data:', reqForm.value);
+  };
 
 const getUsers = async () => {
   try {
@@ -66,69 +69,51 @@ onMounted(async () => {
   getUsers();
 });
 
-    // const formData = new FormData();
-    // formData.append("firstName", reqForm.value.firstName);
-    // formData.append("lastName", reqForm.value.lastName);
-    // formData.append("address", reqForm.value.address);
-    // formData.append("phoneNumber", reqForm.value.phoneNumber);
-    // formData.append("idCard", reqForm.value.idCard);
-    // formData.append("note", reqForm.value.note);
-
-// console.log("Test log",reqForm.value)
 
 
-  const reqAdoption = async () => {
+const getRequest = async () => {
   try {
-    const formData = new FormData();
-    formData.append('note', reqForm.value.note);
-    // formData.append('homePicture', reqForm.value.homePicture);
-    if (reqForm.value.homePicture) {
-    formData.append('homePicture', reqForm.value.homePicture);
-  }
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/sender/reqAdoption`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
 
-
-    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}/reqAdoption`, {
-      method: "POST",
-      headers: {
-        'Authorization': localStorage.getItem("token"),
-      },
-      body: formData,
-    });
-
-    if (res.status === 200 || res.status === 201) {
+    if (res.status === 200) {
       const reqData = await res.json();
-      console.log("Request Adoption successfull0y:", reqData);
-      alert("Request Adoption Successful!");
-      router.go(-1);
-      // emit("closeModal", true);
-    } else if (res.status === 401) {
-      alert("No authentication, Go to signin");
-      localStorage.removeItem("token");
-      router.push({
-        name: "login",
-      });
+      adoptionReq.value = reqData;
     } else {
-      console.error("Error:", res.status, res.statusText);
+      if (res.status === 404) {
+        console.error("Error: Post not found");
+        router.push({
+          name: "notfound",
+        });
+      } else if (res.status === 401) {
+        console.error("Login");
+        localStorage.removeItem("token");
+        router.push({
+          name: "login",
+        });
+      } else if (res.status === 500) {
+        console.error("Error: Internal Server Error");
+      } else {
+        console.error("Error:", res.status, res.statusText);
+      }
     }
   } catch (error) {
-    console.error("Error creating post:", error);
+    console.error(error);
   }
 };
 
-const handleFileUpload = async (event) => {
-  const file = event.target.files[0];
+onMounted(async () => {
+  getRequest();
+});
 
-  if (file) {
-    const maxSizeInBytes = 3 * 1024 * 1024;
-
-    if (file.size <= maxSizeInBytes) {
-      reqForm.value.homePicture = file;
-      console.log(reqForm.value.homePicture);
-    } else {
-      alert("File size exceeds the limit (3MB). Please choose a smaller file.");
-    }
-  }
-};
 
 
 
@@ -173,7 +158,7 @@ onMounted(() => {
   <template>
     <div class="min-h-screen mt-10 flex items-center justify-center w-96">
       <div class="max-w-xl w-full p-8 bg-white shadow-lg rounded-lg">
-        <h2 class="text-2xl font-bold mb-4">Adoption Form</h2>
+        <h2 class="text-2xl font-bold mb-4">Request Detail</h2>
         <!-- {{ user }} -->
         <form @submit.prevent="submitForm">
           <!-- Grid with 2 columns -->
@@ -220,12 +205,8 @@ onMounted(() => {
 </div>
             <!-- Note -->
             <div>
-              <label for="salary" class="block mb- text-left text-[14px]">Salary (baht) for month</label>
-              <input v-model="reqForm.salary" id="salary" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-400">
-            </div>
-            <div>
               <label for="note" class="block mb- text-left text-[14px]">Note (salary) or more question and if requested can not request again</label>
-              <textarea v-model="reqForm.addnote" id="note" rows="4" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-400"></textarea>
+              <textarea v-model="reqForm.note" id="note" rows="4" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-400"></textarea>
             </div>
           </div>
           <div class="text-left">อยากจะขอรับเลี้ยงน้อง {{ getDet.name }}</div>

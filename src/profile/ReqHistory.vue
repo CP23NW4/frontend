@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import Profile from "./Profile.vue";
-import Card from "../home/Card.vue";
+import Card from "./CardHistory.vue";
 const route = useRoute;
 const adoptionReq = ref([]);
 import getStrayAnimals from "../composition/useStrayAnimals";
@@ -18,7 +18,7 @@ const { keyword, filteredStrayAnimals, setSearchKeyword } =
   );
 });
 
-const getRequst = async () => {
+const getRequest = async () => {
   try {
     const res = await fetch(
       `${import.meta.env.VITE_APP_TITLE}/strayAnimals/sender/reqAdoption`,
@@ -58,7 +58,7 @@ const getRequst = async () => {
 };
 
 onMounted(async () => {
-  getRequst();
+  getRequest();
 });
 </script>
 <template>
