@@ -54,15 +54,15 @@ jobs:
     #     npm install -g serve
     #     serve -s dist
 
-    # - name: Stop and remove existing containers
-    #   run: |
-    #     ssh -o StrictHostKeyChecking=no sysadmin@10.4.85.24 "cd /home/sysadmin/proxy && docker-compose stop frontend-container"
-    #     ssh -o StrictHostKeyChecking=no sysadmin@10.4.85.24 "cd /home/sysadmin/proxy && docker-compose rm -f frontend-container"
+    - name: Stop and remove existing containers
+      run: |
+        ssh -o StrictHostKeyChecking=no sysadmin@10.4.85.24 "cd /home/sysadmin/proxy && docker-compose stop frontend-container"
+        ssh -o StrictHostKeyChecking=no sysadmin@10.4.85.24 "cd /home/sysadmin/proxy && docker-compose rm -f frontend-container"
 
-    # - name: Rebuild Docker containers
-    #   run: |
-    #     ssh -o StrictHostKeyChecking=no sysadmin@10.4.85.24 "cd /home/sysadmin/proxy && docker-compose up -d --build frontend-container"
+    - name: Rebuild Docker containers
+      run: |
+        ssh -o StrictHostKeyChecking=no sysadmin@10.4.85.24 "cd /home/sysadmin/proxy && docker-compose up -d --build frontend-container"
 
-    # - name: Show Docker container status
-    #   run: |
-    #     ssh -o StrictHostKeyChecking=no sysadmin@10.4.85.24 "docker ps -a"
+    - name: Show Docker container status
+      run: |
+        ssh -o StrictHostKeyChecking=no sysadmin@10.4.85.24 "docker ps -a"
