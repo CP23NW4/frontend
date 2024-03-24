@@ -37,18 +37,6 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no sysadmin@10.4.85.24 "docker ps -a"
 
-    - name: Install Dependencies
-      run: npm install
-
-    - name: Build Application
-      run: npm run build
-
-    - name: Archive Build
-      uses: actions/upload-artifact@v2
-      with:
-        name: build
-        path: dist
-        
     - name: Stop and remove existing containers
       run: |
         ssh -o StrictHostKeyChecking=no sysadmin@10.4.85.24 "cd /home/sysadmin/proxy && docker-compose stop frontend-container"
