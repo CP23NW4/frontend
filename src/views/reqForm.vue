@@ -8,6 +8,7 @@ const getDet = ref({});
   const reqForm = ref({
     note: '',
     addnote: '',
+    contact: '',
     salary: '',
     homePicture: ''
   });
@@ -17,7 +18,7 @@ const getDet = ref({});
 
   
 const submitForm = () => {
-  reqForm.value.note += `เงินเดือน ${reqForm.value.salary} บาท, ${reqForm.value.addnote} `;
+  reqForm.value.note += `เงินเดือน ${reqForm.value.salary} บาท, ช่องทางติดต่อเพิ่มเติม ${reqForm.value.contact} , ${reqForm.value.addnote} `;
   reqAdoption();
   console.log('Data:', reqForm.value);
 };
@@ -201,6 +202,11 @@ onMounted(() => {
               <label for="phoneNumber" class="block mb-1 text-left text-[14px]">Phone Number</label>
               <input v-if="user.phoneNumber !== null" type="text" v-model="user.phoneNumber" id="phoneNumber" disabled class="w-full bg-gray-200 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-400">
               <input v-else type="text" v-model="reqForm.reqPhone" id="phoneNumber" disabled class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-400">
+            </div>
+            <div>
+              <label for="contact" class="block mb-1 text-left text-[14px]">Other Contacts (Line, etc.)</label>
+              <input v-if="user.contact !== null" type="text" v-model="user.contact" id="phoneNumber" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-400">
+              <input v-else type="text" v-model="reqForm.contact" id="contact" class="w-full border rounded-md px-4 py-2 focus:outline-none focus:border-blue-400">
             </div>
             <!-- ID Card -->
             <div>

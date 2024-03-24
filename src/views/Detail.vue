@@ -1,12 +1,16 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-
+import Comment from '../components/Comment.vue';
 const router = useRouter();
 const route = useRoute();
 const goBack = () => router.go(-1);
 const getDet = ref({});
 const adoptionAcc = ref({});
+
+const adoptionReq = ref([]);
+const comments = ref([]);
+// const props = defineProps(["comments"]);
 // const adoptionReq = ref([]);
 const getRequest = async () => {
   try {
@@ -261,7 +265,6 @@ const getUsers = async () => {
   }
 };
 
-
 onMounted(async () => {
   getUsers();
 });
@@ -274,13 +277,13 @@ console.log(id)
   })
 }
 
-
 </script>
 <template>
   <!-- {{ adoptionReq }} -->
   <!-- {{ getDet }} -->
   <!-- {{ getUser }} -->
-  {{ adoptionAcc }}
+
+  <!-- {{ adoptionAcc }} -->
   <div class="flex items-center justify-center mt-10">
     <div class="items-center gap-4 mb-4 text-center max-w-lg">
       <div class="mb-4">
@@ -358,7 +361,6 @@ console.log(id)
       <div class="text-left"> 
       <button @click="goBack" class="text-gray-600 font-semibold py-2 px-4 rounded-md hover:text-gray-800 focus:outline-none">Back</button>
           </div>   
-          
           <!-- <router-link :to="{ name: 'reqform' }" v-if="user._id !== getDet.owner?.ownerId" class="m-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800">Adopt</router-link> -->
 
       <dialog id="my_modal_1" class="modal">
@@ -384,7 +386,11 @@ console.log(id)
           </div>
         </div>
       </dialog>
-    </div>
 
+    <Comment />
+
+
+  
+</div>
   </div>
 </template>

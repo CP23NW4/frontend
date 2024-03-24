@@ -9,16 +9,10 @@ import Profilebar from "../bar/Profilebar.vue";
 let checkSignIn = ref(localStorage.getItem("token"));
 const { strayAnimals } = getStrayAnimals();
 // const { keyword, filteredStrayAnimals, setSearchKeyword } = searchFilter(strayAnimals);
-
 const user = ref({});
 const posts = ref({});
 const router = useRouter();
 const route = useRoute();
-// import { getUser } from "../composition/useUsers";
-// const getUsers = async () => {
-//   await getUser("/users/", "Sign in successful!");
-// };
-
 const getPosts = async () => {
   try {
     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals/`, {
@@ -44,6 +38,7 @@ const getPosts = async () => {
         router.push({
           name: "login",
         });
+        window.location.reload();
       } else if (res.status === 500) {
         console.error("Error: Internal Server Error");
       } else {
@@ -96,10 +91,9 @@ const getUsers = async () => {
 
 onMounted(async () => {
   getUsers();
-});
-onMounted(async () => {
   getPosts();
 });
+
 </script>
 
 
@@ -133,15 +127,12 @@ onMounted(async () => {
                 >Edit profile</router-link
               >
             </div>
-
             <hr class="mt-8 border-t border-gray-400" />
-            <Profilebar />
+           <Profilebar />
           </div>
         </div>
       </div>
-    </section>
-
-    <!-- <Snowfall /> -->
+    </section> 
   </div>
   <CreateButton v-if="checkSignIn" />
 </template>

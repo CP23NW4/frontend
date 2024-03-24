@@ -63,14 +63,14 @@ onMounted(async () => {
 </script>
 <template>
   <div class="flex flex-col">
-    <Profile />
-
-    <div class="min-h-screen px-20 md:px-20 lg:px-20">
+    <!-- <Profile /> -->
+<!-- {{ adoptionReq }} -->
+    <div class="min-h-screen">
     <div v-if="strayAnimals?.length === 0">
       <p class="text-center text-lg mt-10">No Request History</p>
     </div>
 
-    <div class="grid lg:grid-cols-4 gap-0 md:grid-cols-3 grid-cols-1">
+    <div class="grid lg:grid-cols-3 gap-0 md:grid-cols-3 grid-cols-1">
       <div
         v-for="strayAnimal in filteredStrayAnimalsWithAdoptionReq"
         :key="strayAnimal._id"

@@ -84,7 +84,7 @@ const showDetail = (id) => {
           ? '0.3'
           : '1',
     }"
-    class="mx-1 md:mx-4 lg:mx-4 mb-10 text-left rounded-lg block max-w-sm hover:shadow-lg transition-transform transform hover:-translate-y-1 focus:translate-y-0 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+    class="mx-1 md:mx-4 lg:mx-4 mb-10 text-left rounded-lg block max-w-sm hover:shadow-lg transition-transform transform hover:border hover:border-gray-500 hover:-translate-y-1 focus:translate-y-0 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
   >
     <div class="relative lg:w-full lg:h-52 md:w-full md:h-36 h-60">
       <img

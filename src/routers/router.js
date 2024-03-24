@@ -14,7 +14,7 @@ import NotFound from '../views/NotFound.vue';
 import AboutUs from '../views/AboutUs.vue';
 import Dog from '../home/Dog.vue';
 import Cat from '../home/Cat.vue';
-import Profile from '../profile/YourPosts.vue';
+import Profile from '../profile/Profile.vue';
 import EditProfile from '../profile/EditProfile.vue';
 import AdoptHistory from '../profile/AdoptHistory.vue';
 import ReqHistory from '../profile/ReqHistory.vue';
