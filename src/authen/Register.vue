@@ -533,13 +533,13 @@ const filteredPostCodes = computed(() => {
           <label
             for="userAddress"
             class="absolute left-4 top-2 transition-all text-gray-400 bg-white px-1"
-            :class="{ 'text-xs': registerData.addressLine1 }"
+            :class="{ 'text-xs': registerData.homeAddress }"
           >
             Address
           </label>
           <span class="text-xs ml-[95%] text-gray-400"
           >{{
-            minCount + (registerData.userAddress ? registerData.userAddress.length : 0)
+            minCount + (registerData.homeAddress ? registerData.homeAddress.length : 0)
           }}/{{ maxCountAddress }}</span
         >
         </div>

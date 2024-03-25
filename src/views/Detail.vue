@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Comment from '../components/Comment.vue';
+import Detailbar from '../bar/Detailbar.vue';
 const router = useRouter();
 const route = useRoute();
 const goBack = () => router.go(-1);
@@ -55,7 +56,7 @@ const getRequest = async () => {
 const getAdopt = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/reciever/reqAdoption`,
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/reciever/${route.params.id}/reqAdoption`,
       {
         method: "GET",
         headers: {
@@ -221,14 +222,14 @@ const capitalizeFirstLetter = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-const user = ref({});
+const user = ref([]);
 
 
 
 const getUsers = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/users/`,
+      `${import.meta.env.VITE_APP_TITLE}/users/user/info`,
       {
         method: "GET",
         headers: {'Content-Type':'application/json',
@@ -284,7 +285,7 @@ console.log(id)
   <!-- {{ getUser }} -->
 
   <!-- {{ adoptionAcc }} -->
-  <div class="flex items-center justify-center mt-10">
+  <div class="flex items-center justify-center mt-20">
     <div class="items-center gap-4 mb-4 text-center max-w-lg">
       <div class="mb-4">
         <!-- <img src="{{ getDet.picture }}" class="w-512 h-300 object-cover rounded-md" /> -->
@@ -316,7 +317,7 @@ console.log(id)
     </div>
 
         <div class="flex mb-4">
-          <img class="w-10 h-10 rounded-full mr-2" src="/pf.png" alt="" />
+          <img class="w-10 h-10 rounded-full mr-2" :src="getDet.owner?.ownerPicture" alt="" />
           <div class="font-medium dark:text-white">
             <div class="font-bold">{{ getDet.owner?.ownerUsername }}</div>
             <div class="text-sm text-gray-500 dark:text-gray-400">
@@ -351,8 +352,9 @@ console.log(id)
 <br>
 
     <!-- Button to adopt -->
-    <router-link v-if="user._id !== getDet.owner?.ownerId && checkSignIn" :to="{ name: 'reqform' }" class="block mx-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</router-link>
+ <router-link v-if="user._id !== getDet.owner?.ownerId && checkSignIn" :to="{ name: 'reqform' }" class="block mx-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</router-link>
 <button v-else-if="user._id !== getDet.owner?.ownerId && !checkSignIn" @click="showAlert" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
+<button v-else-if="user._id === getDet.owner?.ownerId" @click="showAlert" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
 <!-- <button v-else-if="checkAdoptionReq" @click="showAlert" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button> -->
 
         </div>
@@ -386,9 +388,14 @@ console.log(id)
           </div>
         </div>
       </dialog>
-
-    <Comment />
-
+      <!-- {{ user }} -->
+      <!-- {{ getDet }} -->
+<div v-if="checkSignIn && user._id === getDet.owner?.ownerId">
+    <Detailbar />
+</div>
+<div v-else class="mb-20">
+  <Comment />
+</div>
 
   
 </div>
