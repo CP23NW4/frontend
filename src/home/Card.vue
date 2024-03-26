@@ -5,6 +5,7 @@ import { useRoute, useRouter } from "vue-router";
 const router = useRouter();
 const props = defineProps(["strayAnimal"]);
 const adoptionReq = ref([]);
+const user = ref({});
 const getRequest = async () => {
   try {
     const res = await fetch(
@@ -72,15 +73,58 @@ const showDetail = (id) => {
   });
 };
 
+const getUsers = async () => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/users/user/info`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
+
+    if (res.status === 200) {
+      const userData = await res.json();
+      user.value = userData;
+    } else {
+      if (res.status === 404) {
+        console.error("Error: Post not found");
+        router.push({
+          name: "notfound",
+        });
+      } else if (res.status === 401) {
+        console.error("Login");
+        localStorage.removeItem("token");
+        router.push({
+          name: "login",
+        });
+      } else if (res.status === 500) {
+        console.error("Error: Internal Server Error");
+      } else {
+        console.error("Error:", res.status, res.statusText);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+onMounted(async () => {
+  getUsers();
+});
+
 
 </script>
 <template>
 
 <div
-  @click="strayAnimal.status === 'Available' ? showDetail(props.strayAnimal._id) : null"
+  @click="strayAnimal.status === 'Available' || strayAnimal.owner?.ownerId === user._id ? showDetail(props.strayAnimal._id) : null"
   :style="{
     opacity: strayAnimal.picture !== null && strayAnimal.status === 'Unavailable' ? '0.3' : '1',
-    cursor: strayAnimal.status === 'Available' ? 'pointer' : 'not-allowed',
+    cursor: strayAnimal.status === 'Available' || strayAnimal.owner?.ownerId === user._id ? 'pointer' : 'not-allowed',
   }"
     class="mx-1 md:mx-4 lg:mx-4 mb-10 text-left rounded-lg block max-w-sm hover:border hover:border-gray-500 hover:shadow-lg transition-transform transform hover:-translate-y-1 focus:translate-y-0 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
   >

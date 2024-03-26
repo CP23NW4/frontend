@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted, defineProps } from "vue";
 import { useRoute, useRouter } from "vue-router";
-
 const router = useRouter();
 const route = useRoute();
 const comments = ref([]);
@@ -119,10 +118,10 @@ const mentionUser = (username) => {
 };
 
 
-const removeComment = async () => {
+const removeComment = async (commentId) => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`,
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}/comment/${commentId}`,
       {
         method: "DELETE",
         headers: {
@@ -133,10 +132,8 @@ const removeComment = async () => {
 
     if (res.status === 200) {
       // Show alert if deletion is successful
-      alert("Post deleted successfully");
-      router.push({
-        name: "home",
-      });
+      comments.value = comments.value.filter(comment => comment._id !== commentId);
+      alert("Comment deleted successfully");
       } else if (res.status === 401) {
       alert("No authentication, Go to signin");
       localStorage.removeItem("token");
@@ -211,8 +208,7 @@ onMounted(async () => {
               </p>
             </div>
 
-            <div class="dropdown dropdown-end absolute top-0 right-2 p-4">
-              <div
+              <div @click="removeComment(comment._id)"
                 tabindex="0"
                 role="button"
                 class="btn btn-sm bg-transparent border-transparent shadow-transparent"
@@ -221,7 +217,7 @@ onMounted(async () => {
           <img src="/menu.png" />
         </div> -->X
               </div>
-              <ul
+              <!-- <ul
                 tabindex="0"
                 class="mt-0 z-[1] p-2 shadow-lg menu menu-sm dropdown-content bg-white rounded-box w-3"
               >
@@ -229,7 +225,7 @@ onMounted(async () => {
                 <li><a>Report</a></li>
                 <li><a>Delete</a></li>
               </ul>
-            </div>
+            </div> -->
           </footer>
           <p class="text-gray-500 dark:text-gray-400 text-left">
             {{ comment.comment }}

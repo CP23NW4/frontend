@@ -10,7 +10,7 @@ const getDet = ref({});
 const adoptionAcc = ref({});
 
 const adoptionReq = ref([]);
-const comments = ref([]);
+// const comments = ref([]);
 // const props = defineProps(["comments"]);
 // const adoptionReq = ref([]);
 const getRequest = async () => {

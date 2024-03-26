@@ -3,14 +3,14 @@ import Navbar from "./bar/Navbar.vue";
 import Footer from './bar/Footer.vue';
 
 import { useRouter } from "vue-router";
-const router = useRouter();
-const clearConsole = () => {
-  console.clear();
-};
+// const router = useRouter();
+// const clearConsole = () => {
+//   console.clear();
+// };
 
-router.afterEach(() => {
-  clearConsole();
-});
+// router.afterEach(() => {
+//   clearConsole();
+// });
 
  </script>
 

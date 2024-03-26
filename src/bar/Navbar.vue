@@ -47,10 +47,6 @@ const getUsers = async () => {
         });
       } else if (res.status === 401) {
         console.error("Login");
-        localStorage.removeItem("token");
-        router.push({
-          name: "login",
-        });
       } else if (res.status === 500) {
         console.error("Error: Internal Server Error");
       } else {
