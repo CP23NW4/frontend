@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import Card from "./CH.vue";
+import Card from "./CardHistory.vue";
 
 const router = useRouter();
 const route = useRoute();

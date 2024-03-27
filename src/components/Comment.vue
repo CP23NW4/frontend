@@ -181,10 +181,11 @@ onMounted(async () => {
       </div>
       <button
         type="submit"
-        class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-gray-900 bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
+        class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-gray-900 bg-amber-600 text-white font-bold rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
       >
         Post comment
       </button>
+
     </form>
     <div v-if="comments.length > 0">
       <div v-for="comment in comments" :key="comment._id">
