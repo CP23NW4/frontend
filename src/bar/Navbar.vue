@@ -47,10 +47,6 @@ const getUsers = async () => {
         });
       } else if (res.status === 401) {
         console.error("Login");
-        localStorage.removeItem("token");
-        router.push({
-          name: "login",
-        });
       } else if (res.status === 500) {
         console.error("Error: Internal Server Error");
       } else {
@@ -75,7 +71,7 @@ onMounted(async () => {
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
   <router-link :to="{ name: 'home' }">
     <a class="flex items-center">
-      <img src="/logo3.png" class="h-10 mr-1" alt="Logo">
+      <img src="https://mnwanimals.blob.core.windows.net/accessories/logo3.png" class="h-10 mr-1" alt="Logo">
       <div class="flex-col justify-start items-start inline-flex">
           <div class="text-black text-base font-bold leading-relaxed tracking-tight">MEOW & WOOF</div>
           <div class="text-black text-[10px] font-bold leading-none tracking-tight">HOME FINDER</div>

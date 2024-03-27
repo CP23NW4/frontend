@@ -106,7 +106,7 @@ const login = async () => {
     class="absolute right-4 top-2 text-gray-400 focus:outline-none"
   >
     <!-- {{ showPassword ? 'Hide' : 'Show' }} -->
-    <img :src="showPassword ? '/oeye.png' : '/ceye.png'" class="w-6" :style="{ opacity: showPassword ? '0.5' : '0.25' }">
+    <img :src="showPassword ? 'https://mnwanimals.blob.core.windows.net/accessories/oeye.png' : 'https://mnwanimals.blob.core.windows.net/accessories/ceye.png'" class="w-6" :style="{ opacity: showPassword ? '0.5' : '0.25' }">
 
         </div>
         </div>
@@ -158,4 +158,4 @@ input:not(:placeholder-shown) + label {
 /* input {
   background-color: transparent;
 } */
-</style>
+</style>../composition/auth.js

@@ -1,4 +1,3 @@
-import { useRouter } from 'vue-router';
 
 export const handleAuthentication = async (url, data, successMessage) => {
     try {
@@ -40,7 +39,6 @@ export const handleAuthentication = async (url, data, successMessage) => {
 
 
   export const handleSignup = async (url, data, successMessage) => {
-    const router = useRouter();
     try {
       const res = await fetch(`${import.meta.env.VITE_APP_TITLE}${url}`, {
         method: "POST",
@@ -48,10 +46,8 @@ export const handleAuthentication = async (url, data, successMessage) => {
       });
   
       if (res.status === 200 || res.status === 201) {
-        alert(successMessage);
         console.log("Successful");
-        location.reload();
-        router.push({ name: "login" });
+        window.location.hash = '#/verify'
       } else if (res.status === 400) {
         const errorResponse = await res.json();
       if (errorResponse.errors && errorResponse.errors.length > 0) {

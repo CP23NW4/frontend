@@ -1,23 +1,11 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import Profile from "./Profile.vue";
 import Card from "./CardHistory.vue";
-const route = useRoute;
+
+const router = useRouter();
+const route = useRoute();
 const adoptionReq = ref([]);
-import getStrayAnimals from "../composition/useStrayAnimals";
-import searchFilter from "../composition/searchFilter";
-
-const { strayAnimals } = getStrayAnimals();
-const { keyword, filteredStrayAnimals, setSearchKeyword } =
-  searchFilter(strayAnimals);
-  const filteredStrayAnimalsWithAdoptionReq = computed(() => {
-  const saIds = adoptionReq.value.map((request) => request.animal.saId);
-  return filteredStrayAnimals.value.filter((strayAnimal) =>
-    saIds.includes(strayAnimal._id)
-  );
-});
-
 const getRequest = async () => {
   try {
     const res = await fetch(
@@ -61,23 +49,17 @@ onMounted(async () => {
   getRequest();
 });
 </script>
+
 <template>
   <div class="flex flex-col">
-    <!-- <Profile /> -->
-<!-- {{ adoptionReq }} -->
     <div class="min-h-screen">
-    <div v-if="strayAnimals?.length === 0">
-      <p class="text-center text-lg mt-10">No Request History</p>
-    </div>
-
-    <div class="grid lg:grid-cols-3 gap-0 md:grid-cols-3 grid-cols-1">
-      <div
-        v-for="strayAnimal in filteredStrayAnimalsWithAdoptionReq"
-        :key="strayAnimal._id"
-      >
-        <Card :strayAnimal="strayAnimal" />
+      <div v-if="adoptionReq.length === 0">
+        <p class="text-center text-lg mt-10">No Request History</p>
       </div>
-    </div>
+
+      <div class="grid lg:grid-cols-3 gap-0 md:grid-cols-3 grid-cols-1">
+          <Card />
+      </div>
     </div>
   </div>
 </template>

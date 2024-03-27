@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted, defineProps } from "vue";
 import { useRoute, useRouter } from "vue-router";
-
 const router = useRouter();
 const route = useRoute();
 const comments = ref([]);
@@ -119,10 +118,10 @@ const mentionUser = (username) => {
 };
 
 
-const removeComment = async () => {
+const removeComment = async (commentId) => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`,
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}/comment/${commentId}`,
       {
         method: "DELETE",
         headers: {
@@ -133,10 +132,8 @@ const removeComment = async () => {
 
     if (res.status === 200) {
       // Show alert if deletion is successful
-      alert("Post deleted successfully");
-      router.push({
-        name: "home",
-      });
+      comments.value = comments.value.filter(comment => comment._id !== commentId);
+      alert("Comment deleted successfully");
       } else if (res.status === 401) {
       alert("No authentication, Go to signin");
       localStorage.removeItem("token");
@@ -165,7 +162,7 @@ onMounted(async () => {
   <div class="max-w-2xl mx-auto px-4">
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
-        Commentation ({{ comments.length }})
+        Comment ({{ comments.length }})
       </h2>
     </div>
     <form @submit.prevent="createComment" class="mb-6">
@@ -184,10 +181,11 @@ onMounted(async () => {
       </div>
       <button
         type="submit"
-        class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-gray-900 bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
+        class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-gray-900 bg-amber-600 text-white font-bold rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
       >
         Post comment
       </button>
+
     </form>
     <div v-if="comments.length > 0">
       <div v-for="comment in comments" :key="comment._id">
@@ -211,8 +209,7 @@ onMounted(async () => {
               </p>
             </div>
 
-            <div class="dropdown dropdown-end absolute top-0 right-2 p-4">
-              <div
+              <div @click="removeComment(comment._id)"
                 tabindex="0"
                 role="button"
                 class="btn btn-sm bg-transparent border-transparent shadow-transparent"
@@ -221,7 +218,7 @@ onMounted(async () => {
           <img src="/menu.png" />
         </div> -->X
               </div>
-              <ul
+              <!-- <ul
                 tabindex="0"
                 class="mt-0 z-[1] p-2 shadow-lg menu menu-sm dropdown-content bg-white rounded-box w-3"
               >
@@ -229,7 +226,7 @@ onMounted(async () => {
                 <li><a>Report</a></li>
                 <li><a>Delete</a></li>
               </ul>
-            </div>
+            </div> -->
           </footer>
           <p class="text-gray-500 dark:text-gray-400 text-left">
             {{ comment.comment }}

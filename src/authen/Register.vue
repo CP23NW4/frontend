@@ -190,7 +190,6 @@ if (registerData.value.userPicture) {
   }
 
 await handleSignup("/users/register", formData, "Sign Up successful!");
-
 };
 
 const handleFileUpload = async (event) => {
@@ -430,7 +429,7 @@ const filteredPostCodes = computed(() => {
     @click="showPassword = !showPassword"
     class="absolute right-4 top-2 text-gray-400 focus:outline-none"
   >
-  <img :src="showPassword ? '/oeye.png' : '/ceye.png'" class="w-6" :style="{ opacity: showPassword ? '0.5' : '0.25' }">
+  <img :src="showPassword ? 'https://mnwanimals.blob.core.windows.net/accessories/oeye.png' : 'https://mnwanimals.blob.core.windows.net/accessories/ceye.png'" class="w-6" :style="{ opacity: showPassword ? '0.5' : '0.25' }">
   </button>
 </div>
 
@@ -533,13 +532,13 @@ const filteredPostCodes = computed(() => {
           <label
             for="userAddress"
             class="absolute left-4 top-2 transition-all text-gray-400 bg-white px-1"
-            :class="{ 'text-xs': registerData.addressLine1 }"
+            :class="{ 'text-xs': registerData.homeAddress }"
           >
             Address
           </label>
           <span class="text-xs ml-[95%] text-gray-400"
           >{{
-            minCount + (registerData.userAddress ? registerData.userAddress.length : 0)
+            minCount + (registerData.homeAddress ? registerData.homeAddress.length : 0)
           }}/{{ maxCountAddress }}</span
         >
         </div>
@@ -613,7 +612,7 @@ const filteredPostCodes = computed(() => {
         <div class="mb-6">
           <button
             type="submit"
-            @click="signup"
+            @click="signup" 
             class="w-full bg-amber-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-orange-500 focus:outline-none"
           >
             Sign up
@@ -630,6 +629,7 @@ const filteredPostCodes = computed(() => {
       </form>
     </div>
   </div>
+
 </template>
 <style scoped>
 /* Add any additional styling you need */
@@ -643,4 +643,4 @@ input:not(:placeholder-shown) + label {
 /* input {
   background-color: transparent;
 } */
-</style>
+</style>../composition/auth.js
