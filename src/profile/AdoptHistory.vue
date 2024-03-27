@@ -32,7 +32,7 @@ const formatDate = (timestamp) => {
 const getAdopt = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/reciever/${route.params.id}/reqAdoption`,
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/receiver/${route.params.id}/reqAdoption`,
       {
         method: "GET",
         headers: {
@@ -75,7 +75,7 @@ const updateReqStatus = async (id, status) => {
   try {
     update.value.status = "Accepted";
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/reciever/reqAdoption/${id}`,
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/receiver/reqAdoption/${id}`,
       {
         method: "PUT",
         headers: {

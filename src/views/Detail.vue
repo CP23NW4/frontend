@@ -56,7 +56,7 @@ const getRequest = async () => {
 const getAdopt = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/reciever/${route.params.id}/reqAdoption`,
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/receiver/${route.params.id}/reqAdoption`,
       {
         method: "GET",
         headers: {
@@ -397,7 +397,7 @@ console.log(id)
   <Comment />
 </div>
 
-  
+
 </div>
-  </div>
+</div>
 </template>
