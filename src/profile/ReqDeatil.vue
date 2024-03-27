@@ -149,9 +149,6 @@ onMounted(async () => {
             </li>
             <li><a class="font-bold m-2">ช่องทางติดต่อ :</a> {{ adoptionReq.requester.reqPhone }}</li>
             <li class="mx-2">  
-              <a class="font-bold">คำอธิบาย :</a> {{ adoptionReq.animal.saDesc }}
-            </li>
-            <li class="mx-2">  
               <a class="font-bold">คำอธิบาย :</a> {{ adoptionReq.note }}
             </li>
             <li class="mx-2">  
