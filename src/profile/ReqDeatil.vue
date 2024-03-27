@@ -143,11 +143,9 @@ onMounted(async () => {
         <hr />
         <ul class="mt-4">
             <li><a class="font-bold m-2">ชื่อ :</a> {{ adoptionReq.requester.reqName }}</li>
-            <li>
-              <a class="font-bold m-2">ที่อยู่ :</a>
+            <li class="mx-2">
+              <a class="font-bold">ที่อยู่ :</a>
               {{ adoptionReq.requester.reqAddress?.homeAddress }} แขวง{{ adoptionReq.requester.reqAddress?.TambonThaiShort }} เขต{{adoptionReq.requester.reqAddress?.DistrictThaiShort}} {{ adoptionReq.requester.reqAddress?.ProvinceThai }} {{ adoptionReq.requester.reqAddress?.PostCode }}
-              <!-- {{ `${adoptionReq.requester.reqAddress?.homeAddress} แขวง${adoptionReq.requester.reqAddress?.TambonThaiShort} เขต${adoptionReq.requester.reqAddress?.DistrictThaiShort} ${adoptionReq.requester.reqAddress?.ProvinceThai} ${adoptionReq.requester.reqAddress?.PostCode}` }} -->
-
             </li>
             <li><a class="font-bold m-2">ช่องทางติดต่อ :</a> {{ adoptionReq.requester.reqPhone }}</li>
             <li class="mx-2">  
