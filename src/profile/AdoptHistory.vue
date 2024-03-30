@@ -229,30 +229,39 @@ onMounted(async () => {
                   :src="req.requester.reqPicture"
                   alt="username"
                 /> -->
-                {{ req.requester.reqName }}
+                {{ req.requester.reqUsername }}
               </p>
               <p class="text-sm text-gray-500 dark:text-gray-400">
                 {{ formatDate(req.createdOn) }}
               </p>
             </div>
           </footer>            
-          <div  v-if="req.homePicture !== null" class="mb-4">
-            <h2 class="text-lg font-semibold text-gray-900">Home Picture</h2>
-            <img :src="req.homePicture" alt="Home Picture" class="w-full h-auto" />
-          </div>
-          <p class="text-gray-500 dark:text-gray-400 text-left">
-  {{ req.requester.reqAddress?.ProvinceThai }}
+          <p class="text-black dark:text-gray-400 text-left">
+            <span class="font-semibold">ชื่อ:</span> {{ req.requester.reqName }}
+</p>
+        
+<p class="text-black dark:text-gray-400 text-left">
+  <!-- {{ req }} -->
+  <span class="font-semibold">เบอร์ติดต่อ:</span> {{ req.requester.reqPhone }}
 </p>
 
-          <p class="text-gray-500 dark:text-gray-400 text-left">
-            {{ req.note }}
+          <p class="text-black dark:text-gray-400 text-left">
+            <span class="font-semibold">หมายเหตุ:</span> {{ req.note }}
           </p>
+          <p class="text-black dark:text-gray-400 text-left">
+            <span class="font-semibold">ที่พักอาศัย:</span> {{ req.requester.reqAddress?.DistrictThaiShort }}, {{ req.requester.reqAddress?.ProvinceThai }} {{ req.requester.reqAddress?.PostCode }}
+</p>
+          <div  v-if="req.homePicture !== null" class="mb-4">
+            <img :src="req.homePicture" alt="Home Picture" class="w-full h-auto" />
+          </div>
+          <div>
           <p v-if="strayAnimals.status === 'Available'" class="text-emerald-700 dark:text-gray-400 text-left">
-            {{ req.status }} </p>
+            <span class="font-semibold text-black">สถานะคำขอ: </span>{{ req.status }} </p>
             <p v-else-if="strayAnimals.status === 'Unavailable' && req.status === 'Accepted'" class="text-emerald-700 dark:text-gray-400 text-left">
-            {{ req.status }} </p>
+              <span class="font-semibold text-black">สถานะคำขอ: </span>{{ req.status }} </p>
             <p v-else-if="strayAnimals.status === 'Unavailable' && req.status !== 'Accepted'" class="text-red-700 dark:text-gray-400 text-left">
-            Rejected </p>
+              <span class="font-semibold text-black">สถานะคำขอ: </span>Rejected 
+            </p></div>
             <!-- {{ req }} -->
           <button
   @click="updateReqStatus(req._id, 'Accepted')"

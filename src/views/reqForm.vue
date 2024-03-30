@@ -193,7 +193,7 @@ onMounted(() => {
           disabled 
           class="w-full bg-gray-200 border border-gray-300 rounded-md focus:outline-none focus:border-blue-400"
           style="padding-top: 0; margin-top: 0; height: 100px;">
-  {{ `${user.userAddress?.homeAddress} แขวง${user.userAddress?.TambonThaiShort} เขต${user.userAddress?.DistrictThaiShort} ${user.userAddress?.ProvinceThai} ${user.userAddress?.PostCode}` }}
+  {{ `เขต${user.userAddress?.DistrictThaiShort} ${user.userAddress?.ProvinceThai} ${user.userAddress?.PostCode}` }}
 </textarea>
 
             </div>

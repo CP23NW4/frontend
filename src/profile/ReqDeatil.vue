@@ -142,22 +142,21 @@ onMounted(async () => {
         </div>
         <hr />
         <ul class="mt-4">
-            <li><a class="font-bold m-2">ชื่อ :</a> {{ adoptionReq.requester.reqName }}</li>
+            <li><a class="font-bold m-2">ชื่อ:</a> {{ adoptionReq.requester.reqName }}</li>
+            <li><a class="font-bold m-2">เบอร์ติดต่อ:</a> {{ adoptionReq.requester.reqPhone }}</li>
+            <li class="mx-2">  
+              <a class="font-bold">คำอธิบาย:</a> {{ adoptionReq.note }}
+            </li>
+            <li class="mx-2">  
+              <a class="font-bold">สถานะ: </a> 
+              <span class="text-emerald-600" v-if="adoptionReq.status === 'Accepted'"> {{ adoptionReq.status }}</span>
+              <span class="text-red-600" v-if="adoptionReq.status === 'On Request'"> {{ adoptionReq.status }}</span>
+            </li>
             <li class="mx-2">
-              <a class="font-bold">ที่อยู่ :</a>
-              {{ adoptionReq.requester.reqAddress?.homeAddress }} แขวง{{ adoptionReq.requester.reqAddress?.TambonThaiShort }} เขต{{adoptionReq.requester.reqAddress?.DistrictThaiShort}} {{ adoptionReq.requester.reqAddress?.ProvinceThai }} {{ adoptionReq.requester.reqAddress?.PostCode }}
-            </li>
-            <li><a class="font-bold m-2">ช่องทางติดต่อ :</a> {{ adoptionReq.requester.reqPhone }}</li>
-            <li class="mx-2">  
-              <a class="font-bold">คำอธิบาย :</a> {{ adoptionReq.note }}
-            </li>
-            <li class="mx-2">  
-              <a class="font-bold">สถานะ : </a> 
-              <span class="text-emerald-600" v-if="adoptionReq.status === 'Accepted'">{{ adoptionReq.status }}</span>
-              <span class="text-red-600" v-if="adoptionReq.status === 'On Request'">{{ adoptionReq.status }}</span>
+              <a class="font-bold">ที่พักอาศัย:</a>
+              {{adoptionReq.requester.reqAddress?.DistrictThaiShort}}, {{ adoptionReq.requester.reqAddress?.ProvinceThai }} {{ adoptionReq.requester.reqAddress?.PostCode }}
             </li>
             <li v-if="adoptionReq.homePicture" class="mx-2">  
-              <a class="font-bold">รูปบ้าน :</a> 
               <img :src="adoptionReq.homePicture" alt="Home Picture" class="w-full h-full object-cover rounded-lg mt-2">
             </li>
 
