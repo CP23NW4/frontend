@@ -13,17 +13,24 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
       
+# ================================================================================
+# Connect to VPN step  
+
     - name: Install OpenVPN
       run: |
         sudo apt update
         sudo apt install -y openvpn openvpn-systemd-resolved
+
     - name: Connect to VPN
       uses: "kota65535/github-openvpn-connect-action@v2"
       with:
         config_file: .github/workflows/sitst-client.ovpn
         username: ${{ secrets.OVPN_USERNAME }}
         password: ${{ secrets.OVPN_PASSWORD }}
-      
+
+# ================================================================================
+# SSH into Azure VM and pull new code step
+
     - name: Install SSH key
       uses: webfactory/ssh-agent@v0.5.4
       with:
@@ -32,6 +39,8 @@ jobs:
     - name: SSH into Azure VM and pull new code
       run: |
         ssh -o StrictHostKeyChecking=no sysadmin@10.4.85.24 "cd /home/sysadmin/frontend && git pull"
+
+# ================================================================================
 
     - name: Install Docker
       run: |
@@ -55,12 +64,18 @@ jobs:
       run: |
          ssh -o StrictHostKeyChecking=no sysadmin@10.4.85.24 "cd /home/sysadmin/frontend && docker build -t punchiu/frontend-image:latest ."
 
+# ================================================================================
+# Login and push docker image to docker hub
+
     - name: Login to Docker Hub
       run: echo '${{ secrets.DOCKERHUB_TOKEN }}' | docker login -u punchiu --password-stdin && echo "Logged in to Docker Hub successfully"
         
     - name: Push Docker image to Docker Hub
       run: | 
         ssh -o StrictHostKeyChecking=no sysadmin@10.4.85.24 "docker push punchiu/frontend-image:latest"
+
+# ================================================================================
+# Image scan
 
     - name: Install Trivy
       run: |
@@ -70,11 +85,16 @@ jobs:
       run: |
         trivy image punchiu/frontend-image:latest
 
+# ================================================================================
+# Dependencies scan
+
     - name: Run Dependency Security Scan
       run: |
-        npm install # Ensure dependencies are installed
-        npm audit # Run dependency security scan
+        npm install
+        npm audit fix --force 
 
+# ================================================================================
+   
     - name: Show Docker images
       run: |
          ssh -o StrictHostKeyChecking=no sysadmin@10.4.85.24 "docker images"
