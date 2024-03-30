@@ -7,7 +7,7 @@ const router = useRouter();
 const route = useRoute();
 const goBack = () => router.go(-1);
 const getDet = ref({});
-const adoptionAcc = ref({});
+
 
 const adoptionReq = ref([]);
 // const comments = ref([]);
@@ -53,48 +53,9 @@ const getRequest = async () => {
 };
 
 
-const getAdopt = async () => {
-  try {
-    const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/receiver/${route.params.id}/reqAdoption`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),
-        },
-      }
-    );
-
-    if (res.status === 200) {
-      const reqData = await res.json();
-      adoptionAcc.value = reqData;
-    } else {
-      if (res.status === 404) {
-        console.error("Error: Post not found");
-        router.push({
-          name: "notfound",
-        });
-      } else if (res.status === 401) {
-        console.error("Login");
-        // localStorage.removeItem("token");
-        // router.push({
-        //   name: "login",
-        // });
-      } else if (res.status === 500) {
-        console.error("Error: Internal Server Error");
-      } else {
-        console.error("Error:", res.status, res.statusText);
-      }
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 onMounted(async () => {
   getRequest();
-  getAdopt();
 });
 
 
@@ -388,8 +349,6 @@ console.log(id)
           </div>
         </div>
       </dialog>
-      <!-- {{ user }} -->
-      <!-- {{ getDet }} -->
 <div v-if="checkSignIn && user._id === getDet.owner?.ownerId">
     <Detailbar />
 </div>
