@@ -121,15 +121,11 @@ const filteredStrayAnimal = computed(() => {
             {{ filteredStrayAnimal[index].status }}
         </div> -->
 
-        <div class="text-[12px] font-bold leading-none mt-1 tracking-tight text-amber-500" v-if="filteredStrayAnimal[index].status === 'Available' && req.status === 'On Request'">
-            On Request
-        </div>
-        <div class="text-[12px] font-bold leading-none mt-1 tracking-tight text-red-600" v-else-if="filteredStrayAnimal[index].status === 'Unavailable' && req.status === 'On Request'">
-            Rejected
-        </div>
-        <div class="text-[12px] font-bold leading-none mt-1 tracking-tight text-emerald-600" v-else-if="filteredStrayAnimal[index].status === 'Unavailable' && req.status === 'Accepted'">
-            Accepted
-        </div>
+<div class="text-[12px] font-bold leading-none mt-1 tracking-tight" v-if="filteredStrayAnimal[index]">
+  <span v-if="filteredStrayAnimal[index].status === 'Available' && req.status === 'On Request'" class="text-amber-500">On Request</span>
+  <span v-else-if="filteredStrayAnimal[index].status === 'Unavailable' && req.status === 'On Request'" class="text-red-600">Rejected</span>
+  <span v-else-if="filteredStrayAnimal[index].status === 'Unavailable' && req.status === 'Accepted'" class="text-emerald-600">Accepted</span>
+</div>
 
       </div>
     </div>
