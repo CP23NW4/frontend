@@ -102,7 +102,7 @@ onMounted(async () => {
 
 
         <div class="flex mb-4">
-          <img class="w-10 h-10 rounded-full mr-2" :src="adoptionReq.owner?.ownerPicture" alt="" />
+          <img class="w-10 h-10 rounded-full object-cover  mr-2" :src="adoptionReq.owner?.ownerPicture" alt="" />
           <div class="font-medium dark:text-white">
             <div class="font-bold">{{ adoptionReq.owner?.ownerUsername }}</div>
             <!-- <div class="text-sm text-gray-500 dark:text-gray-400">
@@ -132,7 +132,7 @@ onMounted(async () => {
           <h2 class="font-semibold mt-10 mb-2">Your Information</h2>
 
           <div class="flex mb-4">
-          <img class="w-10 h-10 rounded-full mr-2" :src="adoptionReq.requester?.reqPicture" alt="" />
+          <img class="w-10 h-10 rounded-full object-cover  mr-2" :src="adoptionReq.requester?.reqPicture" alt="" />
           <div class="font-medium dark:text-white">
             <div class="font-bold">{{ adoptionReq.requester?.reqUsername }}</div>
             <div class="text-sm text-gray-500 dark:text-gray-400">
