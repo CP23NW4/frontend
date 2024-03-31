@@ -3,10 +3,12 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Comment from '../components/Comment.vue';
 import Detailbar from '../bar/Detailbar.vue';
+// import { removeComment }  from '../components/Comment.vue';
 const router = useRouter();
 const route = useRoute();
 const goBack = () => router.go(-1);
 const getDet = ref({});
+// const { removeComment } = Comment;
 
 
 const adoptionReq = ref([]);
@@ -53,6 +55,10 @@ const getRequest = async () => {
 };
 
 
+const checkAdoptionReq = (animalId) => {
+  return adoptionReq.value.some(item => item.animal?.saId === animalId);
+};
+
 
 onMounted(async () => {
   getRequest();
@@ -68,6 +74,10 @@ let checkSignIn= ref(localStorage.getItem('token'))
 
 const showAlert = () => {
   alert("You need to sign in before adopting!");
+};
+
+const goToSignIn = () => {
+  router.push({ name: 'login' });
 };
 
 
@@ -313,10 +323,10 @@ console.log(id)
 <br>
 
     <!-- Button to adopt -->
- <router-link v-if="user._id !== getDet.owner?.ownerId && checkSignIn" :to="{ name: 'reqform' }" class="block mx-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</router-link>
-<button v-else-if="user._id !== getDet.owner?.ownerId && !checkSignIn" @click="showAlert" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
-<button v-else-if="user._id === getDet.owner?.ownerId" @click="showAlert" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
-<!-- <button v-else-if="checkAdoptionReq" @click="showAlert" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button> -->
+    <router-link v-if="user._id !== getDet.owner?.ownerId && checkSignIn && !checkAdoptionReq(getDet._id)" :to="{ name: 'reqform' }" class="block mx-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</router-link>
+<button v-else-if="user._id !== getDet.owner?.ownerId && checkSignIn && checkAdoptionReq(getDet._id)" onclick="my_modal_4.showModal()" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
+<button v-else-if="user._id !== getDet.owner?.ownerId && !checkSignIn" onclick="my_modal_2.showModal()" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
+<button v-else-if="user._id === getDet.owner?.ownerId" onclick="my_modal_3.showModal()" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
 
         </div>
       </div>
@@ -325,6 +335,68 @@ console.log(id)
       <button @click="goBack" class="text-gray-600 font-semibold py-2 px-4 rounded-md hover:text-gray-800 focus:outline-none">Back</button>
           </div>   
           <!-- <router-link :to="{ name: 'reqform' }" v-if="user._id !== getDet.owner?.ownerId" class="m-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800">Adopt</router-link> -->
+
+
+          <dialog id="my_modal_2" class="modal">
+        <div class="modal-box flex flex-col items-center justify-center">
+          <!-- <img src="/modal.svg" /> -->
+          <h1 class="font-bold text-2xl text-amber-500 mt-2"></h1>
+          <p class="py-2">Please sign in to continue.</p>
+          <div class="modal-action flex">
+            <form method="dialog">
+              <button
+                class="m-2 bg-slate-400 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                @click="goToSignIn"
+                class="m-2 bg-orange-600 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
+              >
+                Go to Sign in
+              </button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
+      <dialog id="my_modal_3" class="modal">
+        <div class="modal-box flex flex-col items-center justify-center">
+          <img src="/modal.svg" />
+          <h1 class="font-bold text-2xl text-amber-500 mt-2">You can not adopt this Post.</h1>
+          <p class="py-2">Please check again.</p>
+          <div class="modal-action flex">
+            <form method="dialog">
+              <button
+                class="m-2 bg-slate-400 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
+      <dialog id="my_modal_4" class="modal">
+        <div class="modal-box flex flex-col items-center justify-center">
+          <img src="/modal.svg" />
+          <h1 class="font-bold text-2xl text-amber-500 mt-2">You already adopt this post.</h1>
+          <p class="py-2">Please check again.</p>
+          <div class="modal-action flex">
+            <form method="dialog">
+              <button
+                class="m-2 bg-slate-400 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
+
+
 
       <dialog id="my_modal_1" class="modal">
         <div class="modal-box flex flex-col items-center justify-center">

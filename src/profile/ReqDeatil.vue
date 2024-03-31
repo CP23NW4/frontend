@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter, useRoute } from "vue-router";
 
 const adoptionReq = ref(null);
@@ -23,6 +23,33 @@ const capitalizeFirstLetter = (str) => {
   if (!str) return "";
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
+
+const strayAnimal = ref({});
+
+const getPosts = async () => {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals/all`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: localStorage.getItem('token'),
+      },
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      strayAnimal.value = data;
+    } else {
+      console.error('Error fetching adoption requests:', res.status, res.statusText);
+    }
+  } catch (error) {
+    console.error('Error fetching adoption requests:', error);
+  }
+};
+
+onMounted(async () => {
+  getPosts();
+});
 
 const getRequest = async () => {
   try {
@@ -51,29 +78,8 @@ const getRequest = async () => {
 onMounted(async () => {
   getRequest();
 });
+
 </script>
-
-<!-- <template>
-  <div class="min-h-screen mt-10 flex items-center justify-center w-96">
-    <div class="max-w-xl w-full p-8 bg-white shadow-lg rounded-lg">
-      <h2 class="text-2xl font-bold mb-4">Request Detail</h2>
-      {{ adoptionReq }}
-      <div v-if="adoptionReq">
-        <div class="text-left">Post Owner: {{ adoptionReq.owner.ownerUsername }}</div>
-        <div class="text-left">Animal Name: {{ adoptionReq.animal.saName }}</div>
-        <div class="text-left">Your Name: {{ adoptionReq.requester.reqName }}</div>
-        <div class="text-left">Status: {{ adoptionReq.status }}</div>
-        <div class="text-left">Note: {{ adoptionReq.note }}</div>
-        <div class="text-left">Created On: {{ adoptionReq.createdOn }}</div>
-        <div v-if="adoptionReq.homePicture" class="text-left">Home Picture: <img :src="adoptionReq.homePicture" alt="Home Picture" style="max-width: 200px;"></div>
-      </div>
-    </div>
-  </div>
-  <div class="text-left mb-10 mt-2"> 
-    <button @click="goBack" class="text-gray-600 font-semibold px-4 rounded-md hover:text-gray-800 focus:outline-none">Back</button>
-  </div>  
-</template> -->
-
 
 <template>
   <div v-if="adoptionReq" class="flex items-center justify-center mt-20">
@@ -122,11 +128,6 @@ onMounted(async () => {
             <li class="mx-2">  
               <a class="font-bold">คำอธิบาย :</a> {{ adoptionReq.animal.saDesc }}
             </li>
-            <!-- <li class="mx-2">  
-              <a class="font-bold">สถานะ :</a> 
-              <span class="text-emerald-600" v-if="adoptionReq.status === 'Accepted'">{{ adoptionReq.status }}</span>
-              <span class="text-red-600" v-if="adoptionReq.status === 'On Request'">{{ adoptionReq.status }}</span>
-            </li> -->
           </ul>
           <h2 class="font-semibold mt-10 mb-2">Your Information</h2>
 
@@ -149,9 +150,10 @@ onMounted(async () => {
             </li>
             <li class="mx-2">  
               <a class="font-bold">สถานะ: </a> 
-              <span class="text-emerald-600" v-if="adoptionReq.status === 'Accepted'"> {{ adoptionReq.status }}</span>
-              <span class="text-red-600" v-if="adoptionReq.status === 'On Request'"> {{ adoptionReq.status }}</span>
+              <span class="text-emerald-600 font-semibold" v-if="adoptionReq.status === 'Accepted' "> {{ adoptionReq.status }}</span>
+              <span class="text-amber-500 font-semibold" v-if="adoptionReq.status === 'On Request'"> {{ adoptionReq.status }}</span>
             </li>
+
             <li class="mx-2">
               <a class="font-bold">ที่พักอาศัย:</a>
               {{adoptionReq.requester.reqAddress?.DistrictThaiShort}}, {{ adoptionReq.requester.reqAddress?.ProvinceThai }} {{ adoptionReq.requester.reqAddress?.PostCode }}

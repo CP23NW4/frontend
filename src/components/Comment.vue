@@ -9,6 +9,7 @@ const commentData = ref({
   comment: "",
 });
 
+let checkSignIn= ref(localStorage.getItem('token'))     
 const formatDate = (timestamp) => {
   const date = new Date(timestamp);
   return date.toLocaleString("en-US", {
@@ -20,6 +21,8 @@ const formatDate = (timestamp) => {
     minute: "numeric",
   });
 };
+
+
 // const props = defineProps(["comments"]);
 const getComments = async () => {
   try {
@@ -140,10 +143,7 @@ const removeComment = async (commentId) => {
       router.push({
         name: "login"})
       } else if (res.status === 403) {
-          alert("You do not have permission to edit other post, Check your role");
-          router.push({
-            name: "home",
-          });
+          alert("You do not have permission to delete other comment");
         }else {
       console.error("Error deleting post:", res.status, res.statusText);
     }
@@ -165,7 +165,7 @@ onMounted(async () => {
         Comment ({{ comments.length }})
       </h2>
     </div>
-    <form @submit.prevent="createComment" class="mb-6">
+    <form @submit.prevent="createComment" class="mb-6" v-if="checkSignIn">
       <div
         class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700"
       >
@@ -214,32 +214,14 @@ onMounted(async () => {
                 role="button"
                 class="btn btn-sm bg-transparent border-transparent shadow-transparent"
               >
-                <!-- <div class="w-4 rounded-full">
-          <img src="/menu.png" />
-        </div> -->X
+               X
               </div>
-              <!-- <ul
-                tabindex="0"
-                class="mt-0 z-[1] p-2 shadow-lg menu menu-sm dropdown-content bg-white rounded-box w-3"
-              >
-                <li><a>Edit</a></li>
-                <li><a>Report</a></li>
-                <li><a>Delete</a></li>
-              </ul>
-            </div> -->
+              
+
           </footer>
           <p class="text-gray-500 dark:text-gray-400 text-left">
             {{ comment.comment }}
           </p>
-          <div class="flex items-center mt-4 space-x-4">
-            <!-- <button type="button"
-                class="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium">
-                <svg class="mr-1.5 w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5h5M5 8h2m6-3h2m-5 3h6m2-7H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h3v5l5-5h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"/>
-                </svg>
-                Reply
-            </button> -->
-          </div>
         </article>
       </div>
     </div>

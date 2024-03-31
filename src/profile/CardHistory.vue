@@ -71,7 +71,16 @@ const filteredStrayAnimal = computed(() => {
 
 <template>
 
-  <div v-for="(req, index) in adoptionReq" :key="req._id" @click="showDetail(req._id)" style="cursor: pointer;" class="mx-1 md:mx-4 lg:mx-4 mb-10 text-left rounded-lg block max-w-sm hover:shadow-lg transition-transform transform hover:border hover:border-gray-500 hover:-translate-y-1 focus:translate-y-0 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+  <div v-for="(req, index) in adoptionReq" :key="req._id" 
+     @click="filteredStrayAnimal[index].status === 'Available' && req.status === 'On Request' || filteredStrayAnimal[index].status === 'Unavailable' && req.status === 'Accepted' ? showDetail(req._id) : null" 
+     :style="{
+    opacity: filteredStrayAnimal[index].status === 'Unavailable' && req.status === 'On Request'? '0.3' : '1',
+  }"
+     class="mx-1 md:mx-4 lg:mx-4 mb-10 text-left rounded-lg block max-w-sm hover:shadow-lg transition-transform transform hover:border hover:border-gray-500 hover:-translate-y-1 focus:translate-y-0 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+
+
+
+  <!-- <div v-for="(req, index) in adoptionReq" :key="req._id" @click="showDetail(req._id)" style="cursor: pointer;" class="mx-1 md:mx-4 lg:mx-4 mb-10 text-left rounded-lg block max-w-sm hover:shadow-lg transition-transform transform hover:border hover:border-gray-500 hover:-translate-y-1 focus:translate-y-0 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"> -->
     <div class="relative lg:w-full lg:h-52 md:w-full md:h-36 h-60">
       <img
         v-if="req.animal.saPicture !== null"
