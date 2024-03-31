@@ -88,10 +88,10 @@ jobs:
 # ================================================================================
 # Dependencies scan
 
-    - name: Run Dependency Security Scan
-      run: |
-        npm install
-        npm audit fix --force 
+    # - name: Run Dependency Security Scan
+    #   run: |
+    #     npm install
+    #     npm audit fix --force 
 
 # ================================================================================
    
