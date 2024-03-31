@@ -288,7 +288,7 @@ console.log(id)
     </div>
 
         <div class="flex mb-4">
-          <img class="w-10 h-10 rounded-full mr-2" :src="getDet.owner?.ownerPicture" alt="" />
+          <img class="w-10 h-10 rounded-full object-cover mr-2" :src="getDet.owner?.ownerPicture" alt="" />
           <div class="font-medium dark:text-white">
             <div class="font-bold">{{ getDet.owner?.ownerUsername }}</div>
             <div class="text-sm text-gray-500 dark:text-gray-400">
