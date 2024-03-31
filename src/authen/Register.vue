@@ -585,7 +585,6 @@ const filteredPostCodes = computed(() => {
         <div class="mb-6">
           <button
             type="submit"
-            @click="signup" 
             class="w-full bg-amber-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-orange-500 focus:outline-none"
           >
             Sign up

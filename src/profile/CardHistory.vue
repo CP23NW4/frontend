@@ -72,9 +72,9 @@ const filteredStrayAnimal = computed(() => {
 <template>
 
   <div v-for="(req, index) in adoptionReq" :key="req._id" 
-     @click="filteredStrayAnimal[index].status === 'Available' && req.status === 'On Request' || filteredStrayAnimal[index].status === 'Unavailable' && req.status === 'Accepted' ? showDetail(req._id) : null" 
+     @click="filteredStrayAnimal[index] && filteredStrayAnimal[index].status === 'Available' && req.status === 'On Request' || filteredStrayAnimal[index].status === 'Unavailable' && req.status === 'Accepted' ? showDetail(req._id) : null" 
      :style="{
-    opacity: filteredStrayAnimal[index].status === 'Unavailable' && req.status === 'On Request'? '0.3' : '1',
+    opacity: filteredStrayAnimal[index] && filteredStrayAnimal[index].status === 'Unavailable' && req.status === 'On Request'? '0.3' : '1',
   }"
      class="mx-1 md:mx-4 lg:mx-4 mb-10 text-left rounded-lg block max-w-sm hover:shadow-lg transition-transform transform hover:border hover:border-gray-500 hover:-translate-y-1 focus:translate-y-0 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
 
@@ -126,9 +126,6 @@ const filteredStrayAnimal = computed(() => {
         <div class="text-xs leading-none tracking-tight mt-1 text-gray-500">
           Created by {{ req.owner?.ownerUsername }}
         </div>
-        <!-- <div class="text-[12px] font-bold leading-none mt-1 tracking-tight text-emerald-600">
-            {{ filteredStrayAnimal[index].status }}
-        </div> -->
 
 <div class="text-[12px] font-bold leading-none mt-1 tracking-tight" v-if="filteredStrayAnimal[index]">
   <span v-if="filteredStrayAnimal[index].status === 'Available' && req.status === 'On Request'" class="text-amber-500">On Request</span>
