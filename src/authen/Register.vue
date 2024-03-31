@@ -543,7 +543,7 @@ const filteredPostCodes = computed(() => {
         >
         </div>
 
-        <div class="grid gap-3 mb-4 md:grid-cols-2">
+        <div class="grid gap-2 mb-4 md:grid-cols-2 text-left">
 <!-- Select Province dropdown -->
 <label for="province">Select Province:</label>
 <select class="select select-bordered" id="province" v-model="selectedProvince">
@@ -568,15 +568,6 @@ const filteredPostCodes = computed(() => {
 
 
 <!-- Display PostCode -->
-<!-- <label for="postCode">Select PostCode:</label>
-<select class="select select-bordered" id="postCode" v-model="selectedPostCode">
-  <option disabled value="">Please select a PostCode</option>
-  <option v-for="postCode in filteredPostCodes" :key="postCode" :value="postCode">{{ postCode }}</option>
-</select> -->
-
-
-
-
 <label for="postCode">Post Codes:</label>
 <div>
   <span v-if="selectedTambon">
@@ -590,24 +581,6 @@ const filteredPostCodes = computed(() => {
 
 </div>
 
-        <!-- addess -->
-        <!-- <div class="relative mb-4">
-        <textarea
-          v-model="registerData.address"
-          id="address"
-          placeholder=" "
-          cols="5"
-          rows="2"
-          maxlength="200"
-          class="bg-white border border-gray-300 text-black text-m focus:ring-0 w-[100%] rounded-lg"
-        ></textarea>
-        <label
-            for="address"
-            class="absolute left-4 top-2 transition-all text-gray-400 bg-white px-1"
-            :class="{ 'text-xs': registerData.address }"
-          >Address
-        </label>
-      </div> -->
 
         <div class="mb-6">
           <button

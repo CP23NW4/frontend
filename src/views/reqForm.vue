@@ -205,7 +205,7 @@ onMounted(() => {
             </div>
             <div>
               <label for="contact" class="block mb-1 text-left text-[14px]">Other Contacts (Line, etc.)</label>
-              <input v-if="user.contact !== null" type="text" v-model="user.contact" id="phoneNumber" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-400">
+              <input v-if="user.contact !== null" type="text" v-model="reqForm.contact" id="phoneNumber" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-400">
               <input v-else type="text" v-model="reqForm.contact" id="contact" class="w-full border rounded-md px-4 py-2 focus:outline-none focus:border-blue-400">
             </div>
             <!-- ID Card -->
@@ -230,7 +230,7 @@ onMounted(() => {
               <input v-model="reqForm.salary" id="salary" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-400">
             </div>
             <div>
-              <label for="note" class="block mb- text-left text-[14px]">Note (salary) or more question and if requested can not request again</label>
+              <label for="note" class="block mb- text-left text-[14px]">Note</label>
               <textarea v-model="reqForm.addnote" id="note" rows="4" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-400"></textarea>
             </div>
           </div>

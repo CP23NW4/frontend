@@ -202,8 +202,6 @@ onMounted(async () => {
   getPosts();
 });
 
-
-
 </script>
 
 <template>
