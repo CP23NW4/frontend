@@ -11,8 +11,9 @@ import searchFilter from '../composition/searchFilter';
 
 const { strayAnimals } = getStrayAnimals();
 const { keyword, filteredStrayAnimals, setSearchKeyword } = searchFilter(strayAnimals);
-const filteredStrayAnimalsWithStatusAvailable = computed(() => {
-  return filteredStrayAnimals.value.filter(strayAnimal => strayAnimal.status === 'Available');
+
+const filteredStrayAnimalsWithStatusUnavailable = computed(() => {
+  return filteredStrayAnimals.value.filter(strayAnimal => strayAnimal.status === 'Unavailable');
 });
 // location.reload()
 </script>
@@ -24,7 +25,7 @@ const filteredStrayAnimalsWithStatusAvailable = computed(() => {
     <Searchbar @setSearchKeyword="setSearchKeyword" />
     <Snowfall />
     <Filterbar />
-    <div class="min-h-screen px-20 md:px-20 lg:px-20">
+    <div class="min-h-screen">
       <br />
       <!-- <h1 class="font-bold text-left m-8">Finding Home</h1> -->
       <div v-if="strayAnimals.length === 0">
@@ -32,8 +33,8 @@ const filteredStrayAnimalsWithStatusAvailable = computed(() => {
       </div>
 
       <div class="grid lg:grid-cols-4 gap-0 md:grid-cols-3">
-        <div v-for="strayAnimal in filteredStrayAnimalsWithStatusAvailable" :key="strayAnimal._id">
-          <Card :strayAnimal="strayAnimal" />
+        <div v-for="strayAnimal in filteredStrayAnimalsWithStatusUnavailable" :key="strayAnimal._id">
+          <Card :strayAnimal="strayAnimal"/>
         </div>
       </div>
     </div>

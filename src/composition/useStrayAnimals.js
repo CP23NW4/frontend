@@ -11,7 +11,7 @@ export default function getStrayAnimals(type) {
 
   const getPost = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals`, {
+      const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals/all`, {
         method: 'GET',
       });
 
@@ -22,6 +22,9 @@ export default function getStrayAnimals(type) {
       } else {
         if (res.status === 404) {
           console.error('Error: Post not found');
+          router.push({
+            name: "notfound",
+          });
         } else if (res.status === 500) {
           console.error('Error: Internal Server Error');
         } else {
@@ -41,81 +44,33 @@ export default function getStrayAnimals(type) {
 }
 
 
+export const getSigninStrayAnimals = async () => {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: localStorage.getItem('token'),
+      },
+    });
 
-// export const getPostById = async (postId) => {
-//   try {
-//     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals/${postId}`, {
-//       method: 'GET',
-//     });
-
-//     if (res.status === 200) {
-//       const data = await res.json();
-//       return data;
-//     } else if (res.status === 404) {
-//       console.error("Error: Post not found");
-//       router.push({
-//         name: "notfound",
-//       });
-//     } else if (res.status === 500) {
-//       console.error("Error: Internal Server Error");
-//     } else if (res.status === 400) {
-//       console.error("Not validate");
-//     } else {
-//       throw new Error(`Error: ${res.status} - ${res.statusText}`);
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     throw error;
-//   }
-// };
-
-
-// export const createPost = async (postData) => {
-//   try {
-//     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals`, {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify(postData),
-//     });
-
-//     if (res.status === 200 || res.status === 201) {
-//       const data = await res.json();
-//       return data;
-//     } else {
-//       // Handle errors here
-//       throw new Error(`Error: ${res.status} - ${res.statusText}`);
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     throw new Error('Error creating post');
-//   }
-// };
-
-// export const updatePost = async (postId, postData) => {
-//   try {
-//     const res = await fetch(
-//       `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${postId}`,
-//       {
-//         method: 'PUT',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify(postData),
-//       }
-//     );
-
-//     if (res.status === 200) {
-//       const data = await res.json();
-//       return data;
-//     } else {
-//       // Handle errors here
-//       throw new Error(`Error: ${res.status} - ${res.statusText}`);
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     throw new Error('Error updating post');
-//   }
-// };
-
+    if (res.ok) {
+      console.log('Successful');
+      return await res.json();
+    } else {
+      if (res.status === 403) {
+        console.log('Go to login');
+        localStorage.removeItem('token');
+        router.push({ name: 'login' });
+      } else if (res.status === 404) {
+        console.log(res.status);
+        router.push({ name: 'notfound' });
+      } else {
+        console.log('Error, something went wrong');
+        console.error('Error:', res.status, res.statusText);
+      }
+    }
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+};

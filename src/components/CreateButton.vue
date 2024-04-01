@@ -1,14 +1,16 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import CreateEditPost from './CreateEditPost.vue';
+import CreateEditPost from '../views/Posts.vue';
 
-
+let checkSignIn= ref(localStorage.getItem('token'))     
 const router = useRouter();
 const expandButton = ref(false);
 
 const isCreatePostModalOpen = ref(false);
-
+const showAlert = () => {
+  alert('You need to sign in before creating!')
+}
 const openCreatePostModal = () => {
   isCreatePostModalOpen.value = true;
 };
@@ -47,6 +49,7 @@ const handleCreateModalCloseWithoutConfirmation = () => {
 };
 </script>
 <template>
+  <div v-if="checkSignIn">
     <!-- Create Post Button -->
     <div
     @mouseenter="expandButton = true"
@@ -58,6 +61,7 @@ const handleCreateModalCloseWithoutConfirmation = () => {
     <span class="text-4xl mx-2 transition-all" :class="{ 'text-lg': expandButton }">+</span>
     <span class="transition-all mr-2" :class="{ 'hidden': !expandButton }">Create Post</span>
   </div>
+  
 
 <!-- delete -->
 <!-- <img
@@ -75,7 +79,19 @@ const handleCreateModalCloseWithoutConfirmation = () => {
     </div>
   </div>
 </teleport>
+</div>
 
+<div v-if="!checkSignIn">
+    <!-- Create Post Button -->
+    <div
+    @click="showAlert"
+    class="fixed bottom-8 right-8 lg:right-20 z-10 text-white flex justify-center items-center bg-orange-600 font-bold rounded-full hover:bg-orange-700 hover:text-white cursor-pointer"
+    :style="{ width: expandButton ? 'auto' : '50px', height: '50px' }"
+  >
+    <span class="text-4xl mx-2 transition-all" :class="{ 'text-lg': expandButton }">+</span>
+    <span class="transition-all mr-2" :class="{ 'hidden': !expandButton }">Create Post</span>
+  </div>
+</div>
 </template>
 
 

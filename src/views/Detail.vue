@@ -1,12 +1,84 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-
+import Comment from '../components/Comment.vue';
+import Detailbar from '../bar/Detailbar.vue';
+// import { removeComment }  from '../components/Comment.vue';
 const router = useRouter();
 const route = useRoute();
 const goBack = () => router.go(-1);
 const getDet = ref({});
+// const { removeComment } = Comment;
+
+
+const adoptionReq = ref([]);
+// const comments = ref([]);
+// const props = defineProps(["comments"]);
+// const adoptionReq = ref([]);
+const getRequest = async () => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/sender/reqAdoption`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
+
+    if (res.status === 200) {
+      const reqData = await res.json();
+      adoptionReq.value = reqData;
+    } else {
+      if (res.status === 404) {
+        console.error("Error: Post not found");
+        router.push({
+          name: "notfound",
+        });
+      } else if (res.status === 401) {
+        console.error("Login");
+        // localStorage.removeItem("token");
+        // router.push({
+        //   name: "login",
+        // });
+      } else if (res.status === 500) {
+        console.error("Error: Internal Server Error");
+      } else {
+        console.error("Error:", res.status, res.statusText);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+const checkAdoptionReq = (animalId) => {
+  return adoptionReq.value.some(item => item.animal?.saId === animalId);
+};
+
+
+onMounted(async () => {
+  getRequest();
+});
+
+
+// const checkAdoptionReq = (_id) => {
+//   return adoptionReq.value.some(item => item.animal?.saId === _id);
+// };
+
 let checkSignIn= ref(localStorage.getItem('token'))     
+
+
+const showAlert = () => {
+  alert("You need to sign in before adopting!");
+};
+
+const goToSignIn = () => {
+  router.push({ name: 'login' });
+};
 
 
 const formatDate = (timestamp) => {
@@ -20,6 +92,8 @@ const formatDate = (timestamp) => {
     minute: "numeric",
   });
 };
+
+
 
 const getPostById = async () => {
   try {
@@ -119,14 +193,14 @@ const capitalizeFirstLetter = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-const user = ref({});
+const user = ref([]);
 
 
 
 const getUsers = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/users/`,
+      `${import.meta.env.VITE_APP_TITLE}/users/user/info`,
       {
         method: "GET",
         headers: {'Content-Type':'application/json',
@@ -163,7 +237,6 @@ const getUsers = async () => {
   }
 };
 
-
 onMounted(async () => {
   getUsers();
 });
@@ -176,12 +249,14 @@ console.log(id)
   })
 }
 
-
 </script>
 <template>
+  <!-- {{ adoptionReq }} -->
   <!-- {{ getDet }} -->
   <!-- {{ getUser }} -->
-  <div class="flex items-center justify-center mt-10">
+
+  <!-- {{ adoptionAcc }} -->
+  <div class="flex items-center justify-center mt-20">
     <div class="items-center gap-4 mb-4 text-center max-w-lg">
       <div class="mb-4">
         <!-- <img src="{{ getDet.picture }}" class="w-512 h-300 object-cover rounded-md" /> -->
@@ -213,7 +288,7 @@ console.log(id)
     </div>
 
         <div class="flex mb-4">
-          <img class="w-10 h-10 rounded-full" src="/pf.png" alt="" />
+          <img class="w-10 h-10 rounded-full object-cover mr-2" :src="getDet.owner?.ownerPicture" alt="" />
           <div class="font-medium dark:text-white">
             <div class="font-bold">{{ getDet.owner?.ownerUsername }}</div>
             <div class="text-sm text-gray-500 dark:text-gray-400">
@@ -236,22 +311,92 @@ console.log(id)
               {{ capitalizeFirstLetter(getDet.type) }}
             </li>
             <li><a class="font-bold m-2">สี :</a> {{ getDet.color }}</li>
-            <li>
-              <a class="font-bold m-2">คำอธิบาย :</a> {{ getDet.description }}
+            <li class="mx-2">  
+              <a class="font-bold">คำอธิบาย :</a> {{ getDet.description }}
+            </li>
+            <li class="mx-2">  
+              <a class="font-bold">สถานะ :</a> 
+              <span class="text-emerald-600" v-if="getDet.status === 'Available'">{{ getDet.status }}</span>
+              <span class="text-red-600" v-if="getDet.status === 'Unavailable'">{{ getDet.status }}</span>
             </li>
           </ul>
 <br>
-            <router-link :to="{ name: 'reqform' }" v-if="user._id !== getDet.owner?.ownerId && checkSignIn" class="block mx-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt</router-link>
-            <!-- <router-link :to="{ name: 'reqform' }" v-if="user._id !== getDet.owner?.ownerId" class="m-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800">Adopt</router-link> -->
-  
+
+    <!-- Button to adopt -->
+    <router-link v-if="user._id !== getDet.owner?.ownerId && checkSignIn && !checkAdoptionReq(getDet._id)" :to="{ name: 'reqform' }" class="block mx-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</router-link>
+<button v-else-if="user._id !== getDet.owner?.ownerId && checkSignIn && checkAdoptionReq(getDet._id)" onclick="my_modal_4.showModal()" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
+<button v-else-if="user._id !== getDet.owner?.ownerId && !checkSignIn" onclick="my_modal_2.showModal()" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
+<button v-else-if="user._id === getDet.owner?.ownerId" onclick="my_modal_3.showModal()" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
+
         </div>
       </div>
 
       <div class="text-left"> 
       <button @click="goBack" class="text-gray-600 font-semibold py-2 px-4 rounded-md hover:text-gray-800 focus:outline-none">Back</button>
           </div>   
-          
           <!-- <router-link :to="{ name: 'reqform' }" v-if="user._id !== getDet.owner?.ownerId" class="m-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800">Adopt</router-link> -->
+
+
+          <dialog id="my_modal_2" class="modal">
+        <div class="modal-box flex flex-col items-center justify-center">
+          <!-- <img src="/modal.svg" /> -->
+          <h1 class="font-bold text-2xl text-amber-500 mt-2"></h1>
+          <p class="py-2">Please sign in to continue.</p>
+          <div class="modal-action flex">
+            <form method="dialog">
+              <button
+                class="m-2 bg-slate-400 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                @click="goToSignIn"
+                class="m-2 bg-orange-600 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
+              >
+                Go to Sign in
+              </button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
+      <dialog id="my_modal_3" class="modal">
+        <div class="modal-box flex flex-col items-center justify-center">
+          <img src="/modal.svg" />
+          <h1 class="font-bold text-2xl text-amber-500 mt-2">You can not adopt this Post.</h1>
+          <p class="py-2">Please check again.</p>
+          <div class="modal-action flex">
+            <form method="dialog">
+              <button
+                class="m-2 bg-slate-400 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
+      <dialog id="my_modal_4" class="modal">
+        <div class="modal-box flex flex-col items-center justify-center">
+          <img src="/modal.svg" />
+          <h1 class="font-bold text-2xl text-amber-500 mt-2">You already adopt this post.</h1>
+          <p class="py-2">Please check again.</p>
+          <div class="modal-action flex">
+            <form method="dialog">
+              <button
+                class="m-2 bg-slate-400 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-grey-700 hover:border-grey-800"
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
+
+
 
       <dialog id="my_modal_1" class="modal">
         <div class="modal-box flex flex-col items-center justify-center">
@@ -274,13 +419,16 @@ console.log(id)
               </button>
             </form>
           </div>
-          
         </div>
-        
       </dialog>
+<div v-if="checkSignIn && user._id === getDet.owner?.ownerId">
+    <Detailbar />
+</div>
+<div v-else class="mb-20">
+  <Comment />
+</div>
 
-  
-    </div>
 
-  </div>
+</div>
+</div>
 </template>

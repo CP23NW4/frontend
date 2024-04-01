@@ -6,7 +6,7 @@ import { handleAuthentication } from "../composition/auth";
 const router = useRouter();
 const identifier = ref('');
 const password = ref('');
-
+const showPassword = ref(false);
 
 onBeforeMount(() => {
   const checkLogin = localStorage.getItem("token");
@@ -18,11 +18,11 @@ onBeforeMount(() => {
 });
 
 const login = async () => {
-  const loginData = {
-    identifier: identifier.value,
-    password: password.value,
-  };
-  await handleAuthentication("/users/login", loginData, "Sign in successful!");
+  const formData = new FormData();
+  formData.append('identifier', identifier.value);
+  formData.append('password', password.value);
+
+  await handleAuthentication("/users/login", formData, "Sign in successful!");
 };
 
 // const onInput = (input) => {
@@ -86,7 +86,7 @@ const login = async () => {
         <!-- Password Input -->
         <div class="mb-4 relative">
           <input
-            type="password"
+            :type="showPassword ? 'text' : 'password'"
             id="password"
             v-model="password"
             placeholder=" "
@@ -101,6 +101,14 @@ const login = async () => {
           >
             Password
           </label>
+          <div
+    @click="showPassword = !showPassword"
+    class="absolute right-4 top-2 text-gray-400 focus:outline-none"
+  >
+    <!-- {{ showPassword ? 'Hide' : 'Show' }} -->
+    <img :src="showPassword ? 'https://mnwanimals.blob.core.windows.net/accessories/oeye.png' : 'https://mnwanimals.blob.core.windows.net/accessories/ceye.png'" class="w-6" :style="{ opacity: showPassword ? '0.5' : '0.25' }">
+
+        </div>
         </div>
 
 
@@ -150,4 +158,4 @@ input:not(:placeholder-shown) + label {
 /* input {
   background-color: transparent;
 } */
-</style>
+</style>../composition/auth.js
