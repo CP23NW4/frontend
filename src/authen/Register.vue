@@ -19,7 +19,7 @@ const registerData = ref({
 });
 
 const minCount = 0;
-const maxCountAddress = 200;
+const maxCountAddress = 100;
 const selectedProvince = ref(null);
 const selectedDistrict = ref(null);
 const selectedTambon = ref(null);
@@ -73,7 +73,7 @@ const isValidPassword = computed(() => {
 });
 
 const isValidPhoneNumber = computed(() => {
-  const phoneNumberRegex = /^(09|06|08)\d{8}$/;
+  const phoneNumberRegex = /^(09|06|08|02)\d{8}$/;
   return phoneNumberRegex.test(registerData.value.phoneNumber);
 });
 
@@ -508,7 +508,7 @@ const filteredPostCodes = computed(() => {
         </div>
         <div class="mb-4">
           <div>
-            <label for="birthday" class="block text-gray-700 font-medium"
+            <label for="birthday" class="block text-gray-700 font-medium text-left mb-2"
               >Date of Birth</label
             >
             <input
@@ -527,6 +527,7 @@ const filteredPostCodes = computed(() => {
             id="userAddress"
             v-model="registerData.homeAddress"
             placeholder=" "
+            maxlength="100"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
           />
           <label
@@ -545,21 +546,21 @@ const filteredPostCodes = computed(() => {
 
         <div class="grid gap-2 mb-4 md:grid-cols-2 text-left">
 <!-- Select Province dropdown -->
-<label for="province">Select Province:</label>
+<label for="province" class="text-black ">Select Province:</label>
 <select class="select select-bordered" id="province" v-model="selectedProvince">
   <option disabled value="">Please select a province</option>
   <option v-for="province in filteredProvinces" :key="province._id" :value="province">{{ province.ProvinceThai }}</option>
 </select>
 
 <!-- Select District dropdown -->
-<label for="district">Select District:</label>
+<label for="district" class="text-black ">Select District:</label>
 <select class="select select-bordered" id="district" v-model="selectedDistrict">
   <option disabled value="">Please select a district</option>
   <option v-for="district in filteredDistricts" :key="district._id" :value="district">{{ district.DistrictThaiShort }}</option>
 </select>
 
 <!-- Select Tambon dropdown -->
-<label for="tambon">Select Tambon:</label>
+<label for="tambon" class="text-black ">Select Tambon:</label>
 <select class="select select-bordered" id="tambon" v-model="selectedTambon">
   <option disabled value="">Please select a tambon</option>
   <option v-for="tambon in filteredTambons" :key="tambon._id" :value="tambon">{{ tambon.TambonThaiShort }}</option>
@@ -568,14 +569,14 @@ const filteredPostCodes = computed(() => {
 
 
 <!-- Display PostCode -->
-<label for="postCode">Post Codes:</label>
+<label for="postCode" class="text-black ">Post Codes:</label>
 <div>
   <span v-if="selectedTambon">
     <template v-for="postCode in filteredPostCodes">
       {{ postCode }}
     </template>
   </span>
-  <span v-else>No tambon selected</span>
+  <span class="text-zinc-500 " v-else>No selected</span>
 </div>
 
 
@@ -590,7 +591,7 @@ const filteredPostCodes = computed(() => {
             Sign up
           </button>
         </div>
-        <p>
+        <p class="text-zinc-800">
           Already have an account?
           <router-link :to="{ name: 'login' }"
             ><a @click="toggleForm" class="text-blue-500 cursor-pointer">
@@ -615,4 +616,4 @@ input:not(:placeholder-shown) + label {
 /* input {
   background-color: transparent;
 } */
-</style>../composition/auth.js
+</style>

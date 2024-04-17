@@ -13,6 +13,17 @@ const posts = ref({});
 const router = useRouter();
 
 const strayAnimals = ref({});
+// import { getAnimalPosts } from '../composition/useStrayAnimals';
+// const getPosts = async () => {
+//   try {
+//     const data = await getAnimalPosts("/strayAnimals", "Get post successful!", {
+//       headers: { Authorization: localStorage.getItem("token") }
+//     });
+//     strayAnimals.value = data; 
+//   } catch (error) {
+//     console.error("Error fetching data:", error.message);
+//   }
+// };
 
 const getPosts = async () => {
   try {
@@ -100,8 +111,6 @@ onMounted(async () => {
 
 <template>
   <div class="flex flex-col">
-    <!-- <Profile /> -->
-
     <div class="min-h-screen">
     <div v-if="strayAnimals?.length === 0">
       <p class="text-center text-lg mt-10">No Posts yet</p>

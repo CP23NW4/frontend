@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import Card from "./CardHistory.vue";
+// import Card from "./CardHistory.vue";
+import Card from "../home/Card.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -9,7 +10,7 @@ const adoptionReq = ref([]);
 const getRequest = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/sender/reqAdoption`,
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/sender/reqAdoption/`,
       {
         method: "GET",
         headers: {
@@ -52,7 +53,8 @@ onMounted(async () => {
 
 <template>
   <div class="flex flex-col">
-    <div class="min-h-screen">
+    {{ adoptionReq }}
+    <!-- <div class="min-h-screen">
       <div v-if="adoptionReq.length === 0">
         <p class="text-center text-lg mt-10">No Request History</p>
       </div>
@@ -60,6 +62,6 @@ onMounted(async () => {
       <div class="grid lg:grid-cols-3 gap-0 md:grid-cols-3 grid-cols-1">
           <Card />
       </div>
-    </div>
+    </div> -->
   </div>
 </template>

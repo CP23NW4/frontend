@@ -18,7 +18,7 @@ const getDet = ref({});
 
   
 const submitForm = () => {
-  reqForm.value.note += `เงินเดือน ${reqForm.value.salary} บาท, ช่องทางติดต่อเพิ่มเติม ${reqForm.value.contact} , ${reqForm.value.addnote} `;
+  // reqForm.value.note += `เงินเดือน ${reqForm.value.salary} บาท, ช่องทางติดต่อเพิ่มเติม ${reqForm.value.contact} , ${reqForm.value.addnote} `;
   reqAdoption();
   console.log('Data:', reqForm.value);
 };
@@ -82,6 +82,8 @@ onMounted(async () => {
   try {
     const formData = new FormData();
     formData.append('note', reqForm.value.note);
+    formData.append('contact', reqForm.value.contact);
+    formData.append('salary', reqForm.value.salary);
     // formData.append('homePicture', reqForm.value.homePicture);
     if (reqForm.value.homePicture) {
     formData.append('homePicture', reqForm.value.homePicture);
@@ -231,7 +233,7 @@ onMounted(() => {
             </div>
             <div>
               <label for="note" class="block mb- text-left text-[14px]">Note</label>
-              <textarea v-model="reqForm.addnote" id="note" rows="4" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-400"></textarea>
+              <textarea v-model="reqForm.note" id="note" rows="4" class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-400"></textarea>
             </div>
           </div>
           <div class="text-left">อยากจะขอรับเลี้ยงน้อง {{ getDet.name }}</div>

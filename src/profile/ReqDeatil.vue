@@ -82,6 +82,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  {{ adoptionReq }}
   <div v-if="adoptionReq" class="flex items-center justify-center mt-20">
     <div class="items-center gap-4 mb-4 text-center max-w-lg">
       <div class="mb-4">

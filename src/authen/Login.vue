@@ -58,7 +58,7 @@ const login = async () => {
         </a>
       </div>
 
-      <h2 class="text-2xl font-bold mb-4 text-left">
+      <h2 class="text-black text-2xl font-bold mb-4 text-left">
         Sign in to your account
       </h2>
 
@@ -140,7 +140,7 @@ const login = async () => {
           </button>
         </div>
 
-        <p>Don't have an account? <router-link :to="{ name: 'sign-up' }"><a @click="toggleForm" class="text-blue-500 cursor-pointer">Create account here</a>
+        <p class="text-zinc-800">Don't have an account? <router-link :to="{ name: 'sign-up' }"><a @click="toggleForm" class="text-blue-500 cursor-pointer">Create account here</a>
         </router-link></p>
       </form>
     </div>

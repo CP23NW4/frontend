@@ -6,16 +6,25 @@ import CreateButton from '../components/CreateButton.vue';
 import BannerSlide from '../components/BannerSlide.vue';
 import Card from './Card.vue';
 import Snowfall from '../components/Snowfall.vue';
-import getStrayAnimals from '../composition/useStrayAnimals';
 import searchFilter from '../composition/searchFilter';
+import { getAnimalPosts } from '../composition/useStrayAnimals';
 
-const { strayAnimals } = getStrayAnimals('Dog');
+const strayAnimals = ref([]);
 const { keyword, filteredStrayAnimals, setSearchKeyword } = searchFilter(strayAnimals);
-const filteredStrayAnimalsWithStatusAvailable = computed(() => {
-  return filteredStrayAnimals.value.filter(strayAnimal => strayAnimal.status === 'Available');
+
+const getPost = async () => {
+  try {
+    const data = await getAnimalPosts("/strayAnimals/all/dog", "Get post successful!");
+    strayAnimals.value = data; 
+  } catch (error) {
+    console.error("Error fetching data:", error.message);
+  }
+};
+
+onMounted(() => {
+  getPost();
 });
 </script>
-
 
 <template>
   <div>
@@ -23,20 +32,17 @@ const filteredStrayAnimalsWithStatusAvailable = computed(() => {
     <Searchbar @setSearchKeyword="setSearchKeyword" />
     <Snowfall />
     <Filterbar />
-    <div class="min-h-screen">
+    <div class="min-h-screen px-20 md:px-20 lg:px-20">
       <br />
-      <!-- <h1 class="font-bold text-left m-8">Finding Home</h1> -->
-      <div v-if="strayAnimals.length === 0">
+      <div v-if="strayAnimals?.length === 0">
         <p class="text-center text-lg mt-10">No Stray Animals</p>
       </div>
-
       <div class="grid lg:grid-cols-4 gap-0 md:grid-cols-3">
-        <div v-for="strayAnimal in filteredStrayAnimalsWithStatusAvailable" :key="strayAnimal._id">
+        <div v-for="strayAnimal in strayAnimals" :key="strayAnimal._id">
           <Card :strayAnimal="strayAnimal" />
         </div>
       </div>
     </div>
-  
   </div>
   <CreateButton />
 </template>

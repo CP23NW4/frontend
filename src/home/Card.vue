@@ -126,7 +126,7 @@ onMounted(async () => {
     opacity: strayAnimal.picture !== null && strayAnimal.status === 'Unavailable' ? '0.3' : '1',
     cursor: strayAnimal.status === 'Available' || strayAnimal.owner?.ownerId === user._id ? 'pointer' : 'not-allowed',
   }"
-    class="mx-1 md:mx-4 lg:mx-4 mb-10 text-left rounded-lg block max-w-sm hover:border hover:border-gray-500 hover:shadow-lg transition-transform transform hover:-translate-y-1 focus:translate-y-0 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+    class="mx-1 md:mx-4 lg:mx-4 mb-10 text-left shadow-lg rounded-lg block max-w-sm hover:border hover:border-gray-500 hover:shadow-lg transition-transform transform hover:-translate-y-1 focus:translate-y-0 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
   >
     <div class="relative lg:w-full lg:h-52 md:w-full md:h-36 h-60">
       <img
@@ -200,7 +200,7 @@ onMounted(async () => {
           class="text-xs leading-none tracking-tight mt-1 text-gray-500"
         >
           Created by {{
-            strayAnimal.owner?.ownerUsername 
+            strayAnimal.owner?.username 
           }}
         </div>
 
