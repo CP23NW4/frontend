@@ -1,55 +1,47 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, onMounted, defineProps } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
 const router = useRouter();
+const props = defineProps(["strayAnimal"]);
 const adoptionReq = ref([]);
-const strayAnimal = ref({});
-
-const getPosts = async () => {
-  try {
-    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals/all`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('token'),
-      },
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      strayAnimal.value = data;
-    } else {
-      console.error('Error fetching adoption requests:', res.status, res.statusText);
-    }
-  } catch (error) {
-    console.error('Error fetching adoption requests:', error);
-  }
-};
-
-onMounted(async () => {
-  getRequest();
-  getPosts();
-});
-
-
+const user = ref({});
 const getRequest = async () => {
   try {
-    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals/sender/reqAdoption`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('token'),
-      },
-    });
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/sender/reqAdoption`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
 
-    if (res.ok) {
+    if (res.status === 200) {
       const reqData = await res.json();
       adoptionReq.value = reqData;
     } else {
-      console.error('Error fetching adoption requests:', res.status, res.statusText);
+      if (res.status === 404) {
+        console.error("Error: Post not found");
+        router.push({
+          name: "notfound",
+        });
+      } else if (res.status === 401) {
+        console.error("Login");
+        // localStorage.removeItem("token");
+        // router.push({
+        //   name: "login",
+        // });
+      } else if (res.status === 500) {
+        console.error("Error: Internal Server Error");
+      } else {
+        console.error("Error:", res.status, res.statusText);
+      }
     }
   } catch (error) {
-    console.error('Error fetching adoption requests:', error);
+    console.error(error);
   }
 };
 
@@ -57,82 +49,178 @@ onMounted(async () => {
   getRequest();
 });
 
+
+const checkAdoptionReq = (animalId) => {
+  return adoptionReq.value.some(item => item.animal?.saId === animalId);
+};
+
+// const route = useRoute();
+
+// import { getUser } from "../composition/useUsers";
+// const getUsers = async () => {
+//   await getUser("/users/", "Sign in successful!");
+// };
+
+// onMounted(async () => {
+//   getUsers();
+// });
+
 const showDetail = (id) => {
+  console.log(id);
   router.push({
-    name: 'req-detail',
+    name: "req-detail",
     params: { id: id },
   });
 };
 
-const filteredStrayAnimal = computed(() => {
-  return strayAnimal.value.filter(animal => adoptionReq.value.some(req => req.animal.saId === animal._id));
+const getUsers = async () => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/users/user/info`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
+
+    if (res.status === 200) {
+      const userData = await res.json();
+      user.value = userData;
+    } else {
+      if (res.status === 404) {
+        console.error("Error: Post not found");
+        router.push({
+          name: "notfound",
+        });
+      } else if (res.status === 401) {
+        console.error("Login");
+        localStorage.removeItem("token");
+        // router.push({
+        //   name: "login",
+        // });
+      } else if (res.status === 500) {
+        console.error("Error: Internal Server Error");
+      } else {
+        console.error("Error:", res.status, res.statusText);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+onMounted(async () => {
+  getUsers();
 });
+
+
 </script>
-
 <template>
-
-  <div v-for="(req, index) in adoptionReq" :key="req._id" 
-     @click="filteredStrayAnimal[index] && filteredStrayAnimal[index].status === 'Available' && req.status === 'On Request' || filteredStrayAnimal[index].status === 'Unavailable' && req.status === 'Accepted' ? showDetail(req._id) : null" 
-     :style="{
-    opacity: filteredStrayAnimal[index] && filteredStrayAnimal[index].status === 'Unavailable' && req.status === 'On Request'? '0.3' : '1',
+<div
+  @click="strayAnimal.status === 'On Request' ? showDetail(props.strayAnimal._id) : null"
+  :style="{
+    opacity: strayAnimal.animal.picture !== null && strayAnimal.status === 'Rejected' ? '0.3' : '1',
+    cursor: strayAnimal.status === 'Accepted' || strayAnimal.status === 'On Request' ? 'pointer' : 'not-allowed',
   }"
-     class="mx-1 md:mx-4 lg:mx-4 mb-10 text-left rounded-lg block max-w-sm hover:shadow-lg transition-transform transform hover:border hover:border-gray-500 hover:-translate-y-1 focus:translate-y-0 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-
-
-
-  <!-- <div v-for="(req, index) in adoptionReq" :key="req._id" @click="showDetail(req._id)" style="cursor: pointer;" class="mx-1 md:mx-4 lg:mx-4 mb-10 text-left rounded-lg block max-w-sm hover:shadow-lg transition-transform transform hover:border hover:border-gray-500 hover:-translate-y-1 focus:translate-y-0 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"> -->
+    class="text-zinc-900 mx-1 md:mx-4 lg:mx-4 mb-10 text-left shadow-lg rounded-lg block max-w-sm hover:border hover:border-gray-500 hover:shadow-lg transition-transform transform hover:-translate-y-1 focus:translate-y-0 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+  >
     <div class="relative lg:w-full lg:h-52 md:w-full md:h-36 h-60">
       <img
-        v-if="req.animal.saPicture !== null"
-        :src="req.animal.saPicture"
+        v-if="strayAnimal.animal.picture !== null"
+        :src="strayAnimal.animal.picture"
         class="w-full h-full object-cover rounded-lg "
         alt="Animal Image"
       />
 
       <img
-        v-else-if="req.animal.saPicture === null"
+        v-else-if="strayAnimal.picture === null"
         src="/nodata.png"
         class="w-full h-full object-cover rounded-lg"
         alt="Animal Image"
       />
     </div>
 
+    <!-- <div class="flex items-center p-3"> -->
     <div class="flex p-3">
-      <div v-if="req.animal && req.animal.saGender" >
-        <img
-          v-if="req.animal.saGender.toUpperCase() === 'FEMALE'"
-          src="/female.svg"
-          class="h-5 mr-4"
-          alt="Female Icon"
-        />
-        <img
-          v-else-if="req.animal.saGender.toUpperCase() === 'MALE'"
-          src="/male.svg"
-          class="h-5 mr-4"
-          alt="Male Icon"
-        />
-      </div>
-      <div v-else class="mr-4 h-5 font-bold text-2xl">?</div>
+  <div v-if="strayAnimal && strayAnimal.animal.gender" >
+  <img
+    v-if="strayAnimal.animal.gender.toUpperCase() === 'FEMALE'"
+    src="/female.svg"
+    class="h-5 mr-4"
+    alt="Female Icon"
+  />
+  <img
+    v-else-if="strayAnimal.animal.gender.toUpperCase() === 'MALE'"
+    src="/male.svg"
+    class="h-5 mr-4"
+    alt="Male Icon"
+  />
+</div>
+ <div v-else class="mr-4 h-5 font-bold text-2xl">?</div>
       <div class="flex flex-col">
-        <div class="text-sm font-bold leading-none tracking-tight" v-if="req.animal.saName !== null">
-          {{ req.animal.saName && req.animal.saName.length < 10 ? req.animal.saName : req.animal.saName ? req.animal.saName.substring(0, 10) + " ..." : "" }}
+        <!-- Use flex-col here -->
+        <div
+          class="text-sm font-bold leading-none tracking-tight"
+          v-if="strayAnimal.animal.name !== null"
+        >
+          {{
+            strayAnimal.name && strayAnimal.name.length < 10
+              ? strayAnimal.animal.name
+              : strayAnimal.animal.name
+              ? strayAnimal.animal.name.substring(0, 10) + " ..."
+              : ""
+          }}
         </div>
-        <div class="text-[16px] font-bold leading-none tracking-tight" v-if="req.animal.saName === null">
+        <div
+          class="text-[16px] font-bold leading-none tracking-tight"
+          v-if="strayAnimal.animal.name === null"
+        >
           ไม่ระบุชื่อ
         </div>
-        <div class="text-sm leading-none tracking-tight mt-1 text-gray-500" v-if="req.animal.saDesc !== null">
-          {{ req.animal.saDesc && req.animal.saDesc.length < 20 ? req.animal.saDesc : req.animal.saDesc ? req.animal.saDesc.substring(0, 40) + " ..." : "" }}
-        </div>
-        <div class="text-xs leading-none tracking-tight mt-1 text-gray-500">
-          Created by {{ req.owner?.ownerUsername }}
+      
+
+        <div
+          class="text-sm leading-none tracking-tight mt-1 text-gray-500"
+          v-if="strayAnimal.animal.description !== null"
+        >
+          {{
+            strayAnimal.animal.description && strayAnimal.animal.description.length < 20
+              ? strayAnimal.animal.description
+              : strayAnimal.animal.description
+              ? strayAnimal.animal.description.substring(0, 20) + " ..."
+              : ""
+          }}
         </div>
 
-<div class="text-[12px] font-bold leading-none mt-1 tracking-tight" v-if="filteredStrayAnimal[index]">
-  <span v-if="filteredStrayAnimal[index].status === 'Available' && req.status === 'On Request'" class="text-amber-500">On Request</span>
-  <span v-else-if="filteredStrayAnimal[index].status === 'Unavailable' && req.status === 'On Request'" class="text-red-600">Rejected</span>
-  <span v-else-if="filteredStrayAnimal[index].status === 'Unavailable' && req.status === 'Accepted'" class="text-emerald-600">Accepted</span>
-</div>
+        <div
+          class="text-xs leading-none tracking-tight mt-1 text-gray-500"
+        >
+          Created by {{
+            strayAnimal.animal.ownerUsername 
+          }}
+        </div>
 
+        <div
+          class="text-[12px] font-bold leading-none mt-1 tracking-tight text-emerald-600"
+          v-if="strayAnimal.animal.status === 'Accepted'"
+        >
+          {{ strayAnimal.status }}
+        </div>
+        <div
+          class="text-[12px] font-bold leading-none mt-1 tracking-tight text-amber-600"
+          v-else-if="strayAnimal.status === 'On Request'"
+        >
+        {{ strayAnimal.status }}
+        </div>
+        <div
+          class="text-[12px] font-bold leading-none mt-1 tracking-tight text-red-600"
+          v-if="strayAnimal.status === 'Adopted'"
+        >
+        {{ strayAnimal.status }}
+        </div>
       </div>
     </div>
   </div>

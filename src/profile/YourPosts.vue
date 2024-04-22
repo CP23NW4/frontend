@@ -115,7 +115,7 @@ onMounted(async () => {
     <div v-if="strayAnimals?.length === 0">
       <p class="text-center text-lg mt-10">No Posts yet</p>
     </div>
-
+<!-- {{ strayAnimals }} -->
     <div class="grid lg:grid-cols-3 gap-0 md:grid-cols-3 grid-cols-1">
       <div v-for="strayAnimal in strayAnimals" :key="strayAnimal._id">
       <CardOwner :strayAnimal="strayAnimal" />

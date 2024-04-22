@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useRouter, useRoute } from "vue-router";
-import axios from 'axios';
 
 const profileForm = ref({
   username: '',
@@ -11,7 +10,7 @@ const profileForm = ref({
     TambonThaiShort: '',
     DistrictThaiShort: '',
     ProvinceThai: '',
-    homeAddress: ''
+    homeAddress: 'Address'
   }
 });
 
@@ -140,10 +139,10 @@ const updateProfile = async () => {
 
   if (confirmed) {
     try {
-      profileForm.value.userAddress.ProvinceThai = selectedProvince.value.ProvinceThai;
-      profileForm.value.userAddress.DistrictThaiShort = selectedDistrict.value.DistrictThaiShort;
-      profileForm.value.userAddress.TambonThaiShort = selectedTambon.value.TambonThaiShort;
-      profileForm.value.userAddress.PostCode = selectedTambon.value.PostCode;
+      // profileForm.value.userAddress.ProvinceThai = selectedProvince.value.ProvinceThai;
+      // profileForm.value.userAddress.DistrictThaiShort = selectedDistrict.value.DistrictThaiShort;
+      // profileForm.value.userAddress.TambonThaiShort = selectedTambon.value.TambonThaiShort;
+      // profileForm.value.userAddress.PostCode = selectedTambon.value.PostCode;
       const res = await fetch(
         `${import.meta.env.VITE_APP_TITLE}/users/`,
         {
@@ -159,9 +158,9 @@ const updateProfile = async () => {
       if (res.status === 200) {
         const data = await res.json();
         console.log("Updated successfully:", data);
-        router.push({
-            name: "profile",
-          });
+        // router.push({
+        //     name: "profile",
+        //   });
       } else {
         if (res.status === 404) {
           console.error("Error: Post not found");
@@ -325,6 +324,10 @@ const filteredPostCodes = computed(() => {
   <label for="address" class="w-1/2 text-left mr-4">Address:</label>
   <textarea disabled v-model="profileForm.userAddressText" id="address" class="w-3/4 px-3 py-2 border border-gray-300 rounded-md" :maxlength="200" rows="4"></textarea>
 </div>
+<!-- <div class="flex items-center">
+        <label for="homeAddress" class="w-1/2 text-left mr-4">Address:</label>
+        <input v-model="profileForm.homeAddress" type="text" id="homeAddress" class="w-3/4 px-3 py-2 border border-gray-300 rounded-md">
+  </div> -->
 
 <!-- <div class="grid gap-3 mb-4 md:grid-cols-2">
   <label for="province">Select Province:</label>
@@ -352,8 +355,8 @@ const filteredPostCodes = computed(() => {
   </span>
   <span v-else>No tambon selected</span>
 </div>
-</div> -->
-  
+</div>
+   -->
   
 
 

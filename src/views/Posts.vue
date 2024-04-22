@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, watch, defineProps, defineEmits } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import Swal from 'sweetalert2';
 const router = useRouter();
 const route = useRoute();
 
@@ -88,9 +89,6 @@ const getPostById = async () => {
 };
 
 const updatePost = async () => {
-  const confirmed = window.confirm("Are you sure you want to update the post?");
-
-  if (confirmed) {
     try {
       const res = await fetch(
         `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`,
@@ -105,9 +103,14 @@ const updatePost = async () => {
       );
 
       if (res.status === 200) {
-        const data = await res.json();
-        console.log("Post updated successfully:", data);
+        Swal.fire({
+        title: 'Success!',
+        text: 'Post updated successfully',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
         router.go(-1);
+      });
       } else {
         if (res.status === 404) {
           console.error("Error: Post not found");
@@ -123,11 +126,16 @@ const updatePost = async () => {
             name: "login",
           });
         } else if (res.status === 403) {
-          alert("You do not have permission to edit other post, Check your role");
-          router.push({
-            name: "home",
-          });
-        }else if (res.status === 400) {
+        Swal.fire({
+        title: 'Error',
+        text: 'You do not have permission to edit other post, Check your role',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        router.go(-1);
+      });
+
+        } else if (res.status === 400) {
           console.log("No Valid");
           alert("400 Bad Request");
           const confirmed = window.confirm("Not validate");
@@ -138,9 +146,7 @@ const updatePost = async () => {
     } catch (error) {
       console.error("Error updating post:", error);
     }
-  } else {
-    console.log("Update canceled by user");
-  }
+
 };
 
 const createPost = async () => {

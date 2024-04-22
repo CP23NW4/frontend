@@ -1,13 +1,16 @@
 <script setup>
 import { ref, onMounted, defineProps } from "vue";
+import Swal from 'sweetalert2';
 import { useRoute, useRouter } from "vue-router";
 const router = useRouter();
 const route = useRoute();
 const comments = ref([]);
+
 // const comment = ref('');
 const commentData = ref({
   comment: "",
 });
+
 
 let checkSignIn= ref(localStorage.getItem('token'))     
 const formatDate = (timestamp) => {
@@ -83,8 +86,14 @@ const createComment = async () => {
     if (res.status === 200 || res.status === 201) {
       const commentData = await res.json();
       console.log("Comment created successfully:", commentData);
-      alert("Create Successful!");
-      window.location.reload();
+      Swal.fire({
+        title: 'Success!',
+        text: 'Comment created successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        window.location.reload();
+      });
     } else {
       if (res.status === 404) {
         console.error("Error: Post not found");
@@ -134,16 +143,29 @@ const removeComment = async (commentId) => {
     );
 
     if (res.status === 200) {
-      // Show alert if deletion is successful
       comments.value = comments.value.filter(comment => comment._id !== commentId);
-      alert("Comment deleted successfully");
+      Swal.fire({
+        title: 'Success!',
+        text: 'Comment deleted successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        window.location.reload();
+      });
       } else if (res.status === 401) {
-      alert("No authentication, Go to signin");
-      localStorage.removeItem("token");
-      router.push({
-        name: "login"})
+        Swal.fire({
+        title: 'Unauthorized',
+        text: 'No authentication, please sign in.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
       } else if (res.status === 403) {
-          alert("You do not have permission to delete other comment");
+        Swal.fire({
+        title: 'Permission Denied',
+        text: 'You do not have permission to delete this comment.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
         }else {
       console.error("Error deleting post:", res.status, res.statusText);
     }

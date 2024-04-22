@@ -176,7 +176,7 @@ formData.append('username', registerData.value.username);
 formData.append('email', registerData.value.email);
 formData.append('password', registerData.value.password);
 formData.append('phoneNumber', registerData.value.phoneNumber);
-formData.append('DOB', registerData.value.birthday);
+formData.append('DOB', selectedBirthYear.value);
 formData.append('idCard', registerData.value.idCard);
 formData.append('userAddress[homeAddress]', registerData.value.homeAddress);
 formData.append('userAddress[PostCode]', selectedTambon.value.PostCode);
@@ -300,9 +300,22 @@ const filteredPostCodes = computed(() => {
   }).map(postCode => parseInt(postCode.PostCode)).sort((a, b) => a - b);
 });
 
+const endYear = new Date().getFullYear();
+const startYear = endYear-100;
+  
+  
+  // Create an array of years from startYear to endYear
+  const birthYears = Array.from({ length: endYear - startYear + 1 }, (_, index) => startYear + index).reverse();
 
+  // Selected birth year bound to registerData.birthday
+  const selectedBirthYear = ref(null);
 
-
+  // Watch for changes in selectedBirthYear and update registerData.birthday accordingly
+  watch(selectedBirthYear, (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      registerData.birthday = newVal;
+    }
+  });
 
 
 </script>
@@ -504,22 +517,30 @@ const filteredPostCodes = computed(() => {
             </span>
           </div>
 
-          <!-- dob  -->
+          
         </div>
-        <div class="mb-4">
+        <!-- dob  -->
+        <!-- <div class="mb-4">
           <div>
             <label for="birthday" class="block text-gray-700 font-medium text-left mb-2"
               >Date of Birth</label
             >
             <input
-              type="date"
+              type="number"
               id="birthday"
               v-model="registerData.birthday"
               @input="validateAge"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
             />
           </div>
-        </div>
+        </div> -->
+        <div class="relative mb-4">
+  <label for="birthYear" class="block text-black font-medium text-left mb-2">Year of Birth</label>
+  <select id="birthYear" class="select select-bordered" v-model="selectedBirthYear" @change="updateBirthday">
+    <option disabled value="">Select year</option>
+    <option v-for="year in birthYears" :key="year" :value="year">{{ year }}</option>
+  </select>
+</div>
         <!-- addess -->
         <div class="relative mb-4">
           <input
