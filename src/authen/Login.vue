@@ -36,7 +36,7 @@ const login = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center">
+  <div class="text-black min-h-screen flex items-center justify-center">
     <img
     src="/mnw.png"
     class="w-96 drop-shadow-lg hidden md:block lg:block"

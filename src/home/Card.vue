@@ -51,7 +51,7 @@ onMounted(async () => {
 
 
 const checkAdoptionReq = (animalId) => {
-  return adoptionReq.value.some(item => item.animal?.saId === animalId);
+  return adoptionReq.value.some(item => item.animal?._id === animalId);
 };
 
 // const route = useRoute();
@@ -204,7 +204,7 @@ onMounted(async () => {
           }}
         </div>
 
-        <div
+        <!-- <div
           class="text-[12px] font-bold leading-none mt-1 tracking-tight text-emerald-600"
           v-if="strayAnimal.status === 'Available' && !checkAdoptionReq(strayAnimal._id)"
         >
@@ -221,6 +221,24 @@ onMounted(async () => {
           v-if="strayAnimal.status === 'Unavailable'"
         >
           Adopted
+        </div> -->
+        <!-- <div
+          class="text-[12px] font-bold leading-none mt-1 tracking-tight text-emerald-600"
+          v-if="strayAnimal.status === 'Available' && !checkAdoptionReq(strayAnimal._id)"
+        >
+          {{ strayAnimal.status }}
+        </div> -->
+        <div
+          class="text-[12px] font-bold leading-none mt-1 tracking-tight text-amber-600"
+          v-if="checkAdoptionReq(strayAnimal._id)"
+        >
+          On Request
+        </div>
+        <div
+          class="text-[12px] font-bold leading-none mt-1 tracking-tight text-emerald-600"
+          v-else
+        >
+          {{strayAnimal.status}}
         </div>
 
         

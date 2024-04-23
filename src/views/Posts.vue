@@ -161,8 +161,12 @@ const createPost = async () => {
     if (formPost.value.picture) {
       formData.append("picture", formPost.value.picture);
     } else {
-      alert("Please upload a picture.");
-      return; 
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please upload a picture.',
+      });
+      return;
     }
 
     const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals`, {
@@ -176,24 +180,43 @@ const createPost = async () => {
     if (res.status === 200 || res.status === 201) {
       const data = await res.json();
       console.log("Post created successfully:", data);
-      alert("Create Successful!");
-      emit("closeModal", true);
-      window.location.reload() 
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Create Successful!',
+      }).then(() => {
+        emit("closeModal", true);
+        window.location.reload();
+      });
     } else if (res.status === 400) {
-      alert("Bad Request: Please check your input data.");
-    }else if (res.status === 401) {
-      alert("No authentication, Go to signin");
-      localStorage.removeItem("token");
-      router.push({
-        name: "login",
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Bad Request: Please check your input data.',
+      });
+    } else if (res.status === 401) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'No authentication, please sign in.',
+      }).then(() => {
+        localStorage.removeItem("token");
+        router.push({
+          name: "login",
+        });
       });
     } else {
-      console.error("Error:", res.status, res.statusText);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: `Error: ${res.status} ${res.statusText}`,
+      });
     }
   } catch (error) {
     console.error("Error creating post:", error);
   }
 };
+
 
 const handleFileUpload = async (event) => {
   const file = event.target.files[0];
@@ -262,7 +285,7 @@ watch(
       @submit.prevent="handleSubmit"
       action="#"
       method="POST"
-      class="max-w-lg mx-auto text-center"
+      class="text-zine-900 max-w-lg mx-auto text-center"
     >
       <!-- images -->
       <!-- {{ formPost.picture }} -->
@@ -299,7 +322,7 @@ watch(
           @blur="() => handleInputBlur('name')"
           :class="{ 'border-red-500': touchedInputs.name && !formPost.name }"
           required
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
+          class="text-black w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
         />
         <p v-if="nameError" class="text-red-500 text-sm">{{ nameError }}</p>
         <!-- <p v-if="!formPost.name" class="text-red-500 text-sm">*</p> -->
@@ -377,7 +400,7 @@ watch(
               'border-red-500': touchedInputs.color && !formPost.color,
             }"
             required
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
+            class="text-black w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
           />
           <!-- <p v-if="!formPost.color" class="text-red-500 text-sm">Color is required.</p> -->
         </div>

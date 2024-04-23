@@ -169,9 +169,7 @@ const removePost = async () => {
         icon: 'success',
         confirmButtonText: 'OK'
       }).then(() => {
-        router.push({
-          name: "home"
-        });
+        router.go(-1);
       });
       } else if (res.status === 401) {
       alert("No authentication, Go to signin");

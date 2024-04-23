@@ -88,8 +88,11 @@ const isValidAddress = computed(() => {
 
 
 const isValidAge = computed(() => {
-  return calculateAge(registerData.value.birthday) >= 18;
+  const userBirthYear = parseInt(registerData.value.birthday);
+  const currentYear = new Date().getFullYear();
+  return currentYear - userBirthYear >= 18;
 });
+
 
 const isValidForm = computed(() => {
   return (
@@ -151,17 +154,17 @@ const validateUserAddress = () => {
   if (!isValidUserAddress.value) {
   }
 };
-const validateAge = () => {
+
+const validateAgeAfterSelection = () => {
   touched.birthday = true;
-  if (!isValidAge.value) {
+  if (!isValidAge.value && selectedBirthYear.value !== null && endYear - selectedBirthYear.value < 18) {
     alert("You must be at least 18 years old to register.");
   }
 };
 
 
-
 const signup = async () => {
-  if (calculateAge(registerData.value.birthday) < 18) {
+  if (calculateAge(registerData.value.selectedBirthYear) < 18) {
     alert("You must be at least 18 years old to register.");
     return;
   }
@@ -303,14 +306,11 @@ const filteredPostCodes = computed(() => {
 const endYear = new Date().getFullYear();
 const startYear = endYear-100;
   
-  
-  // Create an array of years from startYear to endYear
+
   const birthYears = Array.from({ length: endYear - startYear + 1 }, (_, index) => startYear + index).reverse();
 
-  // Selected birth year bound to registerData.birthday
   const selectedBirthYear = ref(null);
 
-  // Watch for changes in selectedBirthYear and update registerData.birthday accordingly
   watch(selectedBirthYear, (newVal, oldVal) => {
     if (newVal !== oldVal) {
       registerData.birthday = newVal;
@@ -534,13 +534,6 @@ const startYear = endYear-100;
             />
           </div>
         </div> -->
-        <div class="relative mb-4">
-  <label for="birthYear" class="block text-black font-medium text-left mb-2">Year of Birth</label>
-  <select id="birthYear" class="select select-bordered" v-model="selectedBirthYear" @change="updateBirthday">
-    <option disabled value="">Select year</option>
-    <option v-for="year in birthYears" :key="year" :value="year">{{ year }}</option>
-  </select>
-</div>
         <!-- addess -->
         <div class="relative mb-4">
           <input
@@ -566,6 +559,7 @@ const startYear = endYear-100;
         </div>
 
         <div class="grid gap-2 mb-4 md:grid-cols-2 text-left">
+
 <!-- Select Province dropdown -->
 <label for="province" class="text-black ">Select Province:</label>
 <select class="select select-bordered" id="province" v-model="selectedProvince">
@@ -590,16 +584,21 @@ const startYear = endYear-100;
 
 
 <!-- Display PostCode -->
-<label for="postCode" class="text-black ">Post Codes:</label>
-<div>
-  <span v-if="selectedTambon">
+
+<label for="postCode" class="text-black my-4 ">Post Codes:</label>
+  <span v-if="selectedTambon" class="text-black my-4 ml-4">
     <template v-for="postCode in filteredPostCodes">
       {{ postCode }}
     </template>
   </span>
-  <span class="text-zinc-500 " v-else>No selected</span>
-</div>
+  <span class="text-zinc-500 my-4 ml-4" v-else>No selected</span>
 
+
+  <label for="birthYear" class="text-black">Select Year of Birth:</label>
+<select id="birthYear" class="select select-bordered" v-model="selectedBirthYear" @change="validateAgeAfterSelection">
+  <option disabled value="">Select year</option>
+  <option v-for="year in birthYears" :key="year" :value="year">{{ year }}</option>
+</select>
 
 </div>
 
