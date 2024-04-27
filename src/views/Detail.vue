@@ -296,9 +296,11 @@ console.log(id)
     </div>
 
         <div class="flex mb-4">
-          <img class="w-10 h-10 rounded-full object-cover mr-2" :src="getDet.owner?.userPicture" alt="" />
+          <img v-if="getDet.owner" class="w-10 h-10 rounded-full object-cover mr-2" :src="getDet.owner?.userPicture" alt="" />
+          <img v-else class="w-10 h-10 rounded-full object-cover mr-2" src="https://mnwanimals.blob.core.windows.net/accessories/user.jpg" alt="" />
           <div class="font-medium dark:text-white">
-            <div class="font-bold">{{ getDet.owner?.username }}</div>
+            <div v-if="getDet.owner" class="font-bold">{{ getDet.owner?.username }}</div>
+            <div v-else class="font-bold">user not found</div>
             <div class="text-sm text-gray-500 dark:text-gray-400">
               {{ formatDate(getDet.createdOn) }}
             </div>
@@ -324,17 +326,18 @@ console.log(id)
             </li>
             <li class="mx-2">  
               <a class="font-bold">สถานะ :</a> 
-              <span class="text-emerald-600" v-if="getDet.status === 'Available'">{{ getDet.status }}</span>
-              <span class="text-red-600" v-if="getDet.status === 'Unavailable'">{{ getDet.status }}</span>
+              <span class="text-emerald-600" v-if="getDet.owner && getDet.status === 'Available'"> {{ getDet.status }}</span>
+              <span class="text-red-600" v-else-if="getDet.owner && getDet.status === 'Unavailable'"> {{ getDet.status }}</span>
+              <span class="text-black" v-else-if="!getDet.owner"> Not found</span>
             </li>
           </ul>
 <br>
     <!-- Button to adopt -->
-    <button v-if="user._id !== getDet.owner?._id && checkSignIn && checkAdoptionReq(getDet._id)" onclick="my_modal_4.showModal()" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
-    <router-link v-else-if="user._id !== getDet.owner?._id && checkSignIn && !checkAdoptionReq(getDet._id)" :to="{ name: 'reqform' }" class="block mx-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</router-link>
-    <button v-else-if="getDet.status === 'Unavailable'" :disabled="getDet.status === 'Unavailable'" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopted</button>
-<button v-else-if="user._id !== getDet.owner?._id && !checkSignIn" onclick="my_modal_2.showModal()" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
-<button v-else-if="user._id === getDet.owner?._id" onclick="my_modal_3.showModal()" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
+    <button v-if="getDet.owner && user._id !== getDet.owner?._id && checkSignIn && checkAdoptionReq(getDet._id)" onclick="my_modal_4.showModal()" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
+    <router-link v-else-if="getDet.owner && user._id !== getDet.owner?._id && checkSignIn && !checkAdoptionReq(getDet._id)" :to="{ name: 'reqform' }" class="block mx-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</router-link>
+    <button v-else-if="getDet.status === 'Unavailable'|| !getDet.owner"  :disabled="getDet.status === 'Unavailable' || !getDet.owner" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopted</button>
+    <button v-else-if="getDet.owner && user._id !== getDet.owner?._id && !checkSignIn" onclick="my_modal_2.showModal()" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
+    <button v-else-if="getDet.owner && user._id === getDet.owner?._id" onclick="my_modal_3.showModal()" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
 
         </div>
         

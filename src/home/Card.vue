@@ -196,12 +196,17 @@ onMounted(async () => {
           }}
         </div>
 
-        <div
+        <div v-if="strayAnimal.owner"
           class="text-xs leading-none tracking-tight mt-1 text-gray-500"
         >
           Created by {{
             strayAnimal.owner?.username 
           }}
+        </div>
+        <div v-else
+          class="text-xs leading-none tracking-tight mt-1 text-gray-500"
+        >
+          Created by user not found
         </div>
 
         <!-- <div
