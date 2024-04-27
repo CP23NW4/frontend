@@ -205,7 +205,7 @@ onMounted(async () => {
 
         <div
           class="text-[12px] font-bold leading-none mt-1 tracking-tight text-emerald-600"
-          v-if="strayAnimal.animal.status === 'Accepted'"
+          v-if="strayAnimal.status === 'Accepted'"
         >
           {{ strayAnimal.status }}
         </div>
@@ -217,7 +217,7 @@ onMounted(async () => {
         </div>
         <div
           class="text-[12px] font-bold leading-none mt-1 tracking-tight text-red-600"
-          v-if="strayAnimal.status === 'Adopted'"
+          v-else-if="strayAnimal.status === 'Rejected'"
         >
         {{ strayAnimal.status }}
         </div>

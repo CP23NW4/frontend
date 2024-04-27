@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import Swal from 'sweetalert2';
+
 const user = ref({});
 const router = useRouter();
 const route = useRoute();
@@ -101,9 +103,13 @@ const reqAdoption = async () => {
     if (res.status === 200 || res.status === 201) {
       const reqData = await res.json();
       console.log("Request Adoption successfull0y:", reqData);
-      alert("Request Adoption Successful!");
+      Swal.fire({
+    icon: 'success',
+    title: 'Request Adoption Successful!',
+    showConfirmButton: false,
+    timer: 1500 // Show for 1.5 seconds
+  });
       router.go(-1);
-      // emit("closeModal", true);
     } else if (res.status === 401) {
       alert("No authentication, Go to signin");
       localStorage.removeItem("token");

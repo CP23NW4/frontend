@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useRouter, useRoute } from "vue-router";
+import Swal from 'sweetalert2';
+
 
 const profileForm = ref({
   username: '',
@@ -134,9 +136,15 @@ const deleteUser = async () => {
 
 
 const updateProfile = async () => {
-  const confirmed = window.confirm("Are you sure you want to update the profile?");
-
-  if (confirmed) {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Are you sure you want to update the profile?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, update it!',
+    cancelButtonText: 'Cancel'
+  }).then(async (result) => {
+    if (result.isConfirmed) {
     try {
       const updatedProfile = { ...profileForm.value }; 
       let needToUpdate = false;
@@ -214,8 +222,11 @@ const updateProfile = async () => {
           });
         } else if (res.status === 400) {
           console.log("No Valid");
-          alert("400 Bad Request");
-          const confirmed = window.confirm("Not validate");
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Username or phone number is not unique.',
+        });
         } else {
           console.error("Error:", res.status, res.statusText);
         }
@@ -226,7 +237,7 @@ const updateProfile = async () => {
   } else {
     console.log("Update canceled by user");
   }
-};
+})};
 
 onMounted(async () => {
   getUsers();
@@ -345,12 +356,12 @@ const filteredPostCodes = computed(() => {
       </div>
       <div class="flex items-center">
         <label for="email" class="w-1/2 text-left mr-4">Email:</label>
-        <input v-model="profileForm.email" disabled type="text" id="email" class="w-3/4 px-3 py-2 border border-gray-300 rounded-md">
+        <input v-model="profileForm.email" disabled type="text" id="email" class="bg-gray-200 w-3/4 px-3 py-2 border border-gray-300 rounded-md">
       </div>
 
       <div class="flex items-center">
         <label for="dob" class="w-1/2 text-left mr-4">Year of Birth:</label>
-        <input v-model="formattedDOB" disabled type="text" id="dob" class="w-3/4 px-3 py-2 border border-gray-300 rounded-md">
+        <input v-model="formattedDOB" disabled type="text" id="dob" class="bg-gray-200 w-3/4 px-3 py-2 border border-gray-300 rounded-md">
       </div>
 
       <div class="flex items-center">

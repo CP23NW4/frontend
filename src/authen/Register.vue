@@ -2,7 +2,9 @@
 import { ref, computed, watch, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { handleSignup } from "../composition/auth";
-import { calculateAge } from "../composition/validate";
+import Swal from 'sweetalert2';
+
+// import { calculateAge } from "../composition/validate";
 
 const router = useRouter();
 const registerData = ref({
@@ -158,21 +160,16 @@ const validateUserAddress = () => {
 const validateAgeAfterSelection = () => {
   touched.birthday = true;
   if (!isValidAge.value && selectedBirthYear.value !== null && endYear - selectedBirthYear.value < 18) {
-    alert("You must be at least 18 years old to register.");
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'You must be at least 18 years old to register.',
+    });
   }
 };
 
 
 const signup = async () => {
-  if (calculateAge(registerData.value.selectedBirthYear) < 18) {
-    alert("You must be at least 18 years old to register.");
-    return;
-  }
-
-  if (registerData.value.password !== registerData.value.confirmPassword) {
-    alert("Passwords do not match.");
-    return;
-  }
   const formData = new FormData();
 formData.append('name', `${registerData.value.firstName} ${registerData.value.lastName}`);
 formData.append('username', registerData.value.username);

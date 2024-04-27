@@ -74,12 +74,17 @@ const getPostById = async () => {
     } else if (res.status === 400) {
       console.error("Not validate");
     } else if (res.status === 401) {
-          alert("No authentication, Go to signin");
-          localStorage.removeItem("token");
-          router.push({
-            name: "login",
-          });
-          location.reload();
+      Swal.fire({
+    icon: 'error',
+    title: 'No authentication',
+    text: 'Please sign in again.',
+  }).then(() => {
+    localStorage.removeItem("token");
+    router.push({
+      name: "login",
+    });
+    location.reload();
+  });
         }else {
       console.error("Error:", res.status, res.statusText);
     }
@@ -228,10 +233,15 @@ const handleFileUpload = async (event) => {
       formPost.value.picture = file;
       console.log(formPost.value.picture);
     } else {
-      alert("File size exceeds the limit (3MB). Please choose a smaller file.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'File size exceeds the limit (3MB). Please choose a smaller file.',
+      });
     }
   }
 };
+
 
 const handleInputBlur = (inputName) => {
   touchedInputs.value[inputName] = true;

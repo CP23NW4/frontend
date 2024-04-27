@@ -2,6 +2,8 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import CreateEditPost from '../views/Posts.vue';
+import Swal from 'sweetalert2';
+
 
 let checkSignIn= ref(localStorage.getItem('token'))     
 const router = useRouter();
@@ -28,10 +30,19 @@ const closeCreatePostModal = () => {
   const hasInputValue = Object.values(formPost.value).some(value => value !== '');
   
   if (hasInputValue) {
-    const shouldClose = window.confirm("Are you sure you want to cancel? Changes you made may not be saved.");
-    if (shouldClose) {
-      isCreatePostModalOpen.value = false;
-    }
+    Swal.fire({
+      icon: 'question',
+      title: 'Are you sure?',
+      text: 'Changes you made may not be saved.',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, close',
+      cancelButtonText: 'No, keep editing',
+      reverseButtons: true // Optional, swaps the position of the confirm and cancel buttons
+    }).then((result) => {
+      if (result.isConfirmed) {
+        isCreatePostModalOpen.value = false;
+      }
+    });
   } else {
     isCreatePostModalOpen.value = false;
   }
