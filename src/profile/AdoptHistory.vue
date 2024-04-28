@@ -6,11 +6,11 @@ const router = useRouter();
 const route = useRoute();
 const adoptionAcc = ref({});
 const update = ref({
-  status: ''
-})
+  status: "",
+});
 const updatePost = ref({
-  status: 'Unavailable'
-})
+  status: "Unavailable",
+});
 
 const formatDate = (timestamp) => {
   const date = new Date(timestamp);
@@ -24,7 +24,6 @@ const formatDate = (timestamp) => {
   });
 };
 
-
 // const allRequestsAccepted = computed(() => {
 //   return adoptionAcc.value.every(req => req.status === 'Accepted');
 // });
@@ -32,7 +31,9 @@ const formatDate = (timestamp) => {
 const getAdopt = async () => {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/receiver/${route.params.id}/reqAdoption`,
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/receiver/${
+        route.params.id
+      }/reqAdoption`,
       {
         method: "GET",
         headers: {
@@ -68,52 +69,54 @@ const getAdopt = async () => {
   }
 };
 
-
 const updateReqStatus = async (id, status) => {
-  const confirmed = window.confirm("Are you sure you want to accept this request form ? This action cannot be undone.");
+  const confirmed = window.confirm(
+    "Are you sure you want to accept this request form ? This action cannot be undone."
+  );
   if (confirmed) {
-  try {
-    update.value.status = "Accepted";
-    const res = await fetch(
-      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/receiver/reqAdoption/${id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),
-        },
-        body: JSON.stringify(update.value),
-      }
-    );
+    try {
+      update.value.status = "Accepted";
+      const res = await fetch(
+        `${
+          import.meta.env.VITE_APP_TITLE
+        }/strayAnimals/receiver/reqAdoption/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token"),
+          },
+          body: JSON.stringify(update.value),
+        }
+      );
 
-    if (res.status === 200) {
-      const data = await res.json();
+      if (res.status === 200) {
+        const data = await res.json();
         console.log("Updated successfully:", data);
-        updateStrStatus()
-    } else {
-      if (res.status === 404) {
-        console.error("Error: Post not found");
-        router.push({
-          name: "notfound",
-        });
-      } else if (res.status === 401) {
-        console.error("Login");
-        localStorage.removeItem("token");
-        router.push({
-          name: "login",
-        });
-      } else if (res.status === 500) {
-        console.error("Error: Internal Server Error");
+        updateStrStatus();
       } else {
-        console.error("Error:", res.status, res.statusText);
+        if (res.status === 404) {
+          console.error("Error: Post not found");
+          router.push({
+            name: "notfound",
+          });
+        } else if (res.status === 401) {
+          console.error("Login");
+          localStorage.removeItem("token");
+          router.push({
+            name: "login",
+          });
+        } else if (res.status === 500) {
+          console.error("Error: Internal Server Error");
+        } else {
+          console.error("Error:", res.status, res.statusText);
+        }
       }
+    } catch (error) {
+      console.error(error);
     }
-  } catch (error) {
-    console.error(error);
   }
-}
 };
-
 
 const updateStrStatus = async () => {
   try {
@@ -164,13 +167,16 @@ const strayAnimals = ref({});
 
 const getPosts = async () => {
   try {
-    const res = await fetch(`${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token"),
-      },
-    });
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_TITLE}/strayAnimals/${route.params.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
 
     if (res.status === 200) {
       const postsData = await res.json();
@@ -201,82 +207,125 @@ const getPosts = async () => {
 onMounted(async () => {
   getPosts();
 });
-
 </script>
 
 <template>
   <div class="max-w-2xl mx-auto px-4">
     <!-- {{ adoptionAcc }} -->
-    <div class="flex justify-between items-center mb-6">
+    <div class="text-zinc-900 flex justify-between items-center mb-6">
       <h2 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
-        Adoption Request ({{ adoptionAcc.length }})
+        Adoption Requests ({{ adoptionAcc.length }})
       </h2>
     </div>
     <div v-if="adoptionAcc.length > 0">
-        <div v-for="(req, index) in adoptionAcc" :key="index" class="my-8">
+      <div v-for="req in adoptionAcc" :key="req.id" class="my-8">
         <article
           class="p-6 text-base bg-white rounded-lg dark:bg-gray-900 relative mt-4"
         >
-          <footer class="flex justify-between items-center mb-2">
-            <div class="flex items-center">
+          <footer class="flex justify-between items-center mb-4">
+            <!-- <div class="flex items-center">
               <p
                 class="inline-flex items-center mr-2 text-sm text-gray-900 dark:text-white font-semibold"
               >
-                <!-- <img
-                  class="mr-2 w-8 h-8 rounded-full object-cover"
-                  :src="req.requester.reqPicture"
-                  alt="username"
-                /> -->
+
                 {{ req.requester.reqUsername }}
               </p>
               <p class="text-sm text-gray-500 dark:text-gray-400">
                 {{ formatDate(req.createdOn) }}
               </p>
+            </div> -->
+
+            <div class="flex text-left">
+              <img
+                class="w-10 h-10 rounded-full object-cover mr-2"
+                :src="req.requester.reqPicture"
+                alt=""
+              />
+              <div class="font-medium dark:text-white">
+                <div class="font-bold">{{ req.requester.reqUsername }}</div>
+                <div class="text-sm text-gray-500 dark:text-gray-400">
+                  {{ formatDate(req.createdOn) }}
+                </div>
+              </div>
             </div>
-          </footer>            
-          <p class="text-black dark:text-gray-400 text-left">
+          </footer>
+          <hr />
+          <p class="text-black dark:text-gray-400 text-left mt-4">
             <span class="font-semibold">ชื่อ:</span> {{ req.requester.reqName }}
-</p>
-        
-<p class="text-black dark:text-gray-400 text-left">
-  <!-- {{ req }} -->
-  <span class="font-semibold">เบอร์ติดต่อ:</span> {{ req.requester.reqPhone }}
-</p>
+          </p>
 
           <p class="text-black dark:text-gray-400 text-left">
+            <!-- {{ req }} -->
+            <span class="font-semibold">เบอร์ติดต่อ:</span>
+            {{ req.requester.reqPhone }}
+          </p>
+          <p v-if="req.contact" class="text-black dark:text-gray-400 text-left">
+            <span class="font-semibold">ช่องทางติดต่ออื่น ๆ:</span>
+            {{ req.contact }}
+          </p>
+          <p v-if="req.salary" class="text-black dark:text-gray-400 text-left">
+            <span class="font-semibold">เงินเดือน:</span> {{ req.salary }}
+          </p>
+          <p v-if="req.note" class="text-black dark:text-gray-400 text-left">
             <span class="font-semibold">หมายเหตุ:</span> {{ req.note }}
           </p>
           <p class="text-black dark:text-gray-400 text-left">
-            <span class="font-semibold">ที่พักอาศัย:</span> {{ req.requester.reqAddress?.DistrictThaiShort }}, {{ req.requester.reqAddress?.ProvinceThai }} {{ req.requester.reqAddress?.PostCode }}
-</p>
-          <div  v-if="req.homePicture !== null" class="mb-4">
-            <img :src="req.homePicture" alt="Home Picture" class="w-full h-auto" />
+            <span class="font-semibold">ที่พักอาศัย:</span>
+            {{ req.requester.reqAddress?.DistrictThaiShort }},
+            {{ req.requester.reqAddress?.ProvinceThai }}
+            {{ req.requester.reqAddress?.PostCode }}
+          </p>
+          <div v-if="req.homePicture" class="mb-4">
+            <img
+              :src="req.homePicture"
+              alt="Home Picture"
+              class="w-full h-auto"
+            />
           </div>
+
           <div>
-          <p v-if="strayAnimals.status === 'Available'" class="text-emerald-700 dark:text-gray-400 text-left">
-            <span class="font-semibold text-black">สถานะคำขอ: </span>{{ req.status }} </p>
-            <p v-else-if="strayAnimals.status === 'Unavailable' && req.status === 'Accepted'" class="text-emerald-700 dark:text-gray-400 text-left">
-              <span class="font-semibold text-black">สถานะคำขอ: </span>{{ req.status }} </p>
-            <p v-else-if="strayAnimals.status === 'Unavailable' && req.status !== 'Accepted'" class="text-red-700 dark:text-gray-400 text-left">
-              <span class="font-semibold text-black">สถานะคำขอ: </span>Rejected 
-            </p></div>
-            <!-- {{ req }} -->
+            <p
+              v-if="req.status === 'Accepted'"
+              class="text-emerald-600 dark:text-gray-400 text-left"
+            >
+              <span class="font-semibold text-black">สถานะคำขอ: </span>
+              {{ req.status }}
+            </p>
+            <p
+              v-else-if="req.status === 'Rejected'"
+              class="text-red-600 dark:text-gray-400 text-left"
+            >
+              <span class="font-semibold text-black">สถานะคำขอ: </span>
+              {{ req.status }}
+            </p>
+            <p
+              v-if="req.status === 'On Request'"
+              class="text-amber-500 dark:text-gray-400 text-left"
+            >
+              <span class="font-semibold text-black">สถานะคำขอ: </span>
+              {{ req.status }}
+            </p>
+          </div>
           <button
-  @click="updateReqStatus(req._id, 'Accepted')"
+            v-if="strayAnimals.status === 'Available'"
+            @click="updateReqStatus(req._id, 'Accepted')"
+            class="btn mt-4"
+          >
+            Accept this request form
+          </button>
+          <!-- <button
+  v-else
+  disabled
   class="btn mt-4"
-  :disabled="strayAnimals.status === 'Unavailable' "
-
 >
-  Update Status
-</button>
-
+  {{req.status }} this request form
+</button> -->
         </article>
-        
       </div>
     </div>
     <div v-else>
       <p>No Request this post yet</p>
     </div>
   </div>
-  </template>
+</template>
   

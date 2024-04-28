@@ -51,7 +51,7 @@ onMounted(async () => {
 
 
 const checkAdoptionReq = (animalId) => {
-  return adoptionReq.value.some(item => item.animal?.saId === animalId);
+  return adoptionReq.value.some(item => item.animal?._id === animalId);
 };
 
 // const route = useRoute();
@@ -121,12 +121,12 @@ onMounted(async () => {
 <template>
 
 <div
-  @click="strayAnimal.status === 'Available' || strayAnimal.owner?.ownerId === user._id ? showDetail(props.strayAnimal._id) : null"
+  @click="strayAnimal.status === 'Available' || strayAnimal.owner?._id === user._id ? showDetail(props.strayAnimal._id) : null"
   :style="{
     opacity: strayAnimal.picture !== null && strayAnimal.status === 'Unavailable' ? '0.3' : '1',
     cursor: strayAnimal.status === 'Available' || strayAnimal.owner?.ownerId === user._id ? 'pointer' : 'not-allowed',
   }"
-    class="mx-1 md:mx-4 lg:mx-4 mb-10 text-left rounded-lg block max-w-sm hover:border hover:border-gray-500 hover:shadow-lg transition-transform transform hover:-translate-y-1 focus:translate-y-0 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+    class="text-black mx-1 md:mx-4 lg:mx-4 mb-10 text-left shadow-lg rounded-lg block max-w-sm hover:border hover:border-gray-500 hover:shadow-lg transition-transform transform hover:-translate-y-1 focus:translate-y-0 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
   >
     <div class="relative lg:w-full lg:h-52 md:w-full md:h-36 h-60">
       <img
@@ -160,11 +160,11 @@ onMounted(async () => {
     alt="Male Icon"
   />
 </div>
- <div v-else class="mr-4 h-5 font-bold text-2xl">?</div>
+ <div v-else class="text-black mr-4 h-5 font-bold text-2xl">?</div>
       <div class="flex flex-col">
         <!-- Use flex-col here -->
         <div
-          class="text-sm font-bold leading-none tracking-tight"
+          class="text-black text-sm font-bold leading-none tracking-tight"
           v-if="strayAnimal.name !== null"
         >
           {{
@@ -176,7 +176,7 @@ onMounted(async () => {
           }}
         </div>
         <div
-          class="text-[16px] font-bold leading-none tracking-tight"
+          class="text-black text-[16px] font-bold leading-none tracking-tight"
           v-if="strayAnimal.name === null"
         >
           ไม่ระบุชื่อ
@@ -196,15 +196,20 @@ onMounted(async () => {
           }}
         </div>
 
-        <div
+        <div v-if="strayAnimal.owner"
           class="text-xs leading-none tracking-tight mt-1 text-gray-500"
         >
           Created by {{
-            strayAnimal.owner?.ownerUsername 
+            strayAnimal.owner?.username 
           }}
         </div>
+        <div v-else
+          class="text-xs leading-none tracking-tight mt-1 text-gray-500"
+        >
+          Created by user not found
+        </div>
 
-        <div
+        <!-- <div
           class="text-[12px] font-bold leading-none mt-1 tracking-tight text-emerald-600"
           v-if="strayAnimal.status === 'Available' && !checkAdoptionReq(strayAnimal._id)"
         >
@@ -221,7 +226,27 @@ onMounted(async () => {
           v-if="strayAnimal.status === 'Unavailable'"
         >
           Adopted
+        </div> -->
+        <!-- <div
+          class="text-[12px] font-bold leading-none mt-1 tracking-tight text-emerald-600"
+          v-if="strayAnimal.status === 'Available' && !checkAdoptionReq(strayAnimal._id)"
+        >
+          {{ strayAnimal.status }}
+        </div> -->
+        <div
+          class="text-[12px] font-bold leading-none mt-1 tracking-tight text-amber-600"
+          v-if="checkAdoptionReq(strayAnimal._id)"
+        >
+          On Request
         </div>
+        <div
+          class="text-[12px] font-bold leading-none mt-1 tracking-tight text-emerald-600"
+          v-else
+        >
+          {{strayAnimal.status}}
+        </div>
+
+        
       </div>
     </div>
   </div>

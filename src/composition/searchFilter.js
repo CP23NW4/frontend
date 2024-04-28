@@ -10,7 +10,7 @@ export default function searchFilter(initialData) {
       (item.type && item.type.toLowerCase().includes(keyword.value.toLowerCase())) ||
       (item.gender && item.gender.toLowerCase().includes(keyword.value.toLowerCase())) ||
       (item.color && item.color.toLowerCase().includes(keyword.value.toLowerCase())) ||
-      (item.owner.ownerUsername && item.owner.ownerUsername.toLowerCase().includes(keyword.value.toLowerCase()))
+      (item.owner?.username && item.owner.username.toLowerCase().includes(keyword.value.toLowerCase()))
     );
   });
 

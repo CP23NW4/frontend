@@ -2,7 +2,9 @@
 import { ref, computed, watch, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { handleSignup } from "../composition/auth";
-import { calculateAge } from "../composition/validate";
+import Swal from 'sweetalert2';
+
+// import { calculateAge } from "../composition/validate";
 
 const router = useRouter();
 const registerData = ref({
@@ -19,7 +21,7 @@ const registerData = ref({
 });
 
 const minCount = 0;
-const maxCountAddress = 200;
+const maxCountAddress = 100;
 const selectedProvince = ref(null);
 const selectedDistrict = ref(null);
 const selectedTambon = ref(null);
@@ -73,7 +75,7 @@ const isValidPassword = computed(() => {
 });
 
 const isValidPhoneNumber = computed(() => {
-  const phoneNumberRegex = /^(09|06|08)\d{8}$/;
+  const phoneNumberRegex = /^(09|06|08|02)\d{8}$/;
   return phoneNumberRegex.test(registerData.value.phoneNumber);
 });
 
@@ -88,8 +90,11 @@ const isValidAddress = computed(() => {
 
 
 const isValidAge = computed(() => {
-  return calculateAge(registerData.value.birthday) >= 18;
+  const userBirthYear = parseInt(registerData.value.birthday);
+  const currentYear = new Date().getFullYear();
+  return currentYear - userBirthYear >= 18;
 });
+
 
 const isValidForm = computed(() => {
   return (
@@ -151,32 +156,27 @@ const validateUserAddress = () => {
   if (!isValidUserAddress.value) {
   }
 };
-const validateAge = () => {
+
+const validateAgeAfterSelection = () => {
   touched.birthday = true;
-  if (!isValidAge.value) {
-    alert("You must be at least 18 years old to register.");
+  if (!isValidAge.value && selectedBirthYear.value !== null && endYear - selectedBirthYear.value < 18) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'You must be at least 18 years old to register.',
+    });
   }
 };
 
 
-
 const signup = async () => {
-  if (calculateAge(registerData.value.birthday) < 18) {
-    alert("You must be at least 18 years old to register.");
-    return;
-  }
-
-  if (registerData.value.password !== registerData.value.confirmPassword) {
-    alert("Passwords do not match.");
-    return;
-  }
   const formData = new FormData();
 formData.append('name', `${registerData.value.firstName} ${registerData.value.lastName}`);
 formData.append('username', registerData.value.username);
 formData.append('email', registerData.value.email);
 formData.append('password', registerData.value.password);
 formData.append('phoneNumber', registerData.value.phoneNumber);
-formData.append('DOB', registerData.value.birthday);
+formData.append('DOB', selectedBirthYear.value);
 formData.append('idCard', registerData.value.idCard);
 formData.append('userAddress[homeAddress]', registerData.value.homeAddress);
 formData.append('userAddress[PostCode]', selectedTambon.value.PostCode);
@@ -300,9 +300,19 @@ const filteredPostCodes = computed(() => {
   }).map(postCode => parseInt(postCode.PostCode)).sort((a, b) => a - b);
 });
 
+const endYear = new Date().getFullYear();
+const startYear = endYear-100;
+  
 
+  const birthYears = Array.from({ length: endYear - startYear + 1 }, (_, index) => startYear + index).reverse();
 
+  const selectedBirthYear = ref(null);
 
+  watch(selectedBirthYear, (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      registerData.birthday = newVal;
+    }
+  });
 
 
 </script>
@@ -504,22 +514,23 @@ const filteredPostCodes = computed(() => {
             </span>
           </div>
 
-          <!-- dob  -->
+          
         </div>
-        <div class="mb-4">
+        <!-- dob  -->
+        <!-- <div class="mb-4">
           <div>
-            <label for="birthday" class="block text-gray-700 font-medium"
+            <label for="birthday" class="block text-gray-700 font-medium text-left mb-2"
               >Date of Birth</label
             >
             <input
-              type="date"
+              type="number"
               id="birthday"
               v-model="registerData.birthday"
               @input="validateAge"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
             />
           </div>
-        </div>
+        </div> -->
         <!-- addess -->
         <div class="relative mb-4">
           <input
@@ -527,6 +538,7 @@ const filteredPostCodes = computed(() => {
             id="userAddress"
             v-model="registerData.homeAddress"
             placeholder=" "
+            maxlength="100"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400"
           />
           <label
@@ -544,22 +556,23 @@ const filteredPostCodes = computed(() => {
         </div>
 
         <div class="grid gap-2 mb-4 md:grid-cols-2 text-left">
+
 <!-- Select Province dropdown -->
-<label for="province">Select Province:</label>
+<label for="province" class="text-black ">Select Province:</label>
 <select class="select select-bordered" id="province" v-model="selectedProvince">
   <option disabled value="">Please select a province</option>
   <option v-for="province in filteredProvinces" :key="province._id" :value="province">{{ province.ProvinceThai }}</option>
 </select>
 
 <!-- Select District dropdown -->
-<label for="district">Select District:</label>
+<label for="district" class="text-black ">Select District:</label>
 <select class="select select-bordered" id="district" v-model="selectedDistrict">
   <option disabled value="">Please select a district</option>
   <option v-for="district in filteredDistricts" :key="district._id" :value="district">{{ district.DistrictThaiShort }}</option>
 </select>
 
 <!-- Select Tambon dropdown -->
-<label for="tambon">Select Tambon:</label>
+<label for="tambon" class="text-black ">Select Tambon:</label>
 <select class="select select-bordered" id="tambon" v-model="selectedTambon">
   <option disabled value="">Please select a tambon</option>
   <option v-for="tambon in filteredTambons" :key="tambon._id" :value="tambon">{{ tambon.TambonThaiShort }}</option>
@@ -568,16 +581,21 @@ const filteredPostCodes = computed(() => {
 
 
 <!-- Display PostCode -->
-<label for="postCode">Post Codes:</label>
-<div>
-  <span v-if="selectedTambon">
+
+<label for="postCode" class="text-black my-4 ">Post Codes:</label>
+  <span v-if="selectedTambon" class="text-black my-4 ml-4">
     <template v-for="postCode in filteredPostCodes">
       {{ postCode }}
     </template>
   </span>
-  <span v-else>No tambon selected</span>
-</div>
+  <span class="text-zinc-500 my-4 ml-4" v-else>No selected</span>
 
+
+  <label for="birthYear" class="text-black">Select Year of Birth:</label>
+<select id="birthYear" class="select select-bordered" v-model="selectedBirthYear" @change="validateAgeAfterSelection">
+  <option disabled value="">Select year</option>
+  <option v-for="year in birthYears" :key="year" :value="year">{{ year }}</option>
+</select>
 
 </div>
 
@@ -590,7 +608,7 @@ const filteredPostCodes = computed(() => {
             Sign up
           </button>
         </div>
-        <p>
+        <p class="text-zinc-800">
           Already have an account?
           <router-link :to="{ name: 'login' }"
             ><a @click="toggleForm" class="text-blue-500 cursor-pointer">
@@ -615,4 +633,4 @@ input:not(:placeholder-shown) + label {
 /* input {
   background-color: transparent;
 } */
-</style>../composition/auth.js
+</style>

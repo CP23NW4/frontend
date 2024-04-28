@@ -3,11 +3,11 @@ import { ref, onMounted, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import CreateButton from "../components/CreateButton.vue";
 import Snowfall from "../components/Snowfall.vue";
-import getStrayAnimals from "../composition/useStrayAnimals";
+
 import Profilebar from "../bar/Profilebar.vue";
 
 let checkSignIn = ref(localStorage.getItem("token"));
-const { strayAnimals } = getStrayAnimals();
+
 // const { keyword, filteredStrayAnimals, setSearchKeyword } = searchFilter(strayAnimals);
 const user = ref({});
 const posts = ref({});

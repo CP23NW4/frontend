@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useRouter, useRoute } from "vue-router";
-import axios from 'axios';
+import Swal from 'sweetalert2';
+
 
 const profileForm = ref({
   username: '',
@@ -11,7 +12,7 @@ const profileForm = ref({
     TambonThaiShort: '',
     DistrictThaiShort: '',
     ProvinceThai: '',
-    homeAddress: ''
+    homeAddress: 'Address'
   }
 });
 
@@ -134,16 +135,59 @@ const deleteUser = async () => {
 
 
 
-
 const updateProfile = async () => {
-  const confirmed = window.confirm("Are you sure you want to update the profile?");
-
-  if (confirmed) {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Are you sure you want to update the profile?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, update it!',
+    cancelButtonText: 'Cancel'
+  }).then(async (result) => {
+    if (result.isConfirmed) {
     try {
-      profileForm.value.userAddress.ProvinceThai = selectedProvince.value.ProvinceThai;
-      profileForm.value.userAddress.DistrictThaiShort = selectedDistrict.value.DistrictThaiShort;
-      profileForm.value.userAddress.TambonThaiShort = selectedTambon.value.TambonThaiShort;
-      profileForm.value.userAddress.PostCode = selectedTambon.value.PostCode;
+      const updatedProfile = { ...profileForm.value }; 
+      let needToUpdate = false;
+      
+      if (updatedProfile.username !== user.value.username) {
+        needToUpdate = true;
+      } else {
+        delete updatedProfile.username; 
+      }
+      
+      if (updatedProfile.phoneNumber !== user.value.phoneNumber) {
+        needToUpdate = true;
+      } else {
+        delete updatedProfile.phoneNumber;
+      }
+      if (updatedProfile.userAddress.homeAddress !== user.value.homeAddress) {
+        needToUpdate = true;
+      } else {
+        delete updatedProfile.homeAddress;
+      }
+    
+      // Check if any changes need to be sent
+    
+      console.log("Before updating address:", updatedProfile.userAddress);
+
+      // Check if province, district, and tambon are selected
+      if (selectedProvince.value && selectedDistrict.value && selectedTambon.value) {
+        needToUpdate = true;
+        updatedProfile.userAddress.ProvinceThai = selectedProvince.value.ProvinceThai;
+        updatedProfile.userAddress.DistrictThaiShort = selectedDistrict.value.DistrictThaiShort;
+        updatedProfile.userAddress.TambonThaiShort = selectedTambon.value.TambonThaiShort;
+        updatedProfile.userAddress.PostCode = selectedTambon.value.PostCode;
+
+        console.log("After updating address:", updatedProfile.userAddress);
+      } else {
+        console.log("Province, district, and tambon not selected.");
+      }
+      if (!needToUpdate) {
+        console.log("No changes detected. Update not needed.");
+        return;
+      }
+
+      
       const res = await fetch(
         `${import.meta.env.VITE_APP_TITLE}/users/`,
         {
@@ -152,7 +196,7 @@ const updateProfile = async () => {
             "Content-Type": "application/json",
             Authorization: localStorage.getItem("token"),
           },
-          body: JSON.stringify(profileForm.value),
+          body: JSON.stringify(updatedProfile),
         }
       );
 
@@ -178,8 +222,11 @@ const updateProfile = async () => {
           });
         } else if (res.status === 400) {
           console.log("No Valid");
-          alert("400 Bad Request");
-          const confirmed = window.confirm("Not validate");
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Username or phone number is not unique.',
+        });
         } else {
           console.error("Error:", res.status, res.statusText);
         }
@@ -190,12 +237,13 @@ const updateProfile = async () => {
   } else {
     console.log("Update canceled by user");
   }
-};
+})};
 
 onMounted(async () => {
   getUsers();
 });
 
+const showAddressInput = ref(false);
 
 const selectedProvince = ref(null);
 const selectedDistrict = ref(null);
@@ -298,22 +346,22 @@ const filteredPostCodes = computed(() => {
 </script>
 
 <template>
-  <div class="mt-20 max-w-lg mx-auto">
+  <div class="text-zinc-900 mt-20 max-w-lg mx-auto">
     <!-- {{ user }} -->
     <h1 class="text-2xl font-semibold mb-4 text-left">Edit Profile</h1>
-    <form @submit.prevent="updateProfile" class="space-y-4">
+    <form class="space-y-4">
       <div class="flex items-center">
         <label for="username" class="w-1/2 text-left mr-4">Username:</label>
         <input v-model="profileForm.username" type="text" id="username" class="w-3/4 px-3 py-2 border border-gray-300 rounded-md">
       </div>
       <div class="flex items-center">
         <label for="email" class="w-1/2 text-left mr-4">Email:</label>
-        <input v-model="profileForm.email" disabled type="text" id="email" class="w-3/4 px-3 py-2 border border-gray-300 rounded-md">
+        <input v-model="profileForm.email" disabled type="text" id="email" class="bg-gray-200 w-3/4 px-3 py-2 border border-gray-300 rounded-md">
       </div>
 
       <div class="flex items-center">
         <label for="dob" class="w-1/2 text-left mr-4">Year of Birth:</label>
-        <input v-model="formattedDOB" disabled type="text" id="dob" class="w-3/4 px-3 py-2 border border-gray-300 rounded-md">
+        <input v-model="formattedDOB" disabled type="text" id="dob" class="bg-gray-200 w-3/4 px-3 py-2 border border-gray-300 rounded-md">
       </div>
 
       <div class="flex items-center">
@@ -321,12 +369,17 @@ const filteredPostCodes = computed(() => {
         <input v-model="profileForm.phoneNumber" type="text" id="phoneNumber" maxlength="10" class="w-3/4 px-3 py-2 border border-gray-300 rounded-md">
       </div>
 
-      <div class="flex items-center">
-  <label for="address" class="w-1/2 text-left mr-4">Address:</label>
-  <textarea disabled v-model="profileForm.userAddressText" id="address" class="w-3/4 px-3 py-2 border border-gray-300 rounded-md" :maxlength="200" rows="4"></textarea>
+  <div class="text-left flex items-center">
+  <label for="address" class="w-1/2 text-left mr-10">Address:</label>
+{{ profileForm.userAddressText }}
 </div>
+<div class="text-right">
+<button @click="showAddressInput = !showAddressInput" id="editAddress">Edit Address</button>
+</div>
+<div v-if="showAddressInput" class="text-left grid gap-3 mb-4 md:grid-cols-2">
+  <label for="homeAddress" class="w-1/2 text-left mr-4">Address:</label>
+        <input v-model="profileForm.userAddress.homeAddress" type="text" id="homeAddress" class="w-3/4 px-3 py-2 border border-gray-300 rounded-md">
 
-<!-- <div class="grid gap-3 mb-4 md:grid-cols-2">
   <label for="province">Select Province:</label>
   <select class="select select-bordered" id="province" v-model="selectedProvince">
     <option disabled value="">{{ profileForm.userAddress?.ProvinceThai }}</option>
@@ -352,12 +405,12 @@ const filteredPostCodes = computed(() => {
   </span>
   <span v-else>No tambon selected</span>
 </div>
-</div> -->
+</div>
   
-  
-
 
   <div>
+    
+
     <!-- Delete your Account -->
     <div @click="deleteUser" class="text-red-700 text-right mb-4 cursor-pointer">Delete your account</div>
     
@@ -366,11 +419,12 @@ const filteredPostCodes = computed(() => {
       <!-- Cancel Button -->
     <button @click="goBack" class="text-gray-600 font-semibold py-2 px-4 rounded-md hover:text-gray-800 focus:outline-none">Cancel</button>
     <!-- Submit Button -->
-    <button type="submit" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-500 focus:outline-none">Update Profile</button>
+    <button @click="updateProfile" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-500 focus:outline-none">Update Profile</button>
   </div>
 </div>
 
     </form>
+
   </div>
 </template>
 

@@ -19,14 +19,21 @@ let checkSignIn= ref(localStorage.getItem('token'))
 
 
 const SignOut = () => {
-  if (confirm("Sign Out?")) {
-    localStorage.removeItem("token");
-    location.reload();
-  }
-
+  Swal.fire({
+    icon: 'question',
+    title: 'Sign Out?',
+    text: 'Are you sure you want to sign out?',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, sign out',
+    cancelButtonText: 'Cancel',
+    reverseButtons: true 
+  }).then((result) => {
+    if (result.isConfirmed) {
+      localStorage.removeItem("token");
+      location.reload();
+    }
+  });
 };
-
-
 
 
 const getUsers = async () => {

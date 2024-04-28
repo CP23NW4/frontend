@@ -82,51 +82,52 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div v-if="adoptionReq" class="flex items-center justify-center mt-20">
+  <div v-if="adoptionReq" class="text-zinc-900 flex items-center justify-center mt-20">
     <div class="items-center gap-4 mb-4 text-center max-w-lg">
       <div class="mb-4">
         <img
-          v-if="adoptionReq.animal.saPicture !== null"
-          :src="adoptionReq.animal.saPicture "
+          v-if="adoptionReq.animal.picture !== null"
+          :src="adoptionReq.animal.picture "
           class="w-full h-full object-cover rounded-lg"
           alt="Animal Image"
         />
         <img
-          v-else-if="adoptionReq.animal.saPicture === null"
+          v-else-if="adoptionReq.animal?.picture === null"
           src="/nodata.png"
           class="w-full h-full object-cover rounded-lg"
           alt="Animal Image"
         />
       </div>
       <div class="relative w-full bg-white shadow-lg p-8 my-10 rounded-md text-left">
-
-
         <div class="flex mb-4">
           <img class="w-10 h-10 rounded-full object-cover  mr-2" :src="adoptionReq.owner?.ownerPicture" alt="" />
           <div class="font-medium dark:text-white">
             <div class="font-bold">{{ adoptionReq.owner?.ownerUsername }}</div>
-            <!-- <div class="text-sm text-gray-500 dark:text-gray-400">
-              {{ formatDate(adoptionReq.createdOn) }}
-            </div> -->
+            <div class="text-sm text-gray-500 dark:text-gray-400">
+              {{ formatDate(adoptionReq.animal?.createdOn) }}
+            </div>
           </div>
         </div>
 
         <hr />
         <div class="mt-4">
           <ul>
-            <li><a class="font-bold m-2">ชื่อ :</a> {{ adoptionReq.animal.saName }}</li>
+            <li><a class="font-bold m-2">ชื่อ :</a> {{ adoptionReq.animal.name }}</li>
             <li>
               <a class="font-bold m-2">เพศ :</a>
-              {{ capitalizeFirstLetter(adoptionReq.animal.saGender) }}
+              {{ capitalizeFirstLetter(adoptionReq.animal.gender) }}
             </li>
 
             <li>
               <a class="font-bold m-2">ประเภท :</a>
-              {{ capitalizeFirstLetter(adoptionReq.animal.saType) }}
+              {{ capitalizeFirstLetter(adoptionReq.animal.type) }}
             </li>
-            <li><a class="font-bold m-2">สี :</a> {{ adoptionReq.animal.saColor }}</li>
-            <li class="mx-2">  
-              <a class="font-bold">คำอธิบาย :</a> {{ adoptionReq.animal.saDesc }}
+            <li><a class="font-bold m-2">สี :</a> {{ adoptionReq.animal.color }}</li>
+            <li v-if="adoptionReq.animal.description" class="mx-2">  
+              <a class="font-bold">คำอธิบาย :</a> {{ adoptionReq.animal.description }}
+            </li>
+            <li v-else class="mx-2">  
+              <a class="font-bold">คำอธิบาย :</a> -
             </li>
           </ul>
           <h2 class="font-semibold mt-10 mb-2">Your Information</h2>
@@ -136,30 +137,37 @@ onMounted(async () => {
           <div class="font-medium dark:text-white">
             <div class="font-bold">{{ adoptionReq.requester?.reqUsername }}</div>
             <div class="text-sm text-gray-500 dark:text-gray-400">
-              {{ formatDate(adoptionReq.createdOn) }}
+              {{ formatDate(adoptionReq.requester?.createdOn) }}
             </div>
           </div>
           
         </div>
         <hr />
         <ul class="mt-4">
-            <li><a class="font-bold m-2">ชื่อ:</a> {{ adoptionReq.requester.reqName }}</li>
-            <li><a class="font-bold m-2">เบอร์ติดต่อ:</a> {{ adoptionReq.requester.reqPhone }}</li>
-            <li class="mx-2">  
-              <a class="font-bold">คำอธิบาย:</a> {{ adoptionReq.note }}
+            <li><a class="font-bold m-2">ชื่อ:</a> {{ adoptionReq.requester?.reqName }}</li>
+            <li><a class="font-bold m-2">เบอร์ติดต่อ:</a> {{ adoptionReq.requester?.reqPhone }}</li>
+            <li v-if="adoptionReq.requester.contact" class="mx-2">  
+              <a class="font-bold">ช่องทางติดต่ออื่น ๆ:</a> {{ adoptionReq.requester?.contact }}
+            </li>
+            <li v-if="adoptionReq.requester?.salary" class="mx-2">  
+              <a class="font-bold">เงินเดือน:</a> {{ adoptionReq.requester?.salary }}
+            </li>
+            <li v-if="adoptionReq.requester?.note" class="mx-2">  
+              <a class="font-bold">หมายเหตุ:</a> {{ adoptionReq.requester?.note }}
             </li>
             <li class="mx-2">  
               <a class="font-bold">สถานะ: </a> 
-              <span class="text-emerald-600 font-semibold" v-if="adoptionReq.status === 'Accepted' "> {{ adoptionReq.status }}</span>
-              <span class="text-amber-500 font-semibold" v-if="adoptionReq.status === 'On Request'"> {{ adoptionReq.status }}</span>
+              <span class="text-emerald-600 font-semibold" v-if="adoptionReq.requester?.status === 'Accepted' "> {{ adoptionReq.requester.status }}</span>
+              <span class="text-amber-600 font-semibold" v-if="adoptionReq.requester?.status === 'On Request'"> {{ adoptionReq.requester.status }}</span>
+              <span class="text-red-600 font-semibold" v-if="adoptionReq.requester?.status === 'Rejected'"> {{ adoptionReq.requester.status }}</span>
             </li>
 
             <li class="mx-2">
               <a class="font-bold">ที่พักอาศัย:</a>
               {{adoptionReq.requester.reqAddress?.DistrictThaiShort}}, {{ adoptionReq.requester.reqAddress?.ProvinceThai }} {{ adoptionReq.requester.reqAddress?.PostCode }}
             </li>
-            <li v-if="adoptionReq.homePicture" class="mx-2">  
-              <img :src="adoptionReq.homePicture" alt="Home Picture" class="w-full h-full object-cover rounded-lg mt-2">
+            <li v-if="adoptionReq.requester.homePicture" class="mx-2">  
+              <img :src="adoptionReq.requester.homePicture" alt="Home Picture" class="w-full h-full object-cover rounded-lg mt-2">
             </li>
 
 

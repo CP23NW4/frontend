@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Comment from '../components/Comment.vue';
 import Detailbar from '../bar/Detailbar.vue';
+import Swal from 'sweetalert2';
 // import { removeComment }  from '../components/Comment.vue';
 const router = useRouter();
 const route = useRoute();
@@ -55,9 +56,13 @@ const getRequest = async () => {
 };
 
 
+// const checkAdoptionReq = (animalId) => {
+//   return adoptionReq.value.some(item => item.animal?.saId === animalId);
+// };
 const checkAdoptionReq = (animalId) => {
-  return adoptionReq.value.some(item => item.animal?.saId === animalId);
+  return adoptionReq.value.some((req) => req.animal._id === animalId);
 };
+
 
 
 onMounted(async () => {
@@ -158,10 +163,13 @@ const removePost = async () => {
     );
 
     if (res.status === 200) {
-      // Show alert if deletion is successful
-      alert("Post deleted successfully");
-      router.push({
-        name: "home",
+      Swal.fire({
+        title: 'Success!',
+        text: 'Post deleted successfully',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        router.go(-1);
       });
       } else if (res.status === 401) {
       alert("No authentication, Go to signin");
@@ -169,10 +177,12 @@ const removePost = async () => {
       router.push({
         name: "login"})
       } else if (res.status === 403) {
-          alert("You do not have permission to edit other post, Check your role");
-          router.push({
-            name: "home",
-          });
+        Swal.fire({
+        title: 'Permission Denied',
+        text: 'You do not have permission to delete this comment.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
         }else {
       console.error("Error deleting post:", res.status, res.statusText);
     }
@@ -251,12 +261,10 @@ console.log(id)
 
 </script>
 <template>
-  <!-- {{ adoptionReq }} -->
   <!-- {{ getDet }} -->
   <!-- {{ getUser }} -->
 
-  <!-- {{ adoptionAcc }} -->
-  <div class="flex items-center justify-center mt-20">
+  <div class=" text-zinc-900 flex items-center justify-center mt-20">
     <div class="items-center gap-4 mb-4 text-center max-w-lg">
       <div class="mb-4">
         <!-- <img src="{{ getDet.picture }}" class="w-512 h-300 object-cover rounded-md" /> -->
@@ -275,7 +283,7 @@ console.log(id)
       </div>
       <div class="relative w-full bg-white shadow-lg p-8 my-10 rounded-md text-left">
 
-<div v-if="checkSignIn && user._id === getDet.owner?.ownerId || user._id === '65d231533f0e791b0e10c9d1' " class="dropdown dropdown-end absolute top-0 right-2 p-4">
+<div v-if="checkSignIn && user._id === getDet.owner?._id || user._id === '65d231533f0e791b0e10c9d1' " class="dropdown dropdown-end absolute top-0 right-2 p-4">
       <div tabindex="0" role="button" class="btn btn-sm bg-transparent border-transparent shadow-transparent">
         <div class="w-4 rounded-full">
           <img src="/menu.png" />
@@ -283,14 +291,16 @@ console.log(id)
       </div>
       <ul tabindex="0" class="mt-0 z-[1] p-2 shadow-lg menu menu-sm dropdown-content bg-white rounded-box w-52">
         <li><a @click="editPost(getDet._id)">Edit</a></li>
-        <li><a class="text-red-700" onclick="my_modal_1.showModal()">Delete</a></li>
+        <li><a class="text-red-700" @click="removePost">Delete</a></li>
       </ul>
     </div>
 
         <div class="flex mb-4">
-          <img class="w-10 h-10 rounded-full object-cover mr-2" :src="getDet.owner?.ownerPicture" alt="" />
+          <img v-if="getDet.owner" class="w-10 h-10 rounded-full object-cover mr-2" :src="getDet.owner?.userPicture" alt="" />
+          <img v-else class="w-10 h-10 rounded-full object-cover mr-2" src="https://mnwanimals.blob.core.windows.net/accessories/user.jpg" alt="" />
           <div class="font-medium dark:text-white">
-            <div class="font-bold">{{ getDet.owner?.ownerUsername }}</div>
+            <div v-if="getDet.owner" class="font-bold">{{ getDet.owner?.username }}</div>
+            <div v-else class="font-bold">user not found</div>
             <div class="text-sm text-gray-500 dark:text-gray-400">
               {{ formatDate(getDet.createdOn) }}
             </div>
@@ -316,19 +326,21 @@ console.log(id)
             </li>
             <li class="mx-2">  
               <a class="font-bold">สถานะ :</a> 
-              <span class="text-emerald-600" v-if="getDet.status === 'Available'">{{ getDet.status }}</span>
-              <span class="text-red-600" v-if="getDet.status === 'Unavailable'">{{ getDet.status }}</span>
+              <span class="text-emerald-600" v-if="getDet.owner && getDet.status === 'Available'"> {{ getDet.status }}</span>
+              <span class="text-red-600" v-else-if="getDet.owner && getDet.status === 'Unavailable'"> {{ getDet.status }}</span>
+              <span class="text-black" v-else-if="!getDet.owner"> Not found</span>
             </li>
           </ul>
 <br>
-
     <!-- Button to adopt -->
-    <router-link v-if="user._id !== getDet.owner?.ownerId && checkSignIn && !checkAdoptionReq(getDet._id)" :to="{ name: 'reqform' }" class="block mx-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</router-link>
-<button v-else-if="user._id !== getDet.owner?.ownerId && checkSignIn && checkAdoptionReq(getDet._id)" onclick="my_modal_4.showModal()" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
-<button v-else-if="user._id !== getDet.owner?.ownerId && !checkSignIn" onclick="my_modal_2.showModal()" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
-<button v-else-if="user._id === getDet.owner?.ownerId" onclick="my_modal_3.showModal()" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
+    <button v-if="getDet.owner && user._id !== getDet.owner?._id && checkSignIn && checkAdoptionReq(getDet._id)" onclick="my_modal_4.showModal()" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
+    <router-link v-else-if="getDet.owner && user._id !== getDet.owner?._id && checkSignIn && !checkAdoptionReq(getDet._id)" :to="{ name: 'reqform' }" class="block mx-2 bg-orange-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</router-link>
+    <button v-else-if="getDet.status === 'Unavailable'|| !getDet.owner"  :disabled="getDet.status === 'Unavailable' || !getDet.owner" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopted</button>
+    <button v-else-if="getDet.owner && user._id !== getDet.owner?._id && !checkSignIn" onclick="my_modal_2.showModal()" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
+    <button v-else-if="getDet.owner && user._id === getDet.owner?._id" onclick="my_modal_3.showModal()" class="block mx-2 bg-gray-500 hover:bg-gray-700 rounded-lg text-white font-bold py-2 px-8 border-gray-700 hover:border-gray-800 text-center w-full">Adopt Now</button>
 
         </div>
+        
       </div>
 
       <div class="text-left"> 
@@ -339,7 +351,6 @@ console.log(id)
 
           <dialog id="my_modal_2" class="modal">
         <div class="modal-box flex flex-col items-center justify-center">
-          <!-- <img src="/modal.svg" /> -->
           <h1 class="font-bold text-2xl text-amber-500 mt-2"></h1>
           <p class="py-2">Please sign in to continue.</p>
           <div class="modal-action flex">
@@ -398,7 +409,7 @@ console.log(id)
 
 
 
-      <dialog id="my_modal_1" class="modal">
+      <!-- <dialog id="my_modal_1" class="modal">
         <div class="modal-box flex flex-col items-center justify-center">
           <img src="/modal.svg" />
           <h1 class="font-bold text-2xl text-amber-500 mt-2">Delete Post?</h1>
@@ -420,8 +431,8 @@ console.log(id)
             </form>
           </div>
         </div>
-      </dialog>
-<div v-if="checkSignIn && user._id === getDet.owner?.ownerId">
+      </dialog> -->
+<div v-if="checkSignIn && user._id === getDet.owner?._id">
     <Detailbar />
 </div>
 <div v-else class="mb-20">
