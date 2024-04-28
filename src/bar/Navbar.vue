@@ -19,7 +19,6 @@ let checkSignIn= ref(localStorage.getItem('token'))
 
 
 const SignOut = () => {
-  const SignOut = () => {
   Swal.fire({
     icon: 'question',
     title: 'Sign Out?',
@@ -35,9 +34,6 @@ const SignOut = () => {
     }
   });
 };
-
-
-
 
 
 const getUsers = async () => {
